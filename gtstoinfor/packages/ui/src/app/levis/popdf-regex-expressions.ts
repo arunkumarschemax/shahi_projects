@@ -54,6 +54,7 @@ export const PO_NUMBER_INDEX = 1
 // export const SELLER_ADDRESS_START_TEXT = "SELLER:"
 // export const SELLER_ADDRESS_END_TEXT = "BUYER:"
 export const ITEM_VARIANT_START_TEXT = "Tarif Code" 
+export const TOTAL_QUANTITY_BR='US$'
 
 
  // Jaswanth Chnages 2nd format// 
@@ -78,6 +79,8 @@ export const ITEM_MATERIAL_INDEX1 = 'Line Value'
 export const ITEM_VARIANT_START_TEXT1 = "BOM Summary" 
 export const LSE_FORMAT_KEY="Material Description"
 export const LSE_KEY_PO_LINE='BOM Summary'
+export const TOTAL_QUANTITY_LSE="TOTAL PO QUANTITY"
+export const TOTAL_QUANTITY_MX="Season"
 
 
 /* MX */

@@ -1,5 +1,5 @@
 import { LevisPoDetails, LevisPoItemDetails, LevisPoItemVariant } from "@project-management-system/shared-models";
-import { CURRENCY_INDEX, DELIVERY_ADDRESS, DELIVERY_ADDRESS_BR, DELIVERY_ADDRESS_MX, EMP_STR_EXP, FORMAT1, FORMAT2, FORMAT3, FORMAT_SEPARATION_KEYWORD, FORMAT_SEPARATION_KEYWORD1, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_TEXT_END_TEXT2, ITEM_TEXT_END_TEXT22, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, LSE_FORMAT_KEY, MX_FORMAT_KEY, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_INDEXING_LSE, PO_NUMBER_TEXT, PO_NUMBER_TEXT1, PO_NUMBER_TEXT_LSE, TRANSMODE_INDEX, TRANSMODE_INDEX_LSE, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import { CURRENCY_INDEX, DELIVERY_ADDRESS, DELIVERY_ADDRESS_BR, DELIVERY_ADDRESS_MX, EMP_STR_EXP, FORMAT1, FORMAT2, FORMAT3, FORMAT_SEPARATION_KEYWORD, FORMAT_SEPARATION_KEYWORD1, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_TEXT_END_TEXT2, ITEM_TEXT_END_TEXT22, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, LSE_FORMAT_KEY, MX_FORMAT_KEY, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_INDEXING_LSE, PO_NUMBER_TEXT, PO_NUMBER_TEXT1, PO_NUMBER_TEXT_LSE, TOTAL_QUANTITY_BR, TOTAL_QUANTITY_LSE, TOTAL_QUANTITY_MX, TRANSMODE_INDEX, TRANSMODE_INDEX_LSE, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
 import moment from "moment";
 
 
@@ -57,6 +57,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 let currencyLseIndex;
                 let transModeLseIndex;
                 let deliveryAddressIndexLse;
+                let totalQuantityIndex;
                 for (const [ind, ele] of firstPageContent.entries()) {
                     if (ele.str == PO_NUMBER_TEXT_LSE) {
                         poNumberTextLseIndex = ind
@@ -86,6 +87,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                     }
                     if (ele.str == DELIVERY_ADDRESS) {
                         deliveryAddressIndexLse = ind
+                    }
+                    if (ele.str == TOTAL_QUANTITY_LSE) {
+                        totalQuantityIndex = ind
                     }
 
                 }
@@ -127,6 +131,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 } else {
                     poData.splitPo = "-";
                 }
+
+                poData.totalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g,"");
+                
                 // poData.transMode =
                 //     (firstPageContent[transModeLseIndex + 2].str + " " +
                 //         firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
@@ -232,6 +239,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 let poNumberIndex;
                 let transModeIndex;
                 let deliveryAddressIndex;
+                let totalQuantityIndexBr;
                 for (const [ind, ele] of firstPageContent.entries()) {
                     if (ele.str == PO_NUMBER_TEXT) {
                         poNumberTextIndex = ind
@@ -262,6 +270,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                     if (ele.str == DELIVERY_ADDRESS_BR) {
                         deliveryAddressIndex = ind
                     }
+                    if (ele.str == TOTAL_QUANTITY_BR) {
+                        totalQuantityIndexBr = ind
+                    }
 
                 }
                 poData.poNumber = firstPageContent[poNumberIndex - 20].str
@@ -280,6 +291,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                     i--;
                 }
                 poData.deliveryAddress = deliveryAddress.trim().replace(/SHAHI EXPORTS PVT LTD… /g, "")
+
+                poData.totalQuantity = firstPageContent[totalQuantityIndexBr - 2].str
 
                 // poData.transMode = firstPageContent[transModeIndex + 2].str
                 // poData.deliveryAddress =
@@ -382,6 +395,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 let currencyIndex;
                 let transModeIndex;
                 let deliveryAddressIndexMx;
+                let totalQuantityIndexMx;
                 for (const [ind, ele] of firstPageContent.entries()) {
                     // if (ele.str == PO_NUMBER_TEXT) {
                     //     poNumberTextIndex = ind
@@ -415,6 +429,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                     if (ele.str == DELIVERY_ADDRESS_MX) {
                         deliveryAddressIndexMx = ind
                     }
+                    if (ele.str == TOTAL_QUANTITY_MX) {
+                        totalQuantityIndexMx = ind
+                    }
 
                 }
                 poData.poNumber = firstPageContent[mxPoNumberTextIndex + 1].str.replace(/#/g, "").trim();
@@ -432,6 +449,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 deliveryAddress = deliveryAddress.trim().replace(/(\d+|\d.\d+|,|\d+.)$/, '');
                 poData.deliveryAddress = deliveryAddress.trim();
 
+                poData.totalQuantity = firstPageContent[totalQuantityIndexMx - 1].str
 
                 // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
                 // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str

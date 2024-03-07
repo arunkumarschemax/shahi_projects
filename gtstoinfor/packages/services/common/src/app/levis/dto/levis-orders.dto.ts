@@ -77,6 +77,9 @@ g
     @ApiProperty()
     splitPo: string
 
+    @ApiProperty()
+    totalQuantity:string
+
 
 
 

@@ -162,5 +162,11 @@ export class LevisOrdersEntity {
     })
     splitPo: string
 
+    @Column("varchar", {
+        name: "total_quantity",
+    })
+    totalQuantity:string
+
+
 
 }

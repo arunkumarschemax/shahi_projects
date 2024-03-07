@@ -7,6 +7,7 @@ export class LevisPoDetails {
     currency: string;
     poRemarks: string;
     splitPo: string;
+    totalQuantity:string;
     // poDate: string;
     // shipment: string;
     // season: string;

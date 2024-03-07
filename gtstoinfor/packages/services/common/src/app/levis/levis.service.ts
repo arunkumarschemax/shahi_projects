@@ -189,6 +189,7 @@ export class LevisService {
           entity.currency = req.currency
           entity.poRemarks = req.poRemarks
           entity.splitPo = req.splitPo
+          entity.totalQuantity = req.totalQuantity
 
           entity.poLine = item.poLine
           entity.material = item.material
@@ -213,7 +214,7 @@ export class LevisService {
           if (orderData) {
             const update = await transactionManager.getRepository(LevisOrdersEntity).update(
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
-              {deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo,
+              {deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo,totalQuantity:req.totalQuantity,
                 material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
                 itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
               }
@@ -228,6 +229,7 @@ export class LevisService {
             entitys.currency = req.currency
             entitys.poRemarks = req.poRemarks
             entitys.splitPo = req.splitPo
+            entitys.totalQuantity = req.totalQuantity
 
             entitys.poLine = item.poLine
             entitys.material = item.material
@@ -262,6 +264,7 @@ export class LevisService {
             entitys.currency = req.currency
             entitys.poRemarks = req.poRemarks
             entitys.splitPo = req.splitPo
+            entitys.totalQuantity = req.totalQuantity
 
             entitys.poLine = item.poLine
             entitys.material = item.material
