@@ -5,6 +5,7 @@ import { StyleComboEntity } from "./style-combo-entity";
 import { PoBomEntity } from "./po-bom.entity";
 import { ItemEntity } from "./item-entity";
 import { Exclude } from 'class-transformer';
+import { sequenceEqual } from "rxjs";
 
 @Entity('bom')
 export class BomEntity {
@@ -13,55 +14,59 @@ export class BomEntity {
     })
     id: number;
 
-    @Column('text',{
-        name:'description',
-        nullable:false
+    @Column('text', {
+        name: 'description',
+        nullable: false
     })
-    description:string
+    description: string
 
-    @Column('varchar',{
-        name:'im_code',
-        nullable:false
+    @Column('varchar', {
+        name: 'im_code',
+        nullable: false
     })
-    imCode:string
+    imCode: string
 
-    
-    @Column('varchar',{
-        name:'item_name',
-        nullable:false
+    @Column('varchar', {
+        name: 'item_name',
+        nullable: false
     })
-    itemName:string    
+    itemName: string
 
+    @Column('varchar', {
+        name: 'item_type',
+        nullable: false
+    })
+    itemType: string
 
-    @Column('varchar',{
-        name:'item_type',
-        nullable:false
+    @Column('varchar', {
+        name: 'item_type_one',
+        nullable: false
     })
-    itemType:string
+    itemTypeOne: string
 
-    @Column('varchar',{
-        name:'item_type_one',
-        nullable:false
+    @Column('int', {
+        name: 'sequence',
+        nullable: true
     })
-    itemTypeOne:string
+    sequence: number
 
-    @Column('text',{
-        name:'use',
-        nullable:false
+    @Column('text', {
+        name: 'use',
+        nullable: false
     })
-    use:string
+    use: string
 
-    @Column('varchar',{
-        name:'uom',
-        nullable:false
+    @Column('varchar', {
+        name: 'uom',
+        nullable: false
     })
-    uom:string
-    
-    @Column('varchar',{
-        name:'qty',
-        nullable:false
+    uom: string
+
+    @Column('varchar', {
+        name: 'qty',
+        nullable: false
     })
-    qty:string
+    qty: string
 
     @CreateDateColumn({
         name: 'created_at'
@@ -100,17 +105,17 @@ export class BomEntity {
     })
     isActive: boolean;
 
-    @ManyToOne(type=> StyleEntity, style =>style.bomEntity)
+    @ManyToOne(type => StyleEntity, style => style.bomEntity)
     @JoinColumn({ name: 'style_id' })
-    styleEnityy:StyleEntity
-    
-    @OneToMany(type => StyleComboEntity,styleCombo =>styleCombo.bomEntity,{cascade:true})
-    styleComboEntity:StyleComboEntity[]
+    styleEnityy: StyleEntity
 
-    @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
-    poBom:PoBomEntity
+    @OneToMany(type => StyleComboEntity, styleCombo => styleCombo.bomEntity, { cascade: true })
+    styleComboEntity: StyleComboEntity[]
 
-    @ManyToOne(type=> ItemEntity, item =>item.bomEntity)
+    @OneToMany(type => PoBomEntity, poBom => poBom.bom)
+    poBom: PoBomEntity
+
+    @ManyToOne(type => ItemEntity, item => item.bomEntity)
     @JoinColumn({ name: 'item_id' })
-    itemEntity:ItemEntity
+    itemEntity: ItemEntity
 }

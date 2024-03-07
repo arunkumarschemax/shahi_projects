@@ -177,7 +177,7 @@ export const WasCarelabel = (props: washCareprops) => {
 
 
     const itemWiseGroup = data.reduce((acc, row) => {
-        const { itemNo, geoCode, destination ,styleNumber} = row;
+        const { itemNo, geoCode, destination, styleNumber } = row;
         const key = `${itemNo}_${geoCode}_${styleNumber}`;
 
         // If the destination is Brazil, include it in the key
@@ -250,7 +250,7 @@ export const WasCarelabel = (props: washCareprops) => {
                             {
                                 sizes.map((size) => {
                                     total += s[size] ? Number(s[size]) : 0
-                                    return <th>{s[size] ? s[size] : 0}</th>
+                                    return <td>{s[size] ? s[size] : 0}</td>
 
                                 })
                             }
@@ -311,7 +311,6 @@ export const WasCarelabel = (props: washCareprops) => {
                             <tr>
                                 <td style={{ width: '50px' }}>110044</td>
                                 {
-
                                     data[0].chinaSizes.map((c) => {
                                         return <td style={{ width: '50px' }}>{c.qty}</td>
                                     })
@@ -328,21 +327,25 @@ export const WasCarelabel = (props: washCareprops) => {
                             <tr></tr>
                             <tr></tr>
                             <tr>
-                                <th style={{ width: '50px' }}>IM#</th>
-                                {
-
-                                    data[0].indonesiaSize?.map((h) => {
-                                        return <th style={{ width: '50px' }}>{h.size}</th>
-                                    })
-                                }
+                                <th style={{ width: '50px', textAlign: 'center' }}>ITEM#</th>
+                                <th style={{ width: '50px', textAlign: 'center' }}>IM#</th>
+                                <th style={{ width: '50px', textAlign: 'center' }}>PO#</th>
+                                <th style={{ width: '50px', textAlign: 'center' }}>STYLE#</th>
+                                <th style={{ width: '50px', textAlign: 'center' }}>DESTINATION</th>
+                                <th style={{ width: '50px', textAlign: 'center' }}>QTY</th>
                             </tr>
                             <tr>
-                                <td style={{ width: '50px' }}>574080</td>
+                                <td style={{ width: '50px', textAlign: 'center' }}>{data[0].itemNo}</td>
+                                <td style={{ width: '50px', textAlign: 'center' }}>574080</td>
+                                <td style={{ width: '50px', textAlign: 'center' }}>{data[0].poNumber}</td>
+                                <td style={{ width: '50px', textAlign: 'center' }}>{data[0].styleNumber}</td>
+                                <td style={{ width: '50px', textAlign: 'center' }}>{data[0].destination.toUpperCase()}</td>
                                 {
-
-                                    data[0].indonesiaSize.map((c) => {
-                                        return <td style={{ width: '50px' }}>{c.qty}</td>
-                                    })
+                                    <td style={{ width: '50px', textAlign: 'center' }}>
+                                        {data[0].indonesiaSize.reduce((accumulator, currentValue) => {
+                                            return accumulator + currentValue.qty;
+                                        }, 0)}
+                                    </td>
                                 }
                             </tr>
                             <tr></tr>
@@ -392,7 +395,7 @@ export const WasCarelabel = (props: washCareprops) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {itemWiseGroup[itemNo].map((row, index) => (
+                                        {itemWiseGroup[itemNo].filter(rec => rec.displayInMainReq != false).map((row, index) => (
                                             <tr key={index}>
                                                 <td style={{ textAlign: 'center' }}>{row.itemNo}</td>
                                                 <td style={{ textAlign: 'center' }}>{row.poNumber}</td>
