@@ -797,42 +797,57 @@ export const SampleDevNewView = () => {
 
   const handleTrimDownload = (record) => {
     console.log(record);
-    const req = new SampleItemIdRequest(record.trim_info_id);
-    service.getTrimPaths(req).then(res => {
-      if (res.status) {
-        createItemZipFile(res.data.map(file => {
-          return {
-            ['name']: "",
-            ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
-          }
-        }), record.requestNo,"TRIM");
-      }
-      else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
+    const imageUrl = record.filePath;
+    
+    // Create a temporary anchor element
+    const anchor = document.createElement('a');
+    anchor.href = imageUrl;
+    anchor.download = 'Trim.jpg';
+    anchor.click();
+    // const req = new SampleItemIdRequest(record.trim_info_id);
+    // service.getTrimPaths(req).then(res => {
+    //   if (res.status) {
+    //     createItemZipFile(res.data.map(file => {
+    //       return {
+    //         ['name']: "",
+    //         ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
+    //       }
+    //     }), record.requestNo,"TRIM");
+    //   }
+    //   else {
+    //     AlertMessages.getErrorMessage(res.internalMessage);
+    //   }
+    // }).catch(err => {
+    //   AlertMessages.getErrorMessage(err.message)
+    // })
   }
 
   const handleFabDownload = (record) => {
     console.log(record);
-    const req = new SampleItemIdRequest(record.fabric_info_id);
-    service.getFabricPaths(req).then(res => {
-      if (res.status) {
-        createItemZipFile(res.data.map(file => {
-          return {
-            ['name']: "",
-            ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
-          }
-        }), record.requestNo,"FABRIC");
-      }
-      else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    }).catch(err => {
-      AlertMessages.getErrorMessage(err.message)
-    })
+    console.log(record);
+    const imageUrl = record.filePath;
+    
+    // Create a temporary anchor element
+    const anchor = document.createElement('a');
+    anchor.href = imageUrl;
+    anchor.download = 'Fabric.jpg';
+    anchor.click();
+    // const req = new SampleItemIdRequest(record.fabric_info_id);
+    // service.getFabricPaths(req).then(res => {
+    //   if (res.status) {
+    //     createItemZipFile(res.data.map(file => {
+    //       return {
+    //         ['name']: "",
+    //         ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
+    //       }
+    //     }), record.requestNo,"FABRIC");
+    //   }
+    //   else {
+    //     AlertMessages.getErrorMessage(res.internalMessage);
+    //   }
+    // }).catch(err => {
+    //   AlertMessages.getErrorMessage(err.message)
+    // })
   }
 
   const HeaderRow = (props: any) => {

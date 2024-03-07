@@ -215,35 +215,35 @@ export class SampleDevReqController {
     storage: diskStorage({
       // destination: './upload-files/manisha-123',
       // destination: `./upload-files/PO-${req}`,
-      destination: (req, file, callback) => {
-        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        // console.log(req.body);
-
-        // console.log(file);
-        const destinationPath = join(__dirname, '../../../../',`upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
-
-        // const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
-        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
-
-        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
-
-        try {
-          // Attempt to create the directory if it doesn't exist
-          fs.mkdirSync(destinationPath, { recursive: true });
-          callback(null, destinationPath);
-        } catch (error) {
-          console.error('Error creating directory:', error);
-          callback(error, null);
-        }
-      },
       // destination: (req, file, callback) => {
-      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      //   // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+      //   // console.log(req.body);
+
+      //   // console.log(file);
+      //   const destinationPath = join(__dirname, '../../../../',`upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
+
+      //   // const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+      //   // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
+      //   // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+
+      //   try {
+      //     // Attempt to create the directory if it doesn't exist
+      //     fs.mkdirSync(destinationPath, { recursive: true });
+      //     callback(null, destinationPath);
+      //   } catch (error) {
+      //     console.error('Error creating directory:', error);
+      //     callback(error, null);
+      //   }
       // },
+      destination: (req, file, callback) => {
+        callback(null, join(__dirname, '../../../../',`upload_files`));
+      },
       filename: (req, file, callback) => {
         // console.log(req);
         // console.log(file);
         // console.log("************************************************************************************************");
-        const name = file.originalname.split('.')[0];
+        const name = `Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}_`+file.originalname.split('.')[0];
         const fileExtName = extname(file.originalname);
         const randomName = Array(4)
           .fill(null)
@@ -272,36 +272,36 @@ export class SampleDevReqController {
     storage: diskStorage({
       // destination: './upload-files/manisha-123',
       // destination: `./upload-files/PO-${req}`,
-      destination: (req, file, callback) => {
-        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        // console.log(req.body);
-
-        // console.log(file);
-
-        const destinationPath = join(__dirname, '../../../../',`upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
-
-        // const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
-        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
-
-        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
-
-        try {
-          // Attempt to create the directory if it doesn't exist
-          fs.mkdirSync(destinationPath, { recursive: true });
-          callback(null, destinationPath);
-        } catch (error) {
-          console.error('Error creating directory:', error);
-          callback(error, null);
-        }
-      },
       // destination: (req, file, callback) => {
-      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      //   // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+      //   // console.log(req.body);
+
+      //   // console.log(file);
+
+      //   const destinationPath = join(__dirname, '../../../../',`upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
+
+      //   // const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+      //   // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
+      //   // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+
+      //   try {
+      //     // Attempt to create the directory if it doesn't exist
+      //     fs.mkdirSync(destinationPath, { recursive: true });
+      //     callback(null, destinationPath);
+      //   } catch (error) {
+      //     console.error('Error creating directory:', error);
+      //     callback(error, null);
+      //   }
       // },
+      destination: (req, file, callback) => {
+        callback(null, join(__dirname, '../../../../',`upload_files`));
+      },
       filename: (req, file, callback) => {
         // console.log(req);
         // console.log(file);
         // console.log("************************************************************************************************");
-        const name = file.originalname.split('.')[0];
+        const name = `Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}_`+ file.originalname.split('.')[0];
         const fileExtName = extname(file.originalname);
         const randomName = Array(4)
           .fill(null)
@@ -319,6 +319,9 @@ export class SampleDevReqController {
   }))
   async trimUpload(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<UploadResponse> {
     try {
+      console.log("kkkkkkkkkkkkk");
+      console.log(file);
+      console.log(uploadData);
       return await this.sampleService.trimUpload(file, uploadData.fabIds)
     } catch (error) {
       return this.applicationExceptionHandler.returnException(UploadResponse, error);
