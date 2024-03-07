@@ -59,11 +59,16 @@ export function SizehtLabel(props:SizehtLabelProps){
 
 
     const allSizes = new Set();
+    const allTallSizes = new Set()
     data.forEach(item => {
         item?.sizeWiseQty?.forEach(sizeQty => {
             allSizes.add(sizeQty.size);
         });
+        item?.extraSizeWiseQty?.forEach(extSize =>{
+            allTallSizes.add(extSize.size) 
+        })
     });
+
     const newData = data.map(item => {
         const sizesWithQty = Array.from(allSizes).map(size => {
             const existingSize = item.sizeWiseQty.find(sq => sq.size === size);
@@ -72,10 +77,18 @@ export function SizehtLabel(props:SizehtLabelProps){
                 qty: existingSize ? existingSize.qty : 0
             };
         });
+        const tallSizeWithQty = Array.from(allTallSizes).map(extSize =>{
+            const extraSize = item.extraSizeWiseQty.find(sq =>sq.size === extSize)
+            return{
+                size:extSize,
+                qty:extraSize ?extraSize.qty: 0
+            }
+        })
     
         return {
             // imcode: item.imcode,
-            sizewiseqty: sizesWithQty
+            sizewiseqty: sizesWithQty,
+            tallSizes :tallSizeWithQty
         };
     });
 console.log(newData)
@@ -136,6 +149,9 @@ return(
                 <th>{'FABRIC CODE'}</th>
                 <th>{'FABRIC CONTENT'}</th>
                 <th>{'HT LEBEL COLORS'}</th>
+                {newData[0]?.tallSizes?.map((e, index) => {
+                    return (<th style={{ width: '50px' }}>{e.size}</th>);
+                })}
             </tr>
             {data.map((rec,index) =>{
                 return(
@@ -145,6 +161,14 @@ return(
                         <td>{rec.season}</td>
                         <td>{'723459/'+rec.imCode+'-TALL'}</td>
                         <td>{'STANDARD'}</td>
+                        <td>{'GMT CODE-' + `${rec.combination}`}</td>
+                        <td>{'A0729274'}</td>
+                        <td>{'83% POLYESTER,10%SPANDEX,7% LYOCELL;'}</td>
+                        <td>{rec.itemColor}</td>
+                        {newData[0]?.tallSizes?.map((sizeData, sizeIndex) => {
+                        const sizeWiseQty = rec.extraSizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
+                        return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>;
+                    })}
                     </tr>:<></>
                 )
                 
