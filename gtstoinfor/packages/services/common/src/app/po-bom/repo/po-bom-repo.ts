@@ -199,6 +199,9 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 productCode: item.productCode,
                 styleCombo: item.stcomboId,
                 bomId: item.bomId,
+                bQty:item.bQty,
+                attribute:item.attribute,
+                attributeValue:item.attributeValue,
                 totalGarmentQty: item.totalGarmentQty
             });
         });

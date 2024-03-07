@@ -16,6 +16,7 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
+import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
@@ -42,6 +43,7 @@ export default function GenerateProposal(props: Props) {
 
 
   const [elasticData, setElasticData] = useState<any>([]);
+  const [countrySticker,setCountrySticker]= useState<any>([])
   const [swoosth,setSwoosthData]= useState<any>([])
   const [htLabel, setHtlabel] = useState<any>([])
 
@@ -68,6 +70,7 @@ export default function GenerateProposal(props: Props) {
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
@@ -172,6 +175,17 @@ export default function GenerateProposal(props: Props) {
     service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
         setNeckTapeData(v.data)
+      }
+    })
+  }
+  function handleCountrySticker(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+   
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setCountrySticker(res.data)
       }
     })
   }
@@ -390,7 +404,6 @@ export default function GenerateProposal(props: Props) {
   }
   const onView = (val) => {
     console.log(val.item)
-    console.log(val.itemId)
 
     setTrimName(val.item)
     setModalOpen(true)
@@ -435,6 +448,9 @@ export default function GenerateProposal(props: Props) {
      if(val.item === 'Snap Button'){
       handleButtonTrim(val.itemId)
     }
+    if(val.item === 'Country Sticker'){
+      handleCountrySticker(val.itemId)
+    } 
   }
 
 

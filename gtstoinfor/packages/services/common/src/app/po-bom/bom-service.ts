@@ -786,7 +786,7 @@ export class BomService {
         // console.log(poBomZfactorData, '---po bom zfactord data')
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode,bBomQty,poQty } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute,attributeValue,productCode,bQty,poQty } = currentItem;
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
@@ -809,8 +809,10 @@ export class BomService {
                     color,
                     itemColor,
                     productCode,
-                    bBomQty,
+                    bQty,
                     poQty,
+                    attribute,
+                    attributeValue,
                     sizeWiseQty: [],
                     // colorData: []
                 };
