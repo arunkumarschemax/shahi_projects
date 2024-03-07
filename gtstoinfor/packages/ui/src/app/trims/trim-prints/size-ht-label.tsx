@@ -80,6 +80,11 @@ export function SizehtLabel(props:SizehtLabelProps){
     });
 console.log(newData)
 
+
+
+
+
+
 return(
    <>
    <Card title={'Size Ht Label'}>
@@ -104,24 +109,16 @@ return(
                         <td>{rec.itemNo}</td>
                         <td>{rec.styleNumber}</td>
                         <td>{rec.season}</td>
-                        <td>{rec.imCode}</td>
+                        <td>{'723459/'+rec.imCode}</td>
                         <td>{'STANDARD'}</td>
                         <td>{'GMT CODE-' + `${rec.combination}`}</td>
                         <td>{'A0729274'}</td>
                         <td>{'83% POLYESTER,10%SPANDEX,7% LYOCELL;'}</td>
                         <td>{rec.itemColor}</td>
-                        {/* {newData.map((rec,index) =>{
-                  return  rec.sizewiseqty.map((e) =>{
-                        return(<td>{e.qty?e.qty:'0'}</td>)
-                    })
-                    })
-                } */}
-                  {newData.map((item, idx) => {
-                const sizeData = item.sizewiseqty.find(e => e.size === rec.imCode);
-                return (
-                        <td key={idx}>{sizeData ? sizeData.qty : '0'}</td>
-                    );
-                })}
+                {newData[0]?.sizewiseqty?.map((sizeData, sizeIndex) => {
+                        const sizeWiseQty = rec.sizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
+                        return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>;
+                    })}
                     </tr>
                 );
             })}
@@ -139,8 +136,19 @@ return(
                 <th>{'FABRIC CODE'}</th>
                 <th>{'FABRIC CONTENT'}</th>
                 <th>{'HT LEBEL COLORS'}</th>
-
             </tr>
+            {data.map((rec,index) =>{
+                return(
+                    rec.extraSizeWiseQty.length >0?<tr>
+                       <td>{rec.itemNo}</td>
+                        <td>{rec.styleNumber}</td>
+                        <td>{rec.season}</td>
+                        <td>{'723459/'+rec.imCode+'-TALL'}</td>
+                        <td>{'STANDARD'}</td>
+                    </tr>:<></>
+                )
+                
+            })}
         </table>
    </Card>
    </>
