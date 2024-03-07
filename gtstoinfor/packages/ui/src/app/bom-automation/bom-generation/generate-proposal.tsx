@@ -70,7 +70,7 @@ export default function GenerateProposal(props: Props) {
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
+    "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
     "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
