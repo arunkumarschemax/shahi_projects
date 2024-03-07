@@ -5,6 +5,8 @@ export class LevisPoDetails {
     deliveryAddress: string;
     // transMode: string;
     currency: string;
+    poRemarks: string;
+    splitPo: string;
     // poDate: string;
     // shipment: string;
     // season: string;

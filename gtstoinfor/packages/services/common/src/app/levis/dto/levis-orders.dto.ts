@@ -71,6 +71,12 @@ g
     updatedUser: string | null;
     poItemDetails: any;
 
+    @ApiProperty()
+    poRemarks: string
+
+    @ApiProperty()
+    splitPo: string
+
 
 
 

@@ -99,6 +99,34 @@ export const extractDataFromPoPdf = async (pdf) => {
                     i--;
                 }
                 poData.deliveryAddress = deliveryAddress.trim().replace(/^\d+\s*|\s*\d+$/g, "").replace(/\d+,/g, "");
+
+                const poRemarksRegex = /PO REMARKS/;
+                const poRemarksMatchIndex = firstPageContent.findIndex(item => poRemarksRegex.test(item.str));
+                if (poRemarksMatchIndex !== -1) {
+                    const prevItemIndex = poRemarksMatchIndex - 1;
+                    const prevItem = firstPageContent[prevItemIndex];
+                    if (prevItem && /Split to/.test(prevItem.str)) {
+                        poData.poRemarks = prevItem.str;
+                    } else {
+                        poData.poRemarks = "-";
+                    }
+                } else {
+                    poData.poRemarks = "-";
+                }
+
+                const splitPoAndPoRemarks = /PO REMARKS/;
+                const SplitPoMatchIndex = firstPageContent.findIndex(item => splitPoAndPoRemarks.test(item.str));
+                if (SplitPoMatchIndex !== -1) {
+                    const prevItemIndex = SplitPoMatchIndex - 1;
+                    const prevItem = firstPageContent[prevItemIndex];
+                    if (prevItem && /Split to/.test(prevItem.str)) {
+                        poData.splitPo = (prevItem.str.match(/\d{10}$/) || [""])[0];
+                    } else {
+                        poData.splitPo = "-";
+                    }
+                } else {
+                    poData.splitPo = "-";
+                }
                 // poData.transMode =
                 //     (firstPageContent[transModeLseIndex + 2].str + " " +
                 //         firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
