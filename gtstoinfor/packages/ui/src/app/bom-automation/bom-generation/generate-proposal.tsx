@@ -155,7 +155,7 @@ export default function GenerateProposal(props: Props) {
     })
   }
   
- 
+
   function handleDrawcord(itemId){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
