@@ -15,6 +15,7 @@ import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import { BackingPaper } from '../../trims/trim-prints';
+import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
   poLine: string[]
 }
@@ -61,7 +62,9 @@ export default function GenerateProposal(props: Props) {
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
-    "Backing Paper": <BackingPaper bomInfo={buttonData}/>
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Snap Button": <SnapButton bomInfo={buttonData}/>
+
   }
 
   const onCancel = () => {
@@ -370,6 +373,9 @@ export default function GenerateProposal(props: Props) {
       handleInterlining(val)
     }
     if(val.item === 'Backing Paper'){
+      handleButtonTrim(val.itemId)
+    }
+    if(val.item === 'Snap Button'){
       handleButtonTrim(val.itemId)
     }
   }
