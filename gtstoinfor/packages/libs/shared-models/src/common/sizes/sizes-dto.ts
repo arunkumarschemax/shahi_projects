@@ -17,6 +17,8 @@ export class SizeDto {
     updatedUser : string;
 
     versionFlag : number;
+    buyerId? : number;
+
 }
 
 export const sizeDtoDefault : SizeDto = {

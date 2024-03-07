@@ -11,30 +11,46 @@ import { ColourRequest } from './dto/colour-request';
 // import { ColourRequestDto } from '@project-management-system/shared-models';
 // import { Console } from 'console';
 import { ColourDTO } from './dto/colour-dto';
+import { BuyerDestinationService } from 'packages/libs/shared-services/src/common';
 
 @Injectable()
 export class ColourService{
     constructor(
         @InjectRepository(Colour)
-
         private ColourRepository: Repository<Colour>,
         private ColourAdapter: ColourAdapter,
+        private buyersDestinationService:BuyerDestinationService
+
       ){}
-      async getColourWithoutRelations(Colour: string): Promise<Colour>{
+      async getColourWithoutRelations(Colour: string, bbuyerId:number): Promise<Colour>{
+        console.log(bbuyerId)
         const colourResponse = await this.ColourRepository.findOne({
           where: {colour: Raw(alias => `colour = '${Colour}'`)},
         });
-        if(colourResponse){
-          return colourResponse;
+        console.log(colourResponse)
+        if(colourResponse!=null){
+          console.log("kkkkk")
+          const buyerDest = await this.buyersDestinationService.getBuyerColorDuplicate({buyerId:bbuyerId,trimType:"",trimCatId:0,trimMapId:0,colorId:colourResponse.colourId})
+          // ({where:{buyerInfo:{buyerId:buyerId}, colorInfo:{colourId:colourResponse.colourId}}})
+          console.log("********buyerDest***********");
+          console.log(buyerDest);
+          if(buyerDest.status){
+            return colourResponse;
+          }
+          else{
+            return colourResponse;
+          }
         }
         else{
+          console.log("tttttttttttt")
+
           return null;
         }
       }
 
 
       async createColour(colourDto: ColourDTO, isUpdate: boolean): Promise<ColourResponseModel>{
-        // console.log('ertyudfghjk============',isUpdate)
+        console.log(colourDto)
         // const response = new ProfitControlHeadResponseModel();
         try{
           let previousValue
@@ -42,10 +58,12 @@ export class ColourService{
 
           if(!isUpdate){
 
-            const colourEntity = await this.getColourWithoutRelations(colourDto.colour);
-            if (colourEntity){
+            const colourEntity = await this.getColourWithoutRelations(colourDto.colour,colourDto.buyerId);
+            console.log(colourEntity);
+
+            if (colourEntity!=null){
                 // console.log(colourEntity,'------')
-              throw new ColourResponseModel(false,11104, 'Colour already exists'); 
+              throw new ColourResponseModel(false,11104, 'Colour already exists',[colourEntity]); 
             }
           }
           else{
@@ -53,11 +71,13 @@ export class ColourService{
 
             const certificatePrevious = await this.ColourRepository.findOne({where:{colourId:colourDto.colourId}})
             previousValue =(certificatePrevious.colour)
-            const ColourEntity = await this.getColourWithoutRelations(colourDto.colour);
+            const ColourEntity = await this.getColourWithoutRelations(colourDto.colour,colourDto.buyerId);
+            console.log(ColourEntity);
+
             // console.log('ertyudfghjk============',certificatePrevious)
-            if (ColourEntity){
+            if (ColourEntity!=null){
               if(ColourEntity.colour != colourDto.colour ){
-                throw new ColourResponseModel(false,11104, 'Colour already exists'); 
+                throw new ColourResponseModel(false,11104, 'Colour already exists',[ColourEntity]); 
               }
             }
           }

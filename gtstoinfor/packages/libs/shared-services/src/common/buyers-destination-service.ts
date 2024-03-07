@@ -30,5 +30,12 @@ export class BuyerDestinationService  extends CommonAxiosService{
     async getAllColorsAgainstBuyer(req:BuyerIdReq):Promise<CommonResponseModel>{
         return this.axiosPostCall(this.URL + '/getAllColorsAgainstBuyer',req)
     }
+    async getBuyerColorDuplicate(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getBuyerColorDuplicate',req)
+    }
+
+    async getBuyerSizeDuplicate(req:BuyerIdReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getBuyerSizeDuplicate',req)
+    }
 
 }

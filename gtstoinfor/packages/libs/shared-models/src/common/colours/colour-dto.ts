@@ -7,6 +7,8 @@ export class ColourDto {
     updatedAt : Date | any;
     updatedUser : string;
     versionFlag : number;
+    buyerId? : number;
+
 }
 
 export const colourDtoDefault : ColourDto = {
