@@ -15,6 +15,9 @@ import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
+import { BackingPaper } from '../../trims/trim-prints';
+import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
   poLine: string[]
 }
@@ -35,6 +38,8 @@ export default function GenerateProposal(props: Props) {
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
+  const [mobilontape, setMobilontape] = useState<any>([])
+
 
   const [elasticData, setElasticData] = useState<any>([]);
   const [swoosth,setSwoosthData]= useState<any>([])
@@ -56,14 +61,19 @@ export default function GenerateProposal(props: Props) {
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={interlining}/>,
-    "Drawcords":<Drawcord bomInfo={buttonData}/>,
+    "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
-    "Swoosh HT label":<SwooshHtLable bomInfo={swoosth} />,
+    "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
+    "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
+
   }
+
 
   const onCancel = () => {
     setModalOpen(false)
@@ -98,9 +108,13 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
+        
         setButtonData(v.data)
+        console.log(v.data,"ppppppppppppppppp");
       }
     })
   }
@@ -155,9 +169,9 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    service.generateProposalForButton(bomProposalReq).then((v) => {
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
-        setButtonData(v.data)
+        setNeckTapeData(v.data)
       }
     })
   }
@@ -170,6 +184,30 @@ export default function GenerateProposal(props: Props) {
       setHtlabel(v.data)
     })
   }
+
+
+  function handleMobilontape(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setNeckTapeData(v.data)
+      }
+    })
+  }
+
+
+  // function handleDrawcord(itemId){
+  //   const bomProposalReq = new BomProposalReq()
+  //   bomProposalReq.itemId = [itemId]
+  //   bomProposalReq.poLine = props.poLine
+  //   service.generateProposalForButton(bomProposalReq).then((v) => {
+  //     if (v.status) {
+  //       setButtonData(v.data)
+  //     }
+  //   })
+  // }
 
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
@@ -352,6 +390,8 @@ export default function GenerateProposal(props: Props) {
   }
   const onView = (val) => {
     console.log(val.item)
+    console.log(val.itemId)
+
     setTrimName(val.item)
     setModalOpen(true)
     if(val.item === 'Jocktage Label'){
@@ -384,6 +424,17 @@ export default function GenerateProposal(props: Props) {
       handleSizeHtLabel(val.itemId)
     }
    
+    if(val.item === 'Swoosh HT label'){
+      handleButtonTrim(val.itemId)
+    } 
+
+    if(val.item === 'Mobilon Tape'){
+      handleMobilontape(val.itemId)
+    } 
+    
+     if(val.item === 'Snap Button'){
+      handleButtonTrim(val.itemId)
+    }
   }
 
 

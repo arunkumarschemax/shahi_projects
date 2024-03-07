@@ -71,6 +71,7 @@ import Interlining from "./trims/trim-prints/interlining-prints"
 import Drawcord from "./trims/trim-prints/drawcord"
 import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
 import Elastic from "./trims/trim-prints/elastic-print"
+import Mobilontape from "./trims/trim-prints/mobilon-tape"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -180,7 +181,7 @@ export const AppRoutes = () => {
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
-                    <Route path='backing-paper' element={<BackingPaper />} />
+                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns />} />
                     {/* <Route path='hang-tag' element={<HangTag />} /> */}
@@ -210,6 +211,7 @@ export const AppRoutes = () => {
                     <Route path='drawcord' element={<Drawcord bomInfo={[]} />} />
                     <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} />
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
+                    <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
 
                     
                 </Route>
@@ -236,7 +238,9 @@ export const AppRoutes = () => {
                     <Route path='button1' element={<Button1Print />} />
                     <Route path='button2' element={<Button2Print />} />
                     <Route path='button3' element={<Button3Print bomInfo={''}/>} />
-                    <Route path='backing-paper' element={<BackingPaper />} />
+                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
+                    {/* <Route path='snap-button' element={<SnapButton bomInfo={undefined} />} /> */}
+
                 </Route>
             </Route>
             <Route path="/login" element={<Login />} />

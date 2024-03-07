@@ -14,13 +14,12 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
       }
   });
 };
-export interface DrawcordProps {
+export interface MobilonTapeProps {
     bomInfo: any
 }
-export const  Drawcord = (props: DrawcordProps) => {
+export const  Mobilontape = (props: MobilonTapeProps) => {
 console.log(props.bomInfo)
  const data=props.bomInfo
- const [drawcord, setDrawcord] = useState<any>([])
 
 
  const handlePrint = () => {
@@ -119,14 +118,13 @@ console.log(props.bomInfo)
           >
             <thead>
               <tr>
+              <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
                 <th style={tableCellStyle}>ITEM</th>
                 <th style={tableCellStyle}>STYLE</th>
-                <th style={tableCellStyle}>SEASON</th>
-                <th style={tableCellStyle}>IM#</th>
-                <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-                <th style={tableCellStyle}>GARMENT COLOR CODE</th>
-                <th style={tableCellStyle}>TAPE COLOR</th>
-                <th style={tableCellStyle}>QTY IN YARDS</th>
+                <th style={tableCellStyle}>UNIT</th>
+                <th style={tableCellStyle}>GARMENT QTY</th>
+                <th style={tableCellStyle}>CONSUMPTION MTR</th>
+                <th style={tableCellStyle}>QTY IN KG</th>
               </tr>
             </thead>
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
@@ -168,33 +166,29 @@ console.log(props.bomInfo)
       groupedData[key].push(item);
     });
   
-    // Generate rows based on grouped data
     return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
       <React.Fragment key={groupIndex}>
         {group.map((item, index) => (
           <tr key={`${groupIndex}-${index}`}>
             {index === 0 && (
               <>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
                   {item.itemNo}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
                   {item.styleNumber}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
-                  {`${item.season}${item.year.slice(2)}`}
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
+                  {item.season}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
                   {item.imCode}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
                   {item.description}
                 </td>
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
       </React.Fragment>
@@ -205,7 +199,7 @@ console.log(props.bomInfo)
 
     <div id="print">
     {bomInfo && bomInfo.length > 0 ? (
-      <Card title={'DrawCord'} extra={<Button onClick={handlePrint}>Print</Button>}>
+      <Card title={'Mobilon Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
         {generateTables()}
       </Card>
     ) : (
@@ -213,40 +207,6 @@ console.log(props.bomInfo)
     )}
   </div>
 
-    // <Card title={'DrawCord'}
-    //             extra={<Button onClick={handlePrint}>Print</Button>}>
-    //  <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-    //             <tr>
-    //                 <th style={{ width: '3%' }}>ITEM</th>
-    //                 <th style={{ width: '3%' }}>STYLE</th>
-    //                 <th style={{ width: '3%' }}>SEASON</th>
-    //                 <th style={{ width: '3%' }}>IM#</th>
-    //                 <th style={{ width: '3%' }}>MATERIAL DESCRIPTION</th>
-    //                 <th style={{ width: '3%' }}>GARMENT COLOUR + CODE</th>
-    //                 <th style={{ width: '3%' }}>TAPE COLOUR</th>
-    //                 <th style={{ width: '3%' }}>QTY IN YDS</th>
-                  
-    //                 </tr>
-    //                 {data.map((rec,index) =>{
-    //                     return(
-    //                         <tr>
-    //                         <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
-    //                      </tr>
-    //                     )
-                      
-    //                 })}
-               
-    //         </table>
-
-      
-    // </Card>
   );
 };
 
@@ -254,4 +214,4 @@ console.log(props.bomInfo)
 
  
 
-export default Drawcord;
+export default Mobilontape;

@@ -6,8 +6,6 @@ const NeckType = (props) => {
   const [bomInfo, setBomInfo] = useState([]);
 
   const tableCellStyle = {
-    // border: '1px solid #dddddd',
-    // textAlign: 'left',
      padding: '8px',
   };
 
@@ -90,12 +88,13 @@ const NeckType = (props) => {
     }
     return null;
   };
+
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
       
       return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20%'}}>
+        <div key={index} style={{ marginBottom: '20px'}}>
           <h3>Item No: {itemNo}</h3>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
@@ -119,7 +118,7 @@ const NeckType = (props) => {
             <tfoot>
               <tr>
               <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>
+                <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
               </tr>
@@ -131,65 +130,108 @@ const NeckType = (props) => {
     return null;
   };
   const calculateTotalBomQty = (data) => {
+
     return data.reduce((total, item) => {
       const bomQtys = item?.colors.map(color => Number(color?.bomQty)) || [];
       const validQtys = bomQtys.filter(bomQty => !isNaN(bomQty));
       return total + validQtys.reduce((sum, qty) => sum + qty, 0);
     }, 0);
   };
-  
-  
+
   
   const generateRows = (data) => {
-    
-    return data.map((item, index) => (
-      <React.Fragment key={index}>
-        {index === 0 && (
-          <tr>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-              {item.itemNo}
-            </td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-              {item.styleNumber}
-            </td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  {`${item.season}${item.year.slice(2)}`}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-              {item.imCode}
-            </td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-              {item.description}
-            </td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors.color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.bomQty}</td>
-     
-          </tr>
-        )}
-     
-        {item.colors.slice(1).map((color, colorIndex) => (
-          // <tr key={`${index}-${colorIndex}`}>
-          <tr key={`${index}`}>
-
-            {index !== 0 && colorIndex === 0 && (
+    const groupedData = {};
+  
+    data.forEach((item) => {
+      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+      if (!groupedData[key]) {
+        groupedData[key] = [];
+      }
+      groupedData[key].push(item);
+    });
+  
+    // Generate rows based on grouped data
+    return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
+      <React.Fragment key={groupIndex}>
+        {group.map((item, index) => (
+          <tr key={`${groupIndex}-${index}`}>
+            {index === 0 && (
               <>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} colSpan={5}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.itemNo}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                  {item.styleNumber}
+                </td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                  {`${item.season}${item.year.slice(2)}`}
+                </td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                  {item.imCode}
+                </td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                  {item.description}
+                </td>
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.bomQty}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
       </React.Fragment>
     ));
   };
+  
+  
+  
+  // const generateRows = (data) => {
+    
+  //   return data.map((item, index) => (
+  //     <React.Fragment key={index}>
+  //       {index === 0 && (
+  //         <tr>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  //             {item.itemNo}
+  //           </td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  //             {item.styleNumber}
+  //           </td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  // {`${item.season}${item.year.slice(2)}`}</td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  //             {item.imCode}
+  //           </td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  //             {item.description}
+  //           </td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
+  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
+  //         </tr>
+  //       )}
+     
+  //       {item.colors.slice(1).map((color, colorIndex) => (
+  //           <tr key={`${index}-${colorIndex}`}>
+  //           {index !== 0 && colorIndex === 0 && (
+  //             <>
+  //               <td style={{ ...tableCellStyle, textAlign: 'center'}} >
+  //                 {item.itemNo}
+  //               </td>
+  //               <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
+  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
+  //             </>
+  //           )}
+  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
+  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
+  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.bomQty}</td>
+  //         </tr>
+  //       ))}
+  //     </React.Fragment>
+  //   ));
+  // };
   
  
   return (
@@ -206,3 +248,4 @@ const NeckType = (props) => {
 };
 
 export default NeckType;
+

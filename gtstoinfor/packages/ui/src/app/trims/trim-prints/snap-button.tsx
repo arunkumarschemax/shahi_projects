@@ -16,10 +16,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
         }
     });
 };
-export interface BackingPapertProps{
+export interface SnapButtonProps{
 bomInfo:any
 }
-export function BackingPaper(props:BackingPapertProps) {
+export function SnapButton(props:SnapButtonProps) {
 console.log(props.bomInfo,"********************************")
 const data = props.bomInfo
 console.log(props.bomInfo.map((e)=> e.itemId));
@@ -63,33 +63,39 @@ console.log(props.bomInfo.map((e)=> e.itemId));
    }
     return (
         <div  id='print'>
- <Card title={'BACKING PAPER'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+       <Card title={'Snap Button'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                 <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
                     <th style={{ width: '3%' }}>STYLE#</th>
-                    <th style={{ width: '3%' }}>TRIM</th>
+                    <th style={{ width: '3%' }}>SEASON</th>
+                    <th style={{ width: '3%' }}>MATERIAL</th>
+                    <th style={{ width: '3%' }}>MATERIAL DESCRIPTION</th>
                     <th style={{ width: '3%' }}>IM#</th>
-                    <th style={{ width: '5%' }}>DESC</th>
-                    <th style={{ width: '3%' }}>USED AT</th>
-                    <th style={{ width: '3%' }}>GMT CLR</th>
-                    <th style={{ width: '3%' }}>INTERLINING CLR</th>
-                    <th style={{ width: '3%' }}>REQ</th>
+                    <th style={{ width: '5%' }}>SANP SIZE</th>
+                    <th style={{ width: '3%' }}>SNAP COLOUR</th>
+                    <th style={{ width: '3%' }}>REQUIREMENT IN GROSS(With set)</th>
+                    <th style={{ width: '3%' }}>SUPPLIER</th>
                     </tr>
                     {data?.map((rec,index) =>{
-                      console.log(data,"LLLLLLLLLLLLLL");
+                    //   console.log(data,"LLLLLLLLLLLLLL");
                       
                         return(
                             <tr>
                             <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.trim !== null ? rec.trim:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.use !== null ? rec.use:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
+                            <td style={{ textAlign: 'center' }} >{'20L'}</td>
                             <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                                    {rec.bBomQty !== null && rec.poQty !== null && rec.bBomQty !== null ?
+                                                        (rec.bBomQty * rec.poQty * rec.bBomQty) : ''}
+                                                    </td>
+                            <td style={{ textAlign: 'center' }} >{}</td>
+
                          </tr>
                         )
                       
@@ -103,4 +109,4 @@ console.log(props.bomInfo.map((e)=> e.itemId));
 
 
 }
-export default BackingPaper
+export default SnapButton
