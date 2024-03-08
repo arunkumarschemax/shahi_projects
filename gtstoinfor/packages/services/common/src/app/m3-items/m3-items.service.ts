@@ -49,7 +49,7 @@ export class M3ItemsService {
   }
 
   async getKnittedFabric(): Promise<CommonResponseModel> {
-    let query = `SELECT b.buyer_name AS buyerName,m3i.item_code AS itemCode,m3i.knit_m3_code AS m3Code,m3i.knit_hsn AS hsn,ft.fabric_type_name AS fabricType,m3i.knit_type AS knitType,m3i.knit_weight AS weight,m3i.knit_yarn_count AS yarnCount,m3i.knit_gauze AS gauze,m3i.knite_remarks AS remarks,m3i.description FROM m3_items m3i left join buyers b on b.buyer_id = m3i.buyer_id LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.knitted_fabric_type_id where m3i.fabrics_type='knitted' order by b.buyer_name`
+    let query = `SELECT b.buyer_name AS buyerName,m3i.item_code AS itemCode,m3i.knit_m3_code AS m3Code,m3i.knit_hsn AS hsn,ft.fabric_type_name AS fabricType,m3i.knit_type AS knitType,m3i.knit_weight AS weight,m3i.knit_yarn_count AS yarnCount,m3i.knit_gauze AS gauze,m3i.knite_remarks AS remarks,m3i.description FROM m3_items m3i left join buyers b on b.buyer_id = m3i.buyer_id LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type where m3i.fabrics_type='knitted' order by b.buyer_name`
     const data = await this.datasource.query(query)
 
     if(data)
@@ -268,13 +268,13 @@ export class M3ItemsService {
 
 async getFabricTypes(): Promise<CommonResponseModel>{
   try{
-    let query = `
-    SELECT m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType
+    let query = `SELECT ft.type,m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType
     FROM m3_items m3i
     LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type
     GROUP BY ft.fabric_type_id
     ORDER BY ft.fabric_type_name`
     const data = await this.datasource.query(query)
+    console.log(data)
     if(data.length > 0){
       return new CommonResponseModel(true,1,'Data retrieved successfully',data)
     }else{
