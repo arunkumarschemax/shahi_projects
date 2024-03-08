@@ -5,11 +5,11 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { BomItemReq, ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, ItemNoDto, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { BomItemReq, ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, ItemNoDto, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, UpdateBomITemNoFilters, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { Between, DataSource, UpdateResult } from 'typeorm';
+import { Between, DataSource, In, UpdateResult } from 'typeorm';
 import { DpomChildEntity } from './entites/dpom-child.entity';
 import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
 import { DpomChildAdapter } from './dto/dpom-child.adapter';
@@ -66,7 +66,7 @@ export class DpomService {
             },
         });
     }
-    
+
     private logger = winston.createLogger({
         level: 'info',
         format: winston.format.json(),
@@ -75,7 +75,7 @@ export class DpomService {
             new winston.transports.File({ filename: 'email-service.log' }),
         ],
     });
-  
+
     async getOctaToken() {
         const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'January@123' }
         const headers = {
@@ -1414,12 +1414,12 @@ export class DpomService {
         }
     }
 
-    async getdpomDataForBom(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+    async getdpomDataForBom(req?: UpdateBomITemNoFilters): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getAllDpomDataForBom(req)
-        if(data.length >0){
-            return new CommonResponseModel(true,1,'Data Retrived Sucessfully',data)
-        }else{
-            return new CommonResponseModel(false,1,'No Data Found',[])
+        if (data.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', data)
+        } else {
+            return new CommonResponseModel(false, 1, 'No Data Found', [])
         }
     }
 
@@ -2877,38 +2877,31 @@ export class DpomService {
         }
     }
 
-async updateBomItems(req: BomItemReq): Promise<CommonResponseModel> {
-    try {
-        if (req.itemNo === undefined) {
-            return new CommonResponseModel(false, 0, 'Invalid itemNo');
+    async updateBomItems(req: BomItemReq): Promise<CommonResponseModel> {
+        try {
+            if (req.itemNo === undefined) {
+                return new CommonResponseModel(false, 0, 'Invalid itemNo');
+            }
+            const updateRes = await this.dpomRepository.update({ poAndLine: In(req.poAndLine) }, { bomItem: req.itemNo })
+
+            console.log(updateRes)
+            if (updateRes.affected > 0) {
+                return new CommonResponseModel(true, updateRes.affected, 'Data updated successfully');
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found to update');
+            }
+        } catch (error) {
+            console.error('Error updating BOM items:', error.message || error);
+            throw new CommonResponseModel(false, 0, 'Error updating BOM items');
         }
-
-        const query = `
-            UPDATE dpom
-            SET bom_item = '${req.itemNo}'
-            WHERE id IN (${req.id});
-        `;
-        const result = await this.dpomRepository.query(query, [req.itemNo, req.id]);
-
-        const rowsAffected = result.affectedRows;
-
-        if (rowsAffected > 0) {
-            return new CommonResponseModel(true, rowsAffected, 'Data updated successfully');
-        } else {
-            return new CommonResponseModel(false, 0, 'No data found to update');
-        }
-    } catch (error) {
-        console.error('Error updating BOM items:', error.message || error);
-        throw new CommonResponseModel(false, 0, 'Error updating BOM items');
     }
-}
-async getStyleNumberForItemUpdate(): Promise<CommonResponseModel> {
-    const data = await this.dpomRepository.getStyleNumberForItemUpdate()
-    if (data.length > 0)
-        return new CommonResponseModel(true, 1, 'data retrived', data)
-    else
-        return new CommonResponseModel(false, 0, 'No data found');
-}
+    async getStyleNumberForItemUpdate(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getStyleNumberForItemUpdate()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
 }
 
 
