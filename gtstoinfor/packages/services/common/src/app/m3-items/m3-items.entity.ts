@@ -364,8 +364,20 @@ export class M3ItemsEntity {
     name: "knite_content"
   })
   kniteContent: number;
-  
-  
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'file_name',
+  })
+  fileName: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'file_path',
+  })
+  filePath: string;
 
   @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})

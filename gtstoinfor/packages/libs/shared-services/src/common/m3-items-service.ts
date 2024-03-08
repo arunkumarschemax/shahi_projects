@@ -1,4 +1,4 @@
-import { BuyerIdReq, CommonResponseModel, M3KnittedFabricsDTO, M3trimsDTO, RackPositionDTO, m3FabricFiltersReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, M3KnittedFabricsDTO, M3trimsDTO, RackPositionDTO, UploadResponse, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class M3ItemsService extends CommonAxiosService {
@@ -40,4 +40,7 @@ export class M3ItemsService extends CommonAxiosService {
     async getKnittedFabric(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getKnittedFabric")
     }
+    async fileUpload(file: any): Promise<UploadResponse> {
+        return await this.axiosPostCall(this.URL + '/fileUpload', file);
+      }
 }

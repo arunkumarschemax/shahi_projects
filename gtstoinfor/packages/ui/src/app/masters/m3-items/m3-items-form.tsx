@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,M3KnittedFabricsDTO,UomCategoryEnum,m3ItemsContentEnum} from "@project-management-system/shared-models";
 import { useNavigate } from "react-router-dom";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { LoadingOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
 const { TextArea } = Input;
 const {Option} = Select
 
@@ -14,6 +14,7 @@ const M3Items = ({props}) => {
   const navigate = useNavigate();
   const [uom, setUom] = useState<any[]>([]);
   const [weightData, setWeightData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [yarnData, setYarnData] = useState<any[]>([]);
   const [widthData, setWidthData] = useState<any[]>([]);
   const [buyer, setBuyer] = useState<any[]>([]);
@@ -67,11 +68,8 @@ const M3Items = ({props}) => {
   const finishService = new FinishService()
   const fabFinishService = new FabricFinishTypeService()
   const contentService = new ContentService()
-  // const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
-  //   name: props.styleData.styleFileName,
-  //   status: 'done',
-  //   url:props.styleData.styleFileName,
-  // }]:[]);
+  const [filelist, setfilelist] = useState<any>([])
+  
   const getAllWeights = ()=>{
     weightService.getAllActiveWeight().then((res)=>{
       if(res.status){
@@ -413,6 +411,8 @@ const M3Items = ({props}) => {
   const onFinish = (val) => {
     // console.log("val");
     console.log(val);
+    console.log(form.getFieldsValue());
+
     console.log(formData);
 
 
@@ -439,11 +439,23 @@ const M3Items = ({props}) => {
       return;
     }
   }
-     const req = new M3FabricsDTO(0,form.getFieldValue("buyerId"),form.getFieldValue("itemCode"),form.getFieldValue("fabricTypeId"),form.getFieldValue("weaveId"),weightChange,weightUom,epiData.length>0?epiData:0,ppiData.length>0?ppiData:0,(yarnType).replace(/""/g, '"'),widthChange.length>0?widthChange:0,form.getFieldValue('widthUomId'),form.getFieldValue("finishId"),form.getFieldValue("shrinkage"),form.getFieldValue("description"),form.getFieldValue("buyerCode"),form.getFieldValue("m3Code"),form.getFieldValue("hsnCode"),yarn,formData,undefined,undefined,undefined,undefined,form.getFieldValue("remarks"))
+     const req = new M3FabricsDTO(0,form.getFieldValue("buyerId"),form.getFieldValue("itemCode"),form.getFieldValue("fabricTypeId"),form.getFieldValue("weaveId"),weightChange,weightUom,epiData.length>0?epiData:0,ppiData.length>0?ppiData:0,(yarnType).replace(/""/g, '"'),widthChange.length>0?widthChange:0,form.getFieldValue('widthUomId'),form.getFieldValue("finishId"),form.getFieldValue("shrinkage"),form.getFieldValue("description"),form.getFieldValue("buyerCode"),form.getFieldValue("m3Code"),form.getFieldValue("hsnCode"),yarn,formData,undefined,undefined,undefined,undefined,form.getFieldValue("remarks"),form.getFieldValue("fabricUpload"))
     //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
         // console.log(props);
+        if(filelist.length >0){
+          // console.log(res)
+          const formData = new FormData();
+          filelist.forEach((file: any) => {
+              formData.append('file', file);
+          });
+
+          formData.append('m3ItemId', `${res.data[0]?.m3ItemId}`)
+          service.fileUpload(formData).then(fileres => {
+              res.data[0].styleFilePath = fileres.data
+          })
+        }
         if(props != undefined){
           trimReqCodeService.updateFabStatus({id:props.m3ItemsId,m3ItemsId:res.data?.m3ItemsId}).then((res) => {
             if(res.status){
@@ -610,7 +622,7 @@ const uploadFieldProps: UploadProps = {
   // alert();
   multiple: false,
   onRemove: file => {
-    // setfilelist([]);
+    setfilelist([]);
     setImageUrl('');
   },
   beforeUpload: (file: any) => {
@@ -621,16 +633,16 @@ const uploadFieldProps: UploadProps = {
     var reader = new FileReader();
     reader.readAsArrayBuffer(file);
     reader.onload = data => {
-      // if (filelist.length == 1) {
+      if (filelist.length == 1) {
         AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
         return true;
-      // } else {
-        // setfilelist([file]);
+      } else {
+        setfilelist([file]);
         getBase64(file, imageUrl =>
           setImageUrl(imageUrl)
         );
         return false;
-      // }
+      }
     }
   },
   progress: {
@@ -641,7 +653,7 @@ const uploadFieldProps: UploadProps = {
     strokeWidth: 3,
     format: percent => `${parseFloat(percent.toFixed(2))}%`,
   },
-  // fileList: filelist,
+  fileList: filelist,
 };
 
 const getBase64 = (img, callback) => {
@@ -649,6 +661,13 @@ const getBase64 = (img, callback) => {
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+
+const uploadButton = (
+  <div>
+    {loading ? <LoadingOutlined /> : <PlusOutlined />}
+    <div style={{ marginTop: 8 }}>Upload Style</div>
+  </div>
+);
   
 
   return (
@@ -1017,15 +1036,15 @@ const getBase64 = (img, callback) => {
                 </Card>
               </Col>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
-                <Form.Item name="styleUpload" label='Style Upload'
+                <Form.Item name="fabricUpload" label='Fabric Upload'
                   rules={[
-                      {required:false,message:'Upload Style'}
+                      {required:false,message:'Upload Fabric'}
                   ]}  
                   // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
                   >
                   <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
                   
-                  {/* {uploadButton} */}
+                  {uploadButton}
                   </Upload>
                 </Form.Item>
                 </Col>

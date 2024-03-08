@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { M3ItemsAdapter } from "./m3-items.adaptor";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter, m3FabricFiltersReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter, UploadResponse, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
@@ -341,8 +341,28 @@ async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel>
   } catch (error) {
     return new CommonResponseModel(false, 0, error)
   }
+
+
 }
 
-
+async updateFabricPath(filePath: string, filename: string, m3ItemId: number): Promise<UploadResponse> {
+        console.log('upload service id---------------', m3ItemId)
+        try {
+            let filePathUpdate;   
+                filePathUpdate = await this.repository.update(
+                    { m3ItemsId: m3ItemId },
+                    { filePath: filePath, fileName: filename },
+                )
+            if (filePathUpdate.affected > 0) {
+                return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+            }
+            else {
+                return new UploadResponse(false, 11, 'uploaded failed', filePath);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
 }
