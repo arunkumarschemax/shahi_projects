@@ -66,7 +66,7 @@ export default function GenerateProposal(props: Props) {
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
-    "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
+    "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
     "Snap Button": <SnapButton bomInfo={buttonData}/>
 
   }
@@ -174,13 +174,14 @@ export default function GenerateProposal(props: Props) {
   }
 
 
-  function handleMobilontape(itemId){
+  function handleMobilontape(item){
     const bomProposalReq = new BomProposalReq()
-    bomProposalReq.itemId = [itemId]
+    bomProposalReq.itemId = [item.itemId]
     bomProposalReq.poLine = props.poLine
-    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
-      if (v.status) {
-        setNeckTapeData(v.data)
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setMobilontape(res.data)
       }
     })
   }
@@ -413,7 +414,7 @@ export default function GenerateProposal(props: Props) {
     } 
 
     if(val.item === 'Mobilon Tape'){
-      handleMobilontape(val.itemId)
+      handleMobilontape(val)
     } 
     
      if(val.item === 'Snap Button'){

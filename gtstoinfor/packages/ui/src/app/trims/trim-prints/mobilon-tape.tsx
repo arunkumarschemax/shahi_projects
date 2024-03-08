@@ -1,5 +1,6 @@
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { BomService } from '@project-management-system/shared-services';
 
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
@@ -18,197 +19,99 @@ export interface MobilonTapeProps {
     bomInfo: any
 }
 export const  Mobilontape = (props: MobilonTapeProps) => {
-console.log(props.bomInfo)
- const data=props.bomInfo
+    const data = props.bomInfo
 
-
- const handlePrint = () => {
-    const invoiceContent = document.getElementById('print');
-    if (invoiceContent) {
-      const devContent = invoiceContent.innerHTML;
-      const printWindow = window.open('', 'PRINT', 'height=900,width=1600');
+    const bomservice=new BomService
+    const [mobilontape, setMobilontape] = useState<any>([])
   
-      printWindow.document.write(`
-        <html>
-          <head>
-            <style>
-              @page {
-                size: legal;
-                margin: 20;
-              }
-              body {
-                margin: 0;
-                transform: scale(1);
-                transform-origin: top center;
-                width: 100%;
-              }
-              /* Additional styles for your content */
+    const handlePrint = () => {
+      const invoiceContent = document.getElementById("print");
+      if (invoiceContent) {
+          const devContent = invoiceContent.innerHTML;
+          const printWindow = window.open("", "PRINT", "height=900,width=1600");
   
-              /* Add a counter to track the page number */
-              @page {
-                counter-increment: page;
-              }
+          printWindow.document.write(`
+              <html>
+                  <head>
+                      <style>
+                          @page {
+                              size: legal;
+                              margin: 20;
+                          }
+                          body {
+                              margin: 0;
+                              transform: scale(1);
+                              transform-origin: top center;
+                              width:100%;
+                          }
+                          /* Additional styles for your content */
+                      </style>
+                  </head>
+                  <body>${devContent}</body>
+              </html>
+          `);
   
-              /* Apply styles only to the last page */
-              body:after {
-                content: counter(page);
-                position: absolute;
-                top: 0;
-                right: 0;
-                padding: 10px;
-                background-color: white;
-                color: black;
-              }
+              getCssFromComponent(document, printWindow.document);
   
-              body:last-of-type:after {
-                content: 'Last Page';
-                /* Additional styles for the last page marker */
-              }
-            </style>
-          </head>
-          <body>${devContent}</body>
-        </html>
-      `);
+              printWindow.document.close();
+              setTimeout(function () {
+                  printWindow.print();
+                  printWindow.close();
+              }, 1000); 
+          }
+     }
+     const tableCellStyle = {
+      padding: '8px',
+   };
   
-      printWindow.document.close();
-      setTimeout(function () {
-        printWindow.print();
-        printWindow.close();
-      }, 1000);
-    }
-  };
-  
- const [bomInfo, setBomInfo] = useState([]);
-
-
- useEffect(() => {
-    console.log(props.bomInfo);
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
-
-  
- const groupDataByItemNo = () => {
-    if (bomInfo && bomInfo.length > 0) {
-      const groupedData = {};
-      bomInfo.forEach((item) => {
-        if (!groupedData[item.itemNo]) {
-          groupedData[item.itemNo] = [];
-        }
-        groupedData[item.itemNo].push(item);
-      });
-      return groupedData;
-    }
-    return null;
-  };
-
-  const generateTables = () => {
-    const groupedData = groupDataByItemNo();
-    if (groupedData) {
+   const calculateTotalBomQty = (data) => {
+      return data.reduce((total, item) => {
+        const bomQty = Number(item?.bomQty) || 0;
+        return total + bomQty;
+      }, 0);
+    };
+    
+    return (
       
-      return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20px'}}>
-          <h3>Item No: {itemNo}</h3>
-          <table
-            style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-            border={1}
-            cellSpacing="0"
-            cellPadding="0"
-          >
-            <thead>
-              <tr>
-              <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-                <th style={tableCellStyle}>ITEM</th>
-                <th style={tableCellStyle}>STYLE</th>
-                <th style={tableCellStyle}>UNIT</th>
-                <th style={tableCellStyle}>GARMENT QTY</th>
-                <th style={tableCellStyle}>CONSUMPTION MTR</th>
-                <th style={tableCellStyle}>QTY IN KG</th>
-              </tr>
-            </thead>
-            <tbody>{generateRows(groupedData[itemNo])}</tbody>
-            <tfoot>
-              <tr>
-              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-                  {calculateTotalBomQty(groupedData[itemNo])}
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      ));
-    }
-    return null;
-  };
-  const calculateTotalBomQty = (data) => {
-
-    return data.reduce((total, item) => {
-      const bomQtys = item?.colors.map(color => Number(color?.bomQty)) || [];
-      const validQtys = bomQtys.filter(bomQty => !isNaN(bomQty));
-      return total + validQtys.reduce((sum, qty) => sum + qty, 0);
-    }, 0);
-  };
-
-  const tableCellStyle = {
-    padding: '8px',
- };
-
-  const generateRows = (data) => {
-    const groupedData = {};
-  
-    data.forEach((item) => {
-      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
-      if (!groupedData[key]) {
-        groupedData[key] = [];
-      }
-      groupedData[key].push(item);
-    });
-  
-    return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
-      <React.Fragment key={groupIndex}>
-        {group.map((item, index) => (
-          <tr key={`${groupIndex}-${index}`}>
-            {index === 0 && (
-              <>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
-                  {item.itemNo}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
-                  {item.styleNumber}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
-                  {item.season}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
-                  {item.imCode}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} >
-                  {item.description}
-                </td>
-              </>
-            )}
-          </tr>
-        ))}
-      </React.Fragment>
-    ));
-  };
-  
-  return (
-
-    <div id="print">
-    {bomInfo && bomInfo.length > 0 ? (
       <Card title={'Mobilon Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
-        {generateTables()}
-      </Card>
-    ) : (
-      <div>No data available</div>
-    )}
-  </div>
+      <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+        <thead>
+          <tr>
+            <th style={{ width: '3%' }}>MATERIAL - MOBILON TAPE</th>
+            <th style={{ width: '3%' }}>ITEM</th>
+            <th style={{ width: '3%' }}>STYLE</th>
+            <th style={{ width: '3%' }}>UNIT</th>
+            <th style={{ width: '3%' }}>GARMENT QTY </th>
+            <th style={{ width: '3%' }}>CONSUMPTION MTR </th>
+            <th style={{ width: '3%' }}>QTY IN KG</th>
 
-  );
-};
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((rec, index) => (
+            <tr key={index}>
+              <td style={{ textAlign: 'center' }}>{"6MM Transparent Mobilon Tape" }</td>
+              <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
+              <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
+              <td style={{ textAlign: 'center' }}>{''}</td>
+              <td style={{ textAlign: 'center' }}>{rec.poQty !== null ? rec.poQty : ''}</td>
+              <td style={{ textAlign: 'center' }}>{'0.46'}</td>
+              <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
+            </tr>
+          ))}
+        </tbody>
+        {/* <tfoot>
+          <tr>
+            <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+              {calculateTotalBomQty(data)}
+            </td>
+          </tr>
+        </tfoot> */}
+      </table>
+    </Card>
+    );
+  };
 
 
 

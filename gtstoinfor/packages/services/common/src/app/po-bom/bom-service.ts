@@ -898,14 +898,18 @@ export class BomService {
     async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
+        console.log(poBomData,"poBomData")
 
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty,poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
             if (req.trimName === 'Interlining') {
                 key += `-${color}`;
+            }
+            else if (req.trimName === 'Mobilon Tape') {
+                key += `-${styleNumber}`;
             }
             else if (req.trimName === 'Jocktage Label') {
                 key += `-${season}`;
@@ -915,6 +919,7 @@ export class BomService {
                     geoCode,
                     styleNumber,
                     description,
+                    poQty,
                     use, imCode, itemNo, bomQty: 0, destination,
                     itemId,
                     poNumber,
@@ -923,7 +928,7 @@ export class BomService {
                     year,
                     color,
                     itemColor,
-                    productCode,
+                    productCode
                 };
             }
             result[key].bomQty += bomQty;
