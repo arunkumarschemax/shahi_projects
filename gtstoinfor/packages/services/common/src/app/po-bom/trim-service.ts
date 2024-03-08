@@ -26,7 +26,7 @@ export class TrimService {
 
     async getAllTrimInfo(): Promise<CommonResponseModel> {
         try {
-            const data = await this.itemRepo.find({ where: { isActive: true} })
+            const data = await this.itemRepo.find({ where: { isActive: true } })
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data)
             } else {
@@ -63,7 +63,7 @@ export class TrimService {
                 const trimsInfo: TrimInfoModel[] = []
                 for (const style of styleWiseMap.keys()) {
                     const bomInfoModel: BomInfo[] = []
-                                        const bomInfo = styleWiseMap.get(style)[0]
+                    const bomInfo = styleWiseMap.get(style)[0]
                     const poInfo = styleWiseMap.get(style)[1]
 
                     for (const [_, bomValue] of bomInfo) {
@@ -96,15 +96,15 @@ export class TrimService {
             query += ` GROUP BY LEFT(item,4),style_number,geo_code ORDER BY LEFT(item,4)`
             const data = await this.dataSource.query(query)
             if (data) {
-                const itemMap = new Map<string,ItemInfoModel>()
-                for(const rec of data){
-                    if(!itemMap.has(`${rec.item}-${rec.style_number}`)){
-                        itemMap.set(`${rec.item}-${rec.style_number}`,new ItemInfoModel(rec.id,rec.item,rec.po_line_item_number,rec.po_number,rec.style_number,rec.total_item_qty,[]))
+                const itemMap = new Map<string, ItemInfoModel>()
+                for (const rec of data) {
+                    if (!itemMap.has(`${rec.item}-${rec.style_number}`)) {
+                        itemMap.set(`${rec.item}-${rec.style_number}`, new ItemInfoModel(rec.id, rec.item, rec.po_line_item_number, rec.po_number, rec.style_number, rec.total_item_qty, []))
                     }
-                    itemMap.get(`${rec.item}-${rec.style_number}`).regionInfo.push(new RegionModel(rec.destination_country,rec.destination_country_code,rec.geo_code))
+                    itemMap.get(`${rec.item}-${rec.style_number}`).regionInfo.push(new RegionModel(rec.destination_country, rec.destination_country_code, rec.geo_code))
 
                 }
-                const itemModel : ItemInfoModel[] =[]
+                const itemModel: ItemInfoModel[] = []
                 itemMap.forEach(e => itemModel.push(e))
                 return new CommonResponseModel(true, 1, 'Data retreived', itemModel)
             } else {
@@ -119,7 +119,7 @@ export class TrimService {
     async getItemDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select LEFT(item,4) as item from dpom where created_at between '${req.fromDate}' and '${req.toDate}' and item is not null group by LEFT(item,4)`
+            const query = `select LEFT(item,4) as item from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and item is not null group by LEFT(item,4)`
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
@@ -176,10 +176,10 @@ export class TrimService {
                 const styleWiseBomInfoData = styleWiseBomInfoRes.data
                 const dataModelArray: BomPrintInfoModel[] = [];
                 trimPrintInfoMap.forEach(e => dataModelArray.push(e));
-                for(const rec of dataModelArray){
-                    if(styleWiseBomInfoData != undefined){
+                for (const rec of dataModelArray) {
+                    if (styleWiseBomInfoData != undefined) {
 
-                        if(styleWiseBomInfoData.has(rec.style)){
+                        if (styleWiseBomInfoData.has(rec.style)) {
                             const bomInfoModel: BomInfo[] = []
                             const bomInfo = styleWiseBomInfoData.get(rec.style)[0]
                             for (const [_, bomValue] of bomInfo) {

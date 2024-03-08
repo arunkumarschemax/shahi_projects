@@ -18,12 +18,12 @@ export default function VerifyQuantities(props: Props) {
     function clubQuantities() {
         const clubbedData = [...selectedData].reduce((result, currentItem) => {
             // Generate a key based on item, styleNumber, and geoCode
-            const key = `${currentItem.item}_${currentItem.styleNumber}_${currentItem.geoCode}`;
+            const key = `${currentItem.item.substring(0, 4)}_${currentItem.styleNumber}_${currentItem.geoCode}`;
 
             // Initialize the group if it doesn't exist yet
             if (!result[key]) {
                 result[key] = {
-                    item: currentItem.item,
+                    item: currentItem.item.substring(0, 4),
                     styleNumber: currentItem.styleNumber,
                     geoCode: currentItem.geoCode,
                     total: 0,  // Total sum of all sizes
@@ -49,7 +49,6 @@ export default function VerifyQuantities(props: Props) {
         setClubbedData(Object.values(clubbedData))
     }
 
-    console.log(clubbedData)
 
     function renderColumns(): any {
 

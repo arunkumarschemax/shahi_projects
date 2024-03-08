@@ -132,3 +132,13 @@ export class BomExcelreq {
     geoCode: string []
 
 }
+
+
+export class UpdateBomITemNoFilters{
+    styleNo : string[]
+    fromDate : any
+    toDate : any
+    poLine : string []
+    planningSeasonCode:string;
+    planningSeasonYear:string
+}

@@ -21,7 +21,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsData(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber, b.sequence,ia.attribute,ia.attribute_value as attributeValue`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber, b.sequence,ia.attribute,ia.attribute_value as attributeValue`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(ItemAttributesEntity,'ia','ia.item_id=b.item_id')
@@ -66,7 +66,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getZfactorsData(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,z.item_id as itemId,pb.zfactor_bom_id as zfactorBomId,zb.im_code as zbImCode,zb.item_name as zbItemName,zb.description,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,z.item_id as itemId,pb.zfactor_bom_id as zfactorBomId,zb.im_code as zbImCode,zb.item_name as zbItemName,zb.description,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(ZFactorsBomEntity, 'zb', 'zb.id = pb.zfactor_bom_id and pb.zfactor_bom_id is not null')
             .leftJoin(ZFactorsEntity, 'z', 'z.id = zb.zfactor_id ')
@@ -112,7 +112,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForButton(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity,'st','st.bom_id = b.id')
@@ -160,7 +160,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForElastic(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId ,size_qty AS totalGarmentQty`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId ,size_qty AS totalGarmentQty`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id ')
@@ -210,7 +210,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForNeckTape(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id')

@@ -5,7 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { BomCreationFiltersReq, BomPrintFilterReq, FobPriceDiffRequest, ItemInfoFilterReq, PoDataForBomGenerationModel, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomItemReq, BomPrintFilterReq, FobPriceDiffRequest, ItemInfoFilterReq, PoDataForBomGenerationModel, PpmDateFilterRequest, UpdateBomITemNoFilters, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
 import { FabricContent } from "../../fabric-content/fabric-content.entity";
 import { StyleEntity } from "../../po-bom/entittes/style-entity";
@@ -769,9 +769,9 @@ export class DpomRepository extends Repository<DpomEntity> {
     //     return await query.getRawMany();
     // }
 
-    async getAllDpomDataForBom(req?: PpmDateFilterRequest): Promise<any[]>{
+    async getAllDpomDataForBom(req?: UpdateBomITemNoFilters): Promise<any[]> {
         const query = await this.createQueryBuilder('dpom')
-        .select(`id AS dpom_id,po_and_line,last_modified_date,item,factory,
+            .select(`id AS dpom_id,po_and_line,last_modified_date,item,factory,
         po_number,po_line_item_number,dpom_item_line_status,style_number,product_code,color_desc,
         customer_order,plan_no,category_code,category_desc,
         vendor_code,gcc_focus_code,gcc_focus_desc,gender_age_code,gender_age_desc,destination_country_code,
@@ -783,10 +783,9 @@ export class DpomRepository extends Repository<DpomEntity> {
          ship_to_address_dia,
          actual_unit,allocated_quantity
         ,size_description,size_qty,trading_co_po_no,hanger,legal_po_qty,geo_code, co_line_status`)
-        .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' AND customer_order IS NULL AND (co_line_status != 'Success' OR co_line_status IS NULL)`)
-        .groupBy(`po_number , po_line_item_number`)
-        if (req.styleNumber !== undefined) {
-            query.andWhere(`style_number ='${req.styleNumber}'`)
+            .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' and bom_item IS NULL`)
+        if (req.styleNo !== undefined) {
+            query.andWhere(`style_number IN (:...styleNo)`, { styleNo: req.styleNo })
         }
         if (req.planningSeasonCode !== undefined) {
             query.andWhere(`planning_season_code ='${req.planningSeasonCode}'`)
@@ -794,6 +793,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
         }
+        query.groupBy(`po_number , po_line_item_number`)
         return await query.getRawMany();
     }
 
@@ -1056,7 +1056,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req?.item !== undefined) {
             // const items = req.item.split(',').map(item => item.trim());
-            distinctSizesQuery.andWhere(`LEFT(dpom.item, 4) IN (:...items)`, { items: req.item });
+            distinctSizesQuery.andWhere(`LEFT(dpom.bom_item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
             distinctSizesQuery.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
@@ -1066,7 +1066,6 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
 
         const distinctSizes = await distinctSizesQuery.getRawMany();
-        console.log(distinctSizes,'------- distinct sizes ----------')
 
         // Generate conditional aggregations for each distinct size
         const columnsQuery = distinctSizes
@@ -1077,7 +1076,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .join(', ');
 
         const query = this.createQueryBuilder('d')
-            .select(`po_number as poNumber , po_line_item_number as poLineItemNumber ,po_and_line as poLine,item, style_number as styleNumber , planning_season_code as planningSeasonCode , planning_season_year as planningSeasonYear, geo_code as geoCode , destination_country_code as destinationCountryCode, gender_age_desc as genderAgeDesc,
+            .select(`po_number as poNumber , po_line_item_number as poLineItemNumber ,po_and_line as poLine,LEFT(bom_item, 4) as item, style_number as styleNumber , planning_season_code as planningSeasonCode , planning_season_year as planningSeasonYear, geo_code as geoCode , destination_country_code as destinationCountryCode, gender_age_desc as genderAgeDesc,
             destination_country as destinationCountry,plant,${columnsQuery}`)
             .where(`d.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
         if (req?.style !== undefined) {
@@ -1088,10 +1087,10 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req?.item !== undefined) {
             // const items = req.item.split(',').map(item => item.trim());
-            query.andWhere(`LEFT(d.item, 4) IN (:...items)`, { items: req.item });
+            query.andWhere(`LEFT(d.bom_item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
-            query.andWhere(`d.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+            query.andWhere(`DATE(d.created_at) BETWEEN DATE('${req.fromDate}') AND DATE('${req.toDate}')`)
         }
         if (req.poLine !== undefined) {
             query.andWhere(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
@@ -1105,7 +1104,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
 
-    async getPoDataForBomGeneration(req: { poLine: string[] }) :Promise<PoDataForBomGenerationModel[]>{
+    async getPoDataForBomGeneration(req: { poLine: string[] }): Promise<PoDataForBomGenerationModel[]> {
         const query = await this.createQueryBuilder('d')
             .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size,gender_age_desc as gender`)
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
@@ -1124,7 +1123,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             year: item.year,
             qty: item.qty,
             size: item.size,
-            gender : item.gender
+            gender: item.gender
         }));
 
         return mappedResult
@@ -1142,7 +1141,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getStyleNumberForItemUpdate(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.style_number,dpom.id`)
-            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Closed' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL) AND dpom.style_number IS NOT NULL`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Closed' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.style_number IS NOT NULL AND dpom.bom_item IS NULL`)
             .groupBy(`dpom.style_number`)
         return await query.getRawMany();
     }
