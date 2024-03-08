@@ -56,12 +56,13 @@ const BomPdfInfoDetailView = () => {
             render: (v, r, i) => i + 1
         },
         {
-            title: 'Item name',
+            title: 'Item Name',
             dataIndex: 'itemName'
         },
         {
             title: 'IM Code',
-            dataIndex: 'imCode'
+            dataIndex: 'imCode',
+            width:'70px'
         },
         {
             title: 'Description',

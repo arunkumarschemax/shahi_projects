@@ -100,7 +100,9 @@ export class BomProposalDataModel {
     bomId ?: number;
     styleCombo?:number;
     totalGarmentQty ?:number;
-    bBomQty?:number;
+    attribute?:string
+    attributeValue?:string
+    bQty?:number
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
