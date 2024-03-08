@@ -588,7 +588,7 @@ export const AppRoutes = () => {
 
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} /> } />
+                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} buyerId={undefined} /> } />
 
                     <Route path='department/department-view' element={<DepartmentGrid />} />
                     <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}
@@ -943,7 +943,7 @@ export const AppRoutes = () => {
 
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false}/>} />
+                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} buyerId={undefined}/>} />
 
                 <Route path='department/department-view' element={<DepartmentGrid />} />
                 <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}

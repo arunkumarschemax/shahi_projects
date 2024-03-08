@@ -15,7 +15,7 @@ import { BuyersSize } from "./buyers-sizes.entity";
 import { BuyersColor } from "./byers-colors.entity";
 import { Colour } from "../colours/colour.entity";
 import { BuyerRepository } from "../buyers/buyers.repository";
-import { buyerColorsMappingRepository } from "./buyer-colors-repo";
+import { BuyerColorsMappingRepository } from "./buyer-colors-repo";
 import { buyersSizesMappingRepository } from "./buyer-size-repo";
 import { buyersDestionationMappingRepository } from "./buyers-destination.repo";
 import { BuyersDestinationRequest } from "./dto/byers-destination.request";
@@ -27,7 +27,7 @@ export class BuyersDestinationService {
 
     private repo:BuyerRepository,
 
-     private buyerColorRepo: buyerColorsMappingRepository,
+     private buyerColorRepo: BuyerColorsMappingRepository,
 
      private buyerSizeRepo: buyersSizesMappingRepository
 
@@ -246,7 +246,7 @@ async createBuyersDestination(
 }
 
   async getAllSizesAgainstBuyer(req:BuyerIdReq):Promise<CommonResponseModel>{
-    const query='select sizes as size,bs.buyer_id as buyerId,bs.size_id as sizeId from buyers_size bs left join size s on bs.size_id=s.size_id where bs.buyer_id='+req.buyerId+' group by bs.size_id'
+    const query='select sizes as size,bs.buyer_id as buyerId,bs.size_id as sizeId from buyers_size bs left join size s on bs.size_id=s.size_id where bs.buyer_id='+req.buyerId+' and s.is_active = true group by s.sizes'
     const result = await this.buyerSizeRepo.query(query)
     if(result){
       return new CommonResponseModel(true,1,'data',result)
@@ -257,7 +257,7 @@ async createBuyersDestination(
 
   async getAllColorsAgainstBuyer(req:BuyerIdReq):Promise<CommonResponseModel>{
     try{
-      const query='select c.colour AS colour,bc.buyer_id as buyerId,bc.colour_id as colourId from buyers_color bc left join colour c on c.colour_id=bc.colour_id where bc.buyer_id='+req.buyerId+' group by bc.colour_id'
+      const query='select c.colour AS colour,bc.buyer_id as buyerId,bc.colour_id as colourId from buyers_color bc left join colour c on c.colour_id=bc.colour_id where bc.buyer_id='+req.buyerId+' and c.is_active = true group by c.colour'
       const result = await this.buyerSizeRepo.query(query)
       if(result.length > 0){
         return new CommonResponseModel(true,1,'data',result)
@@ -270,4 +270,37 @@ async createBuyersDestination(
     }
   }
  
+  async getBuyerColorDuplicate(req:BuyerIdReq):Promise<CommonResponseModel>{
+    try{
+      console.log(req);
+      const query=`select bc.colour_id as colourId from buyers_color bc where bc.colour_id = ${req.colorId} and bc.buyer_id = ${req.buyerId}`
+        const result = await this.buyerSizeRepo.query(query)
+      if(result.length > 0){
+        return new CommonResponseModel(true,1001,"data retrived",result)
+      }
+      else{
+        return new CommonResponseModel(false,1010,"no data found")
+      }
+    }catch (err) {
+      throw err;
+  }
+    
+}
+async getBuyerSizeDuplicate(req:BuyerIdReq):Promise<CommonResponseModel>{
+  try{
+    console.log(req);
+    const query=`select bs.buyer_size_id as buyerSizeId from buyers_size bs where bs.size_id = ${req.sizeId} and bs.buyer_id = ${req.buyerId}`
+      const result = await this.buyerSizeRepo.query(query)
+      console.log(result)
+    if(result.length > 0){
+      return new CommonResponseModel(true,1001,"data retrived",result)
+    }
+    else{
+      return new CommonResponseModel(false,1010,"no data found")
+    }
+  }catch (err) {
+    throw err;
+}
+  
+}
 }

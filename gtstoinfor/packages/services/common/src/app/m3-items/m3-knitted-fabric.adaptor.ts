@@ -15,6 +15,7 @@ export class M3KnittedFabricAdapter {
         entity.kniteGauze = dto.kniteGauze;
         entity.kniteHsn = dto.kniteHsn;
         entity.kniteM3Code = dto.kniteM3Code;
+        entity.fabricsType = "knitted";
         entity.kniteRemarks = dto.kniteRemarks;
         entity.kniteYarnCount = dto.kniteYarnCount;
         entity.knittedFabricTypeId = dto.knittedFabricTypeId;

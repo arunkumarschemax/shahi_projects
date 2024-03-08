@@ -20,7 +20,8 @@ export interface SizeDetailFormProps {
   const [sizeData, setSizeData]=useState<any[]>([])
   const [modelKey, setModelKey]=useState<string>(undefined)
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
-
+  const userData = JSON.parse(localStorage.getItem('currentUser'))
+  const buyerId = userData?.user?.userName
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
@@ -435,7 +436,7 @@ export interface SizeDetailFormProps {
           <ColourForm colourData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }}  closeModal={(val) => {handleColorModel()}} mapBuyerDest={true}/>
+                        updateItem={(undefined) => { }}  closeModal={(val) => {handleColorModel()}} mapBuyerDest={true} buyerId={buyerId}/>
           :modelKey === "size"?
           <SizeForm sizeData={undefined}
                         isUpdate={false}

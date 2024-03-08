@@ -12,7 +12,7 @@ import { BuyersSize } from "./buyers-sizes.entity";
 import { BuyersDestinationRequest } from "./dto/byers-destination.request";
 
 @Injectable()
-export class buyerColorsMappingRepository extends Repository<BuyersColor> {
+export class BuyerColorsMappingRepository extends Repository<BuyersColor> {
 
     constructor(@InjectRepository(BuyersColor) private buyersMappingRepo: Repository<BuyersColor>
     ) {
@@ -31,5 +31,7 @@ export class buyerColorsMappingRepository extends Repository<BuyersColor> {
         query.orderBy(`b.buyer_id`)
         return await query.getRawMany()
     }
+
+    
 
 }

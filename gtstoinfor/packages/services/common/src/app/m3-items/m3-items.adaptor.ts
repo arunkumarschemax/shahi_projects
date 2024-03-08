@@ -15,6 +15,7 @@ export class M3ItemsAdapter {
         const entity = new M3ItemsEntity();
         // entity.itemCode = dto.itemCode;
         // entity.content = dto.content;
+        entity.fabricsType = "woven";
         entity.fabricType = dto.fabricTypeId;
         entity.weave = dto.weaveId;
         entity.weight = dto.weightId;

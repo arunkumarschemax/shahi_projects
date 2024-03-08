@@ -33,14 +33,18 @@ export interface SizeFormProps{
         }
 
         const savePayment = (sizeData:SizeDto ) => {
+          const userData = JSON.parse(localStorage.getItem('currentUser'))
+          const externalRefNo = userData?.user?.externalRefNo;
+          buyerService.getBuyerByExternalRefNo({buyerExternalRefNo:externalRefNo}).then((rees)=>{
+            if(rees.status){
+              sizeData.buyerId= rees.data.buyerId;
+            }
             // setDisable(true)
             sizeData.sizeId= 0;
             service.createsize(sizeData).then((res) => {
               setDisable(false)
                 if (res.status) {
                   if(props.mapBuyerDest){
-                    const userData = JSON.parse(localStorage.getItem('currentUser'))
-                    const externalRefNo = userData?.user?.externalRefNo;
                     let buyer
                     buyerService.getBuyerByExternalRefNo({buyerExternalRefNo:externalRefNo}).then((rees)=>{
                       if(res.status){
@@ -78,10 +82,48 @@ export interface SizeFormProps{
                       onReset();
                   }
                 } else {
-                    AlertMessages.getErrorMessage(res.internalMessage);
+                    if(res.errorCode === 11104){
+                      let buyer
+                      buyerService.getBuyerByExternalRefNo({buyerExternalRefNo:externalRefNo}).then((rees)=>{
+                        if(rees.status){
+                          console.log(rees.data);
+                          buyer = rees.data.buyerId;
+                          const map = new MappedData(res.data[0].sizeId,res.data[0].size)
+                          const mapData = new MappedDetails("Size",[map])
+                          const destReq = new BuyersDestinationDto(0,buyer,true,"","",0,[mapData]);
+                          console.log(destReq);
+                          buyerDest.create(destReq).then((res)=>{
+                            if(res.status){
+                              onReset();
+                              AlertMessages.getSuccessMessage("Buyer Mapping done.");
+                              props.closeModal(false)
+                            }
+                            else{
+                              AlertMessages.getErrorMessage("Something went wrong. ");
+                            }
+                          }).catch((err) => {
+                            setDisable(false)
+                            AlertMessages.getErrorMessage(err.message);
+                          });
+                        }
+                        else{
+                          AlertMessages.getErrorMessage("Buyer Details not retrived. ")
+                        }
+                      }).catch((err) => {
+                        setDisable(false)
+                        AlertMessages.getErrorMessage(err.message);
+                      });
+                    }
+                    else{
+                      AlertMessages.getErrorMessage(res.internalMessage);
+                    }
                 }
               })
               .catch((err) => {
+                setDisable(false)
+                AlertMessages.getErrorMessage(err.message);
+              });
+            }).catch((err) => {
                 setDisable(false)
                 AlertMessages.getErrorMessage(err.message);
               });

@@ -10,6 +10,7 @@ import { SizeRequest } from './dto/sizes-request';
 import { SizeRequestDto } from '@project-management-system/shared-models';
 import { Console } from 'console';
 import { SizeDto } from './dto/sizes-dto';
+import { BuyerDestinationService } from '@project-management-system/shared-services';
 
 @Injectable()
 export class SizeService{
@@ -18,13 +19,23 @@ export class SizeService{
 
         private SizeRepository: Repository<Size>,
         private SizeAdapter: SizeAdapter,
+        private buyerDestinationService: BuyerDestinationService,
+
       ){}
-      async getsizeWithoutRelations(size: string): Promise<Size>{
+      async getsizeWithoutRelations(size: string, bbuyerId:number): Promise<Size>{
         const sizeResponse = await this.SizeRepository.findOne({
           where: {size: Raw(alias => `Sizes = '${size}'`)},
         });
-        if(sizeResponse){
-          return sizeResponse;
+        console.log(sizeResponse)
+        if(sizeResponse != null){
+          const getbuyerSizeDuplicate = await this.buyerDestinationService.getBuyerSizeDuplicate({buyerId:bbuyerId,trimType:"",trimCatId:0,trimMapId:0,colorId:0,sizeId:sizeResponse.sizeId});
+          console.log(getbuyerSizeDuplicate);
+          if(getbuyerSizeDuplicate.status){
+            return sizeResponse;
+          }
+          else{
+            return sizeResponse;
+          }
         }
         else{
           return null;
@@ -33,30 +44,34 @@ export class SizeService{
 
 
       async createSize(sizedto: SizeDto, isUpdate: boolean): Promise<SizeResponseModel>{
-        console.log('ggggggggg============',isUpdate)
-        // const response = new ProfitControlHeadResponseModel();
         try{
           let previousValue
         const sizedDto2: SizeDto[] = [];
 
           if(!isUpdate){
 
-            const SizeEntity = await this.getsizeWithoutRelations(sizedto.size);
-            if (SizeEntity){
+            const SizeEntity = await this.getsizeWithoutRelations(sizedto.size,sizedto.buyerId);
+            console.log(SizeEntity);
+            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+
+            if (SizeEntity != null){
                 console.log(SizeEntity,'------')
-              throw new SizeResponseModel(false,11104, 'Size already exists'); 
+               const savedSizeDto: SizeDto = this.SizeAdapter.convertEntityToDto(SizeEntity);
+
+              throw new SizeResponseModel(false,11104, 'Size already exists',[savedSizeDto]); 
             }
           }
           else{
-            console.log('ertyudfghjk============')
-
             const certificatePrevious = await this.SizeRepository.findOne({where:{sizeId:sizedto.sizeId}})
             previousValue =(certificatePrevious.size)
-            const sizeEntity = await this.getsizeWithoutRelations(sizedto.size);
-            console.log('ertyudfghjk============',certificatePrevious)
-            if (sizeEntity){
+            const sizeEntity = await this.getsizeWithoutRelations(sizedto.size,sizedto.buyerId);
+            console.log(sizeEntity);
+            console.log("*******************************************************")
+
+            if (sizeEntity != null){
               if(sizeEntity.sizeId != sizedto.sizeId ){
-                throw new SizeResponseModel(false,11104, 'Size already exists'); 
+               const savedSizeDto: SizeDto = this.SizeAdapter.convertEntityToDto(sizeEntity);
+                throw new SizeResponseModel(false,11104, 'Size already exists',[savedSizeDto]); 
               }
             }
           }

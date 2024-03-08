@@ -35,4 +35,7 @@ export class SizeDto{
   
   @ApiProperty()
   versionFlag : number;  
+
+  @ApiProperty()
+  buyerId? : number;  
 }

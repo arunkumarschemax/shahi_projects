@@ -1953,14 +1953,17 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     try {
       const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
       const grnRes = await this.dataSource.query(grnInfo)
-      // console.log(grnRes)
+      console.log(grnRes)
       await manager.startTransaction()
       if (grnRes.length > 0) {
         let grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
-        if(grnRes.grn_type === "SAMPLE_ORDER"){
+        if(grnRes[0].grn_type === "SAMPLE_ORDER"){
           grnItemInfo = grnItemInfo + ` and sample_req_id = ${req.sampleRequestId}`;
         }
         const grnItemRes = await this.dataSource.query(grnItemInfo);
+
+        console.log("grnItemRes");
+        console.log(grnItemRes);
 
         // let sampleItemId
         // if(grnItemRes[0].sampleItemId > 0){

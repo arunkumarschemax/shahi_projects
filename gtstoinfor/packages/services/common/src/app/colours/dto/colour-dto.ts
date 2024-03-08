@@ -33,4 +33,7 @@ updatedUser : string;
 
 @ApiProperty()
 versionFlag : number;
+
+@ApiProperty()
+buyerId?:number;
 }

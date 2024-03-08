@@ -1,5 +1,5 @@
 import {BuyersService,ContentService,FabricFinishTypeService,FabricRequestCodeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Tag, Typography, message } from "antd";
+import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Tag, Typography, Upload, UploadProps, message } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,M3KnittedFabricsDTO,UomCategoryEnum,m3ItemsContentEnum} from "@project-management-system/shared-models";
@@ -56,6 +56,7 @@ const M3Items = ({props}) => {
   const [selectedContentValues, setSelectedContentValues] = useState([]);
   const [selectedContentValue, setSelectedContentValue] = useState(undefined);
   const [fabricCodeType, setFabricCodeType] = useState<string>(undefined);
+  const [imageUrl, setImageUrl] = useState('');
   const trimReqCodeService = new FabricRequestCodeService()
   const service = new M3ItemsService();
   const uomService = new UomService();
@@ -66,7 +67,11 @@ const M3Items = ({props}) => {
   const finishService = new FinishService()
   const fabFinishService = new FabricFinishTypeService()
   const contentService = new ContentService()
-
+  // const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
+  //   name: props.styleData.styleFileName,
+  //   status: 'done',
+  //   url:props.styleData.styleFileName,
+  // }]:[]);
   const getAllWeights = ()=>{
     weightService.getAllActiveWeight().then((res)=>{
       if(res.status){
@@ -194,10 +199,12 @@ const M3Items = ({props}) => {
     generateItemCode()
     // getWeaveData(val)
   }
-  const handleFormSubmit = () =>{
+  const handleFormSubmit = (val) =>{
+    console.log(val)
     console.log("jjjjj")
     console.log(KnittedForm.getFieldsValue())
-
+    KnittedForm.validateFields().then((values) => {
+      console.log(values)
     const req = new M3KnittedFabricsDTO(0,KnittedForm.getFieldValue("kniteContent"),KnittedForm.getFieldValue("kniteDescription"),KnittedForm.getFieldValue("kniteRemarks"),KnittedForm.getFieldValue("kniteGauze"),KnittedForm.getFieldValue("kniteYarnCount"),KnittedForm.getFieldValue("kniteHsn"),KnittedForm.getFieldValue("kniteM3Code"),KnittedForm.getFieldValue("knitWeight"),KnittedForm.getFieldValue("knitType"),KnittedForm.getFieldValue("knittedFabricTypeId"),KnittedForm.getFieldValue("knittedBuyerId"),true,"","",0,KnittedForm.getFieldValue("knittedBuyerCode"))
     service.createKnittedFabric(req).then((res) => {
       if(res.status){
@@ -213,6 +220,10 @@ const M3Items = ({props}) => {
     }).catch((err) => {
         AlertMessages.getErrorMessage(err.message);
       });
+    }).catch((err) => {
+      AlertMessages.getErrorMessage(err.message);
+    });
+
   }
 
   useEffect(() => {
@@ -374,8 +385,15 @@ const M3Items = ({props}) => {
 
   const onKniteFinish = (val) => {
     console.log("val");
-    console.log(val);
-    const req = new M3KnittedFabricsDTO(0,val.content,val.itemCode,val.fabricTypeId,val.weaveId,"","weightUom","","ppiData",(yarnType).replace(/""/g, '"'),0,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code)
+    // console.log(val.target.value);
+    // console.log(val.kniteContent)
+    // console.log(val.kniteDescription)
+    // console.log(val.kniteGauze)
+    console.log(form.getFieldsValue())
+    console.log(KnittedForm.getFieldsValue());
+    const req = new M3KnittedFabricsDTO(0,form.getFieldValue("kniteContent"),form.getFieldValue("kniteDescription"),form.getFieldValue("kniteRemarks"),form.getFieldValue("kniteGauze"),form.getFieldValue("kniteYarnCount"),form.getFieldValue("kniteHsn"),form.getFieldValue("kniteM3Code"),form.getFieldValue("knitWeight"),form.getFieldValue("knitType"),form.getFieldValue("knittedFabricTypeId"),form.getFieldValue("knittedBuyerId"),true,"","",0,form.getFieldValue("knittedBuyerCode"))
+    // const req = new M3KnittedFabricsDTO(0,val.content,val.itemCode,val.fabricTypeId,val.weaveId,"","weightUom","","ppiData",(yarnType).replace(/""/g, '"'),0,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code)
+    console.log(req);
     service.createKnittedFabric(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -394,7 +412,7 @@ const M3Items = ({props}) => {
   }
   const onFinish = (val) => {
     // console.log("val");
-    // console.log(val);
+    console.log(val);
     console.log(formData);
 
 
@@ -421,7 +439,7 @@ const M3Items = ({props}) => {
       return;
     }
   }
-     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,(yarnType).replace(/""/g, '"'),widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
+     const req = new M3FabricsDTO(0,form.getFieldValue("buyerId"),form.getFieldValue("itemCode"),form.getFieldValue("fabricTypeId"),form.getFieldValue("weaveId"),weightChange,weightUom,epiData.length>0?epiData:0,ppiData.length>0?ppiData:0,(yarnType).replace(/""/g, '"'),widthChange.length>0?widthChange:0,form.getFieldValue('widthUomId'),form.getFieldValue("finishId"),form.getFieldValue("shrinkage"),form.getFieldValue("description"),form.getFieldValue("buyerCode"),form.getFieldValue("m3Code"),form.getFieldValue("hsnCode"),yarn,formData,undefined,undefined,undefined,undefined,form.getFieldValue("remarks"))
     //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
@@ -588,7 +606,49 @@ const handleYarnUnitChange = (index, value) => {
   });
 };
 
+const uploadFieldProps: UploadProps = {
+  // alert();
+  multiple: false,
+  onRemove: file => {
+    // setfilelist([]);
+    setImageUrl('');
+  },
+  beforeUpload: (file: any) => {
+    if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+      AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+      // return true;
+    }
+    var reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = data => {
+      // if (filelist.length == 1) {
+        AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+        return true;
+      // } else {
+        // setfilelist([file]);
+        getBase64(file, imageUrl =>
+          setImageUrl(imageUrl)
+        );
+        return false;
+      // }
+    }
+  },
+  progress: {
+    strokeColor: {
+      '0%': '#108ee9',
+      '100%': '#87d068',
+    },
+    strokeWidth: 3,
+    format: percent => `${parseFloat(percent.toFixed(2))}%`,
+  },
+  // fileList: filelist,
+};
 
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
   
 
   return (
@@ -956,10 +1016,23 @@ const handleYarnUnitChange = (index, value) => {
                   </Form.List>
                 </Card>
               </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
+                <Form.Item name="styleUpload" label='Style Upload'
+                  rules={[
+                      {required:false,message:'Upload Style'}
+                  ]}  
+                  // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
+                  >
+                  <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+                  
+                  {/* {uploadButton} */}
+                  </Upload>
+                </Form.Item>
+                </Col>
           </Row>
           <Row>
             <Col span={24} style={{ textAlign: "right" }}>
-              <Button type="primary" htmlType="submit">
+              <Button type="primary" htmlType="button" onClick={onFinish}>
                 Submit
               </Button>
               <Button
@@ -975,7 +1048,7 @@ const handleYarnUnitChange = (index, value) => {
         </>
         :
         <>
-          <Form layout="vertical" form={KnittedForm} onFinish={onKniteFinish}>
+          <Form layout="vertical" form={KnittedForm} >
             <Row gutter={[16, 2]}>
               <Col xs={24} sm={12} md={6}>
                 <Form.Item id="knittedBuyerId" name="knittedBuyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
@@ -1147,8 +1220,8 @@ const handleYarnUnitChange = (index, value) => {
             </Row>
             <Row>
               <Col span={24} style={{ textAlign: "right" }}>
-                <Button type="primary" htmlType="button" onClick={handleFormSubmit}>
-                  Submit1
+                <Button type="primary" htmlType="button" onClick={onKniteFinish}>
+                  Create
                 </Button>
                 <Button
                   htmlType="button"

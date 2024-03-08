@@ -10,7 +10,7 @@ import { IndentTrimsEntity } from './indent-trims-entity';
 import { IndentAdapter } from './dto/indent-adapter';
 import { FabricIndentRepository } from './dto/fabric-indent-repository';
 import { TrimIndentRepository } from './dto/trim-indent-repository';
-import { UomService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, UomService } from '@project-management-system/shared-services';
 import { ColourService } from '../colours/colour.service';
 import { Colour } from '../colours/colour.entity';
 import { ColourAdapter } from '../colours/dto/colour-adapter';
@@ -20,7 +20,7 @@ import { ColourAdapter } from '../colours/dto/colour-adapter';
     imports: [
         TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity,Colour]),
       ],
-providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter,ColourService,ColourAdapter],
+providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter,ColourService,ColourAdapter,BuyerDestinationService],
       controllers: [IndentController],
       exports: []
 })
