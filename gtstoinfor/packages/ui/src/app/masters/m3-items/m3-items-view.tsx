@@ -336,20 +336,20 @@ const stockService = new StockService();
           sortDirections: ['descend', 'ascend'],
       },
 
-        {
-          title: "Width",
-          dataIndex: "width",
-          render : (text,record) => {
-              return (
-                  <span>
-                      {record.width ? `${record.width}${record.widthUom}`: '-'}
-                  </span>
-              )
-          },
-          sorter: (a, b) => a.width - b.width,
-          sortDirections: ['descend', 'ascend'],
+      //   {
+      //     title: "Width",
+      //     dataIndex: "width",
+      //     render : (text,record) => {
+      //         return (
+      //             <span>
+      //                 {record.width ? `${record.width}${record.widthUom}`: '-'}
+      //             </span>
+      //         )
+      //     },
+      //     sorter: (a, b) => a.width - b.width,
+      //     sortDirections: ['descend', 'ascend'],
 
-      },
+      // },
         {
             title: "Construction",
             dataIndex: "construction",

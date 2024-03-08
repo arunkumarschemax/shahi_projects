@@ -379,6 +379,8 @@ const M3Items = ({props}) => {
     // console.log("hi")
     generateItemCode()
     form.setFieldValue('buyerCode', option?.name)
+    form.setFieldValue('knittedBuyerCode', option?.name)
+
   }
 
   const onKniteFinish = (val) => {

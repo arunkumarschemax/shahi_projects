@@ -272,11 +272,11 @@ const stockService = new StockService();
             render : (text,record) => {
               return (
                   <span>
-                      {record.buyerInfo.buyerName}
+                      {record.buyerName}
                   </span>
               )
           },
-            sorter: (a, b) => a.buyerInfo.buyerName?.length - b.buyerInfo.buyerName?.length,
+            sorter: (a, b) => a.buyerName?.length - b.buyerName?.length,
            sortDirections: ['descend', 'ascend'],
            fixed:'left'
         },
@@ -291,18 +291,18 @@ const stockService = new StockService();
         },
         {
           title: "M3 Code",
-          dataIndex: "kniteM3Code",
-          ...getColumnSearchProps('kniteM3Code'),
-          sorter: (a, b) => a.kniteM3Code?.length - b.kniteM3Code?.length,
+          dataIndex: "m3Code",
+          ...getColumnSearchProps('m3Code'),
+          sorter: (a, b) => a.m3Code?.length - b.m3Code?.length,
          sortDirections: ['descend', 'ascend'],
          render: (text) => text || "-",
 
       },
       {
         title: "HSN Code",
-        dataIndex: "kniteHsn",
-        ...getColumnSearchProps('kniteHsn'),
-        sorter: (a, b) => a.kniteHsn?.length - b.kniteHsn?.length,
+        dataIndex: "hsn",
+        ...getColumnSearchProps('hsn'),
+        sorter: (a, b) => a.hsn?.length - b.hsn?.length,
        sortDirections: ['descend', 'ascend'],
     },
         // {
@@ -330,29 +330,29 @@ const stockService = new StockService();
   
         {
           title: "Weight",
-          dataIndex: "knitWeight",
-          sorter: (a, b) => a.knitWeight - b.knitWeight,
+          dataIndex: "weight",
+          sorter: (a, b) => a.weight - b.weight,
           sortDirections: ['descend', 'ascend'],
       },
 
         {
           title: "YarnCount",
-          dataIndex: "kniteYarnCount",
-          sorter: (a, b) => a.kniteYarnCount - b.kniteYarnCount,
+          dataIndex: "yarnCount",
+          sorter: (a, b) => a.yarnCount - b.yarnCount,
           sortDirections: ['descend', 'ascend'],
 
       },
         {
             title: "Gauze",
-            dataIndex: "kniteGauze",
-            sorter: (a, b) => a.kniteGauze?.length - b.kniteGauze?.length,
+            dataIndex: "gauze",
+            sorter: (a, b) => a.gauze?.length - b.gauze?.length,
             sortDirections: ['descend', 'ascend'],     
         },
         {
             title: "Remarks",
-            dataIndex: "kniteRemarks",
-            ...getColumnSearchProps('kniteRemarks'),
-            sorter: (a, b) => a.kniteRemarks?.length - b.kniteRemarks?.length,
+            dataIndex: "remarks",
+            ...getColumnSearchProps('remarks'),
+            sorter: (a, b) => a.remarks?.length - b.remarks?.length,
             sortDirections: ['descend', 'ascend'],
         },
         {
