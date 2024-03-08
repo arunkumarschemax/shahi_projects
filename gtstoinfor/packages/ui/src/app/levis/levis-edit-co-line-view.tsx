@@ -284,29 +284,36 @@ const LevisEditColineView = () => {
         // },
 
 
-        {
+        // {
+        //     title: 'Item No',
+        //     dataIndex: 'item_no',
+        //     render: (text, record, index) => {
+        //         return (
+        //             <div>
+        //                 {editingRow === record ? (
+        //                     <Input
+        //                         value={editedValue}
+        //                         onChange={(e) => setEditedValue(e.target.value)}
+        //                         style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+        //                         placeholder="Item No"
+        //                     />
+        //                 ) : (
+        //                     <Input
+        //                         value={text}
+        //                         readOnly
+        //                         style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+        //                     />
+        //                 )}
+        //             </div>
+        //         );
+        //     }
+        // },
+            {
             title: 'Item No',
             dataIndex: 'item_no',
-            render: (text, record, index) => {
-                return (
-                    <div>
-                        {editingRow === record ? (
-                            <Input
-                                value={editedValue}
-                                onChange={(e) => setEditedValue(e.target.value)}
-                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
-                                placeholder="Item No"
-                            />
-                        ) : (
-                            <Input
-                                value={text}
-                                readOnly
-                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
-                            />
-                        )}
-                    </div>
-                );
-            }
+            render: (text, record) => {
+                return (record.item_no ? (record.item_no) : '-')
+            },
         },
         {
             title: 'CO Date',

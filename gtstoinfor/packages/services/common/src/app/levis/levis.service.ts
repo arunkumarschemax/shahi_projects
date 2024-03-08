@@ -896,9 +896,9 @@ export class LevisService {
                 oldData.deliveryAddress,
                 rec.delivery_address,
                 rec.status,
-                itemNumber.item_no,
-                coNumber.co_number,
-                coDate.co_date,
+                itemNumber?.item_no  ? itemNumber?.item_no :"-",
+                coNumber?.co_number,
+                coDate?.co_date,
                 rec.material
 
               ));
@@ -1863,7 +1863,7 @@ export class LevisService {
           { poNumber: req.poNumber }, // Conditions for updating
           { status: StatusEnum.INPROGRESS }
         );
-        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+        return new CommonResponseModel(true, 1, 'Edit CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
