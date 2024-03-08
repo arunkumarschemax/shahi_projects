@@ -64,21 +64,21 @@ export function BomView() {
 
 
         },
-        {
-            title: 'Factory LO',
-            dataIndex: 'factoryLo',
-            align: 'center',
+        // {
+        //     title: 'Factory LO',
+        //     dataIndex: 'factoryLo',
+        //     align: 'center',
 
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            align: 'center',
+        // },
+        // {
+        //     title: 'Status',
+        //     dataIndex: 'status',
+        //     align: 'center',
 
-        },
+        // },
         {
-            title: 'EXP',
-            dataIndex: 'expNo',
+            title: 'Year',
+            dataIndex: 'YEAR',
             align: 'center',
 
         },

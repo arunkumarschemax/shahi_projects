@@ -14,7 +14,11 @@ import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
+import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
+import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
+import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
   poLine: string[]
 }
@@ -35,9 +39,13 @@ export default function GenerateProposal(props: Props) {
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
+  const [mobilontape, setMobilontape] = useState<any>([])
+
 
   const [elasticData, setElasticData] = useState<any>([]);
+  const [countrySticker,setCountrySticker]= useState<any>([])
   const [swoosth,setSwoosthData]= useState<any>([])
+  const [htLabel, setHtlabel] = useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -55,14 +63,21 @@ export default function GenerateProposal(props: Props) {
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={interlining}/>,
-    "Drawcords":<Drawcord bomInfo={buttonData}/>,
+    "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
-    "Backing Paper": <BackingPaper bomInfo={buttonData}/>
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
+    // "Snap Button": <SnapButton bomInfo={buttonData}/>,
+    "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
+    "Snap Button": <SnapButton bomInfo={buttonData}/>,
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
+
   }
+
 
   const onCancel = () => {
     setModalOpen(false)
@@ -158,12 +173,57 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    service.generateProposalForButton(bomProposalReq).then((v) => {
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
-        setButtonData(v.data)
+        setNeckTapeData(v.data)
       }
     })
   }
+  function handleCountrySticker(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+   
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setCountrySticker(res.data)
+      }
+    })
+  }
+
+  function handleSizeHtLabel(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generatePropsalForHtLabel(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
+    })
+  }
+
+
+  function handleMobilontape(item){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [item.itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setMobilontape(res.data)
+      }
+    })
+  }
+
+
+  // function handleDrawcord(itemId){
+  //   const bomProposalReq = new BomProposalReq()
+  //   bomProposalReq.itemId = [itemId]
+  //   bomProposalReq.poLine = props.poLine
+  //   service.generateProposalForButton(bomProposalReq).then((v) => {
+  //     if (v.status) {
+  //       setButtonData(v.data)
+  //     }
+  //   })
+  // }
 
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
@@ -346,7 +406,6 @@ export default function GenerateProposal(props: Props) {
   }
   const onView = (val) => {
     console.log(val.item)
-    console.log(val.itemId)
 
     setTrimName(val.item)
     setModalOpen(true)
@@ -376,9 +435,25 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Elastic'){
       handleElasticTrim(val.itemId)
     }
+    if(val.item == 'Size Ht label'){
+      handleSizeHtLabel(val.itemId)
+    }
+   
     if(val.item === 'Swoosh HT label'){
       handleButtonTrim(val.itemId)
-    }  }
+    } 
+
+    if(val.item === 'Mobilon Tape'){
+      handleMobilontape(val)
+    } 
+    
+     if(val.item === 'Snap Button'){
+      handleButtonTrim(val.itemId)
+    }
+    if(val.item === 'Country Sticker'){
+      handleCountrySticker(val.itemId)
+    } 
+  }
 
 
   return (

@@ -24,13 +24,14 @@ import { DestinationEntity } from "./entittes/destination-entity";
 import { DestinationsRepo } from "./repo/destination-repo";
 import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
 import { DpomModule } from "../dpom/nike-dpom.module";
+import { ItemAttributesEntity } from "./entittes/item-attributes.entity";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity
+            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity
         ]),
         DpomModule],
     controllers:[BomController],

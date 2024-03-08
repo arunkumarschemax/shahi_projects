@@ -88,14 +88,22 @@ export const SwooshHtLable = (props: swooshHtLableprops) => {
       };
 
 
-
+      const groupedData = {};
+  
+      data.forEach((item) => {
+        const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+        if (!groupedData[key]) {
+          groupedData[key] = [];
+        }
+        groupedData[key].push(item);
+      });
     return (
         <div id='print'>
             <Card title={'Swoosh HT Lable'}
                 extra={<Button onClick={handlePrint}>Print</Button>} >
              
        <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                <tr>
+                <tr >
                     <th style={{ width: '3%' }}>ITEM#</th>
                     <th style={{ width: '3%' }}>STYLE#</th>
                     <th style={{ width: '3%' }}>SEASON</th>
@@ -108,7 +116,7 @@ export const SwooshHtLable = (props: swooshHtLableprops) => {
                     {data.map((rec,index) =>{
                         return(
                             <tr>
-                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center' }} rowSpan={rec.length}>{rec.itemNo !== null ? rec.itemNo:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
