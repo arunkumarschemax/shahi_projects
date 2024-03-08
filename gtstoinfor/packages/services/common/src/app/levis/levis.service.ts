@@ -190,6 +190,9 @@ export class LevisService {
           entity.poNumber = req.poNumber
           entity.deliveryAddress = req.deliveryAddress
           entity.currency = req.currency
+          entity.poRemarks = req.poRemarks
+          entity.splitPo = req.splitPo
+          entity.totalQuantity = req.totalQuantity
 
           entity.poLine = item.poLine
           entity.material = item.material
@@ -205,46 +208,56 @@ export class LevisService {
           entity.scheduledDate = variant.scheduledDate
           pdfData.push(entity);
 
+          // if (orderData) {
+          //   // Check if any of the fields have changed
+          //   const fieldsChanged = Object.keys(entity).some(key => orderData[key] !== entity[key]);
+
+          //   console.log("update")
+
           if (orderData) {
-            // Check if any of the fields have changed
-            const fieldsChanged = Object.keys(entity).some(key => orderData[key] !== entity[key]);
-
-            if (fieldsChanged) {
-              const update = await transactionManager.getRepository(LevisOrdersEntity).update(
-                { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
-                { ...entity }
-              );
-
-              let po = parseInt(order?.poVersion) + 1
-              const entitys = new LevisOrderschildEntity()
-
-              entitys.poNumber = req.poNumber
-              entitys.deliveryAddress = req.deliveryAddress
-              entitys.currency = req.currency
-
-              entitys.poLine = item.poLine
-              entitys.material = item.material
-              entitys.transMode = item.transMode
-              entitys.plannedExFactoryDate = item.plannedExFactoryDate
-              entitys.exFactoryDate = item.exFactoryDate
-
-              entitys.itemNo = variant.itemNo
-              entitys.size = variant.size
-              entitys.upc = variant.upc
-              entitys.quantity = variant.quantity
-              entitys.unitPrice = variant.unitPrice
-              entitys.scheduledDate = variant.scheduledDate
-              entitys.poVersion = po.toString()
-              entitys.orderId = orderData.id
-
-              const savedChild = await transactionManager.getRepository(LevisOrderschildEntity).save(entitys)
-
-
-              if (!update.affected) {
-                throw new Error('Update failed');
+            const update = await transactionManager.getRepository(LevisOrdersEntity).update(
+              { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
+              {deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo,totalQuantity:req.totalQuantity,
+                material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
+                itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
               }
+            );
+            console.log("update", update)
+
+            let po = parseInt(order?.poVersion) + 1
+            const entitys = new LevisOrderschildEntity()
+
+            entitys.poNumber = req.poNumber
+            entitys.deliveryAddress = req.deliveryAddress
+            entitys.currency = req.currency
+            entitys.poRemarks = req.poRemarks
+            entitys.splitPo = req.splitPo
+            entitys.totalQuantity = req.totalQuantity
+
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            entitys.transMode = item.transMode
+            entitys.plannedExFactoryDate = item.plannedExFactoryDate
+            entitys.exFactoryDate = item.exFactoryDate
+
+            entitys.itemNo = variant.itemNo
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.scheduledDate = variant.scheduledDate
+            entitys.poVersion = po.toString()
+            entitys.orderId = orderData.id
+
+            const savedChild = await transactionManager.getRepository(LevisOrderschildEntity).save(entitys)
+
+
+            if (!update.affected) {
+              throw new Error('Update failed');
             }
-          } else {
+          }
+          // } 
+          else {
             // Only save if the record doesn't exist
             saved = await transactionManager.getRepository(LevisOrdersEntity).save(entity);
             const entitys = new LevisOrderschildEntity()
@@ -252,6 +265,9 @@ export class LevisService {
             entitys.poNumber = req.poNumber
             entitys.deliveryAddress = req.deliveryAddress
             entitys.currency = req.currency
+            entitys.poRemarks = req.poRemarks
+            entitys.splitPo = req.splitPo
+            entitys.totalQuantity = req.totalQuantity
 
             entitys.poLine = item.poLine
             entitys.material = item.material
@@ -1321,7 +1337,7 @@ export class LevisService {
       return new CommonResponseModel(false, 0, error)
     }
   }
-  
+
   async editCOline(req: any): Promise<CommonResponseModel> {
     const [po] = await this.levisCoLineRepo.getDataforCOLineEdit();
     if (!po) {
@@ -1431,34 +1447,34 @@ export class LevisService {
       // await driver.findElement(By.id('vieworderpo')).click();
 
       // const maxRows = 1000;
-      console.log("startLoop") 
+      console.log("startLoop")
       let j;
       for (let i = 1; i <= 1000; i++) {
-          const buyerpoPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`;
-          const coNumberPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[7]`;
+        const buyerpoPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`;
+        const coNumberPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[7]`;
 
-          console.log(buyerpoPath,"buyerpoPath")
-          console.log(coNumberPath,"coNumberPath")
+        console.log(buyerpoPath, "buyerpoPath")
+        console.log(coNumberPath, "coNumberPath")
 
 
 
-          console.log("----------------------------------")
-          const BuyerPoelementContainingNumber = await driver.findElement(By.xpath(buyerpoPath));
-          const coNumberelementContaining = await driver.findElement(By.xpath(coNumberPath));
+        console.log("----------------------------------")
+        const BuyerPoelementContainingNumber = await driver.findElement(By.xpath(buyerpoPath));
+        const coNumberelementContaining = await driver.findElement(By.xpath(coNumberPath));
 
-          console.log("==============================")
-          console.log(BuyerPoelementContainingNumber,"elementContainingNumber")
-          const textContainingBuyerPo = await BuyerPoelementContainingNumber.getText();
-          const textContainingCoNumber = await coNumberelementContaining.getText();
-          console.log(`Element containing the number in row ${i}:`, textContainingBuyerPo);
-          console.log(coLine.coNumber,"coLine.coNumber")
-          if (textContainingBuyerPo===coLine.buyerPo && textContainingCoNumber === coLine.coNumber) {
-            j=i
-            console.log(`Found the desired text in row ${i}!`);
-            break; 
-          }
+        console.log("==============================")
+        console.log(BuyerPoelementContainingNumber, "elementContainingNumber")
+        const textContainingBuyerPo = await BuyerPoelementContainingNumber.getText();
+        const textContainingCoNumber = await coNumberelementContaining.getText();
+        console.log(`Element containing the number in row ${i}:`, textContainingBuyerPo);
+        console.log(coLine.coNumber, "coLine.coNumber")
+        if (textContainingBuyerPo === coLine.buyerPo && textContainingCoNumber === coLine.coNumber) {
+          j = i
+          console.log(`Found the desired text in row ${i}!`);
+          break;
+        }
       }
-     
+
       const viewButtonPo = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[21]/div`));
       await viewButtonPo.click();
       console.log(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[31]/td[21]/div`, "kkkkkkkk")
@@ -1474,7 +1490,7 @@ export class LevisService {
       await driver.findElement(By.name('dojo.delydt')).clear();
       await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
       console.log("DeliveryDate end")
-      
+
       // await driver.sleep(50000)
 
 
@@ -1531,9 +1547,9 @@ export class LevisService {
       await driver.wait(until.elementLocated(By.id('ptr')));
       const ptrDropDown = await driver.findElement(By.id('ptr'));
       await driver.executeScript(`arguments[0].value = '${paymentTerms}';`, ptrDropDown)
-    
 
-   
+
+
       // for (let dest of coLine.destinations) {
       //   const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
       //   const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
@@ -1699,7 +1715,7 @@ export class LevisService {
       // }
       return new CommonResponseModel(true, 1, `COline created successfully`)
     }
-     catch (error) {
+    catch (error) {
 
       console.log(error, 'error');
       // if (error.name === 'TimeoutError') {
@@ -1719,7 +1735,7 @@ export class LevisService {
     }
   }
 
-   
+
 
 
 
@@ -1767,7 +1783,7 @@ export class LevisService {
 
   async getOrderReportData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
     console.log(req, "servvv")
- 
+
     try {
       const details = await this.LevisOrdersRepo.getOrderReportData(req);
       if (details.length === 0) {
@@ -1780,13 +1796,13 @@ export class LevisService {
             colorCode: rec.material
           }
         });
-    
-        const color = colorcheck?.colorName 
-      
+
+        const color = colorcheck?.colorName
+
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${color}`,
-            new levisOrderReportDataModel(rec.id, rec.po_number, rec.unit_price, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date,color)
+            new levisOrderReportDataModel(rec.id, rec.po_number, rec.unit_price, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date, color)
           );
 
 

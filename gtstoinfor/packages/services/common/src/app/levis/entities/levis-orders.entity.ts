@@ -150,5 +150,23 @@ export class LevisOrdersEntity {
     })
     isActive: boolean;
 
+    
+    @Column("varchar", {
+        name: "po_remarks",
+    })
+    poRemarks: string
+
+
+    @Column("varchar", {
+        name: "split_po",
+    })
+    splitPo: string
+
+    @Column("varchar", {
+        name: "total_quantity",
+    })
+    totalQuantity:string
+
+
 
 }

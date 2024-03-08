@@ -46,6 +46,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     {/* <th className='ta-b'>TRANSMODE</th> */}
                     <th className='ta-b'>DELIVERY ADDRESS</th>
                     <th className='ta-b'>CURRENCY</th>
+                    <th className='ta-b'>TOTAL QUANTITY</th>
 
 
                 </tr>
@@ -55,6 +56,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     {/* <td className='ta-b' style={{ textAlign: 'center' }}>{pdfData?.transMode}</td> */}
                     <td className='ta-b'>{pdfData?.deliveryAddress}</td>
                     <td className='ta-b'>{pdfData?.currency}</td>
+                    <td className='ta-b'>{pdfData?.totalQuantity}</td>
                 </tr>
                 {pdfData?.LevispoItemDetails?.map((i) => {
                     return <>
