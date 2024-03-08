@@ -10,7 +10,6 @@ import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
 import HangTag from "./trim-prints/hang-tag";
 import WasCarelabel from "./trim-prints/wash-care-label";
-import { CountryStickerPrint } from "./trim-prints/country-sticker";
 import { PageContainer } from "@ant-design/pro-layout";
 
 

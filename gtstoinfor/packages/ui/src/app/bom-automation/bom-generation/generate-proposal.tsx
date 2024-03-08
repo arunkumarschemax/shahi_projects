@@ -16,9 +16,9 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
-import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
+import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
 type Props = {
   poLine: string[]
 }
