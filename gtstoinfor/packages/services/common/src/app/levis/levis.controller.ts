@@ -298,7 +298,43 @@ export class LevisController {
         }
     }
    
-   
+    @Post('/editCoLineCreationReq')
+    async editCoLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.editCoLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+
+    @Post('/getEditCoLineData')
+    async getEditCoLineData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getEditCoLineData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getEditItem')
+    async getEditItem(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getEditItem();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getEditCoPoNumber')
+    async getEditCoPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getEditCoPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 
  
 }

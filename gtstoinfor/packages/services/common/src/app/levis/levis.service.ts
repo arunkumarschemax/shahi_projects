@@ -24,6 +24,8 @@ import * as puppeteer from 'puppeteer';
 import { Cron } from "@nestjs/schedule";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
+import { EditLevisCOLineEntity } from "./entities/edit-levis-co-line.entity";
+import { EditLevisCOLineRepository } from "./repositories/edit-levis-co-line.repository";
 
 
 
@@ -41,7 +43,8 @@ export class LevisService {
     private sizeRepo: SizeRepository,
     private AddressRepo: AddressRepository,
     private AddressService: AddressService,
-    private LevisOrdersChildRepo: LevisOrdersChildRepository
+    private LevisOrdersChildRepo: LevisOrdersChildRepository,
+    private EditRepo:EditLevisCOLineRepository
 
 
 
@@ -838,6 +841,13 @@ export class LevisService {
       const compareModel: LevisCompareModel[] = []
 
       for (const rec of Originaldata) {
+        console.log(rec,"rec")
+        const itemNumber=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coNumber=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coDate=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        console.log(itemNumber,'kkkkkkkkkkkkkkkk')
+        console.log(coNumber,'lllllllllll')
+        console.log(coDate,'mmmmmmmm')
         const childData = await this.LevisOrdersChildRepo.find({
           where: {
             poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
@@ -869,6 +879,12 @@ export class LevisService {
                 rec.transmode,
                 oldData.deliveryAddress,
                 rec.delivery_address,
+                rec.status,
+                itemNumber.item_no,
+                coNumber.co_number,
+                coDate.co_date,
+                rec.material
+
               ));
           }
         }
@@ -1795,6 +1811,80 @@ export class LevisService {
 
 
 
+
+  async editCoLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      // console.log(req,'req')
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.LevisOrdersChildRepo.find({ where: { poNumber: req.poNumber } });
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const empty = [];
+
+      //console.log(rec,'reccccccccc')
+      const entity = new EditLevisCOLineEntity()
+      entity.poLine = uniquePoLines.join(',');
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      entity.material = req.material;
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      // entity.deliveryDate = req.deliveryDate;
+      entity.createdUser = 'admin';
+      entity.coDate=req?.coDate;
+      entity.coNumber=req?.coNumber
+      empty.push(entity)
+
+      // console.log(empty,'emptyyyyy')
+      const save = await this.EditRepo.save(empty);
+
+
+
+      if (save) {
+        const update = await this.LevisOrdersChildRepo.update(
+          { poNumber: req.poNumber }, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
+        );
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      //  console.log(err,',,,,,,,,,,,,,,,')
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+  async getEditCoLineData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
+    const data = await this.EditRepo.getEditCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getEditCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.EditRepo.getEditCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getEditItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.EditRepo.getEditItem()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 
 
