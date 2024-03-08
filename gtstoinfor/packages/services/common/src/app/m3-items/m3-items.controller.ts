@@ -7,8 +7,7 @@ import { M3ItemsDTO } from "./m3-items.dto";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { join } from "path";
-
-
+import { diskStorage } from 'multer';
 
 @ApiTags('m3Items')
 @Controller('/m3Items')
@@ -130,12 +129,4 @@ export class M3ItemsController {
         }
       }
 
-}
-
-function diskStorage(arg0: {
-  destination: any;
-  // destination: './upload_files',
-  filename: (req: any, file: any, callback: any) => void;
-}): any {
-  throw new Error("Function not implemented.");
 }
