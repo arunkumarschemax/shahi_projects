@@ -1060,20 +1060,15 @@ async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonRespons
         const { styleNumber, bomQty, itemNo, destination } = currentItem;
         const bomGeoCode = destinations.find((v) => v.destination === destination);
         const key = `${styleNumber}-${itemNo}`;
-        console.log(poBomData,"poBomData")
-        console.log(groupedData,"groupedData")
-
         const existingGroup = result.find((group) => group.key === key);
-        console.log(existingGroup,"existingGroup")
 
-        if (!existingGroup) {
+        if (!existingGroup) { 
             result.push({
                 key,
                 styleNumber,
                 itemNo,
                 bomQty: 0,
             });
-            console.log(key,"key")
 
         }
         const groupToUpdate = result.find((group) => group.key === key);
