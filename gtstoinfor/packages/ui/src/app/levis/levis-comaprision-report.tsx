@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
+import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Spin, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import { CentricService, EddieService, LevisService, OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useRef, useState } from "react"
@@ -24,6 +24,7 @@ export const LevisComaparisionReport = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [itemNoValues, setItemNoValues] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const { Option } = Select;
 
@@ -33,6 +34,7 @@ export const LevisComaparisionReport = () => {
   }, []);
   
   const getordercomparationData = () => {
+    setLoading(true);
     const req = new LevisOrderFilter();
 
     if (form.getFieldValue("poNumber") !== undefined) {
@@ -41,6 +43,7 @@ export const LevisComaparisionReport = () => {
   
 
     service.getordercomparationData(req).then((res) => {
+      setLoading(false);
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -375,7 +378,7 @@ export const LevisComaparisionReport = () => {
   ]
       },
       {
-        title: "Delivery Date",
+        title: "Ex-Factory Date",
         dataIndex: "",
         width: 90,
         // sorter: (a, b) => a.size.localeCompare(b.size),
@@ -766,6 +769,12 @@ export const LevisComaparisionReport = () => {
 
     return (
       <>
+{loading ? (
+  <Spin spinning={loading}>
+    {/* Content to show while loading */}
+    <div>Loading...</div>
+  </Spin>
+) : (
 
           <Table
             // loading={tableLoading}
@@ -785,6 +794,7 @@ export const LevisComaparisionReport = () => {
             rowClassName={getRowClassName}
             bordered
           />
+)}
       
       </>
     );
@@ -880,7 +890,7 @@ export const LevisComaparisionReport = () => {
   ]
       },
       {
-        title: "Delivery Date",
+        title: "Ex-Factory Date",
         dataIndex: "",
         width: 90,
         children: [
