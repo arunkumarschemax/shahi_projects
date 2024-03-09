@@ -133,6 +133,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
 
                 poData.totalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g,"");
+                poData.splitPoTotalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g,"");
                 
                 // poData.transMode =
                 //     (firstPageContent[transModeLseIndex + 2].str + " " +
@@ -293,6 +294,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 poData.deliveryAddress = deliveryAddress.trim().replace(/SHAHI EXPORTS PVT LTD… /g, "")
 
                 poData.totalQuantity = firstPageContent[totalQuantityIndexBr - 2].str
+                poData.splitPoTotalQuantity = firstPageContent[totalQuantityIndexBr - 2].str
 
                 // poData.transMode = firstPageContent[transModeIndex + 2].str
                 // poData.deliveryAddress =
@@ -450,6 +452,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 poData.deliveryAddress = deliveryAddress.trim();
 
                 poData.totalQuantity = firstPageContent[totalQuantityIndexMx - 1].str
+                poData.splitPoTotalQuantity = firstPageContent[totalQuantityIndexMx - 1].str
 
                 // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
                 // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str

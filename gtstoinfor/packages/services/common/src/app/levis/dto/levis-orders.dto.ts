@@ -79,6 +79,9 @@ g
 
     @ApiProperty()
     totalQuantity:string
+    
+    @ApiProperty()
+    splitPoTotalQuantity:string
 
 
 

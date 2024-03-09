@@ -176,6 +176,12 @@ export class LevisOrderschildEntity {
     })
     totalQuantity:string
 
+    @Column("varchar", {
+        name: "split_po_total_quantity",
+    })
+    splitPoTotalQuantity:string
+
+
     
 
 }

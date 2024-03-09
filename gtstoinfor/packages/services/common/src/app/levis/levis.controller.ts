@@ -297,8 +297,16 @@ export class LevisController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
         }
     }
-   
-   
+
+
+    @Post('/getSplitOrderComparisionData')
+    async getSplitOrderComparisionData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getSplitOrderComparisionData(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
 
  
 }
