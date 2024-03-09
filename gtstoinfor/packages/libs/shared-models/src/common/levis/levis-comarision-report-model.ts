@@ -13,6 +13,11 @@ export class LevisCompareModel{
     newtransMode: string;
      olddeliveryAddress: string;
     newdeliveryAddress: string;
+    status:string;
+    itemNo:number;
+    coNumber:string;
+    coDate:string;
+    material:string;
     
     constructor (poNumber: string, po_line:number,size:string,
         oldPrice: string,
@@ -24,7 +29,13 @@ export class LevisCompareModel{
         oldtransMode: string,
         newtransMode: string,
         olddeliveryAddress: string,
-    newdeliveryAddress: string,){
+    newdeliveryAddress: string,
+    status:string,
+    itemNo:number,
+    coNumber:string,
+    coDate:string,
+    material:string,
+    ){
 
             this.poNumber = poNumber
             this.po_line = po_line
@@ -39,6 +50,11 @@ export class LevisCompareModel{
             this.newtransMode=newtransMode
             this.olddeliveryAddress=olddeliveryAddress
             this.newdeliveryAddress=newdeliveryAddress
+            this.status=status
+            this.itemNo = itemNo
+            this.coNumber=coNumber
+            this.coDate=coDate
+            this.material=material
 
     } 
 

@@ -117,7 +117,21 @@ export class LevisOrdersRepository extends Repository<LevisOrdersEntity> {
                 // else if (req.splitPoTotalQuantity !== undefined) {
                 //     query.andWhere(`o.split_po_total_quantity ='${req.splitPoTotalQuantity}'`)
                 // }
+
+
     
         return await query.getRawMany();
       }
+
+      async getItemsNo(req:any): Promise<any> {
+        console.log(req,"jjjjjjj")
+        const query = this.createQueryBuilder('o')
+            .select(`lc.item_no,lc.co_date,lc.co_number`)
+            .leftJoin(`LevisCOLineEntity`,'lc','lc.po_number = o.po_number')
+            .where(`lc.po_number = ${req}`)
+            .groupBy(`lc.item_no`)
+    
+    
+        return await query.getRawOne()
+    }
 }

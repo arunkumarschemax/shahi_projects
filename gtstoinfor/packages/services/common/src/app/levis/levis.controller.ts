@@ -223,9 +223,9 @@ export class LevisController {
     }
 
     @Post('/getPdfFileInfo')
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.Service.getPdfFileInfo();
+            return this.Service.getPdfFileInfo(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
@@ -297,7 +297,71 @@ export class LevisController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
         }
     }
+   
+    @Post('/editCoLineCreationReq')
+    async editCoLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.editCoLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
 
+
+    @Post('/getEditCoLineData')
+    async getEditCoLineData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getEditCoLineData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getEditItem')
+    async getEditItem(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getEditItem();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getEditCoPoNumber')
+    async getEditCoPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getEditCoPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
+    @Post('/getHistoryPoNumber')
+    async getHistoryPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getHistoryPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+ 
+    @Post('/deleteEditCoLine')
+    async deleteEditCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.deleteEditCoLine(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Post('/updateStatusInOrderAcceptance')
+    async updateStatusInOrderAcceptance(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.updateStatusInOrderAcceptance(req);
+        } catch (error) {
+            return error
+        }
+    }
 
     @Post('/getSplitOrderComparisionData')
     async getSplitOrderComparisionData(@Body() req: any): Promise<CommonResponseModel> {
@@ -308,5 +372,4 @@ export class LevisController {
         }
     }
 
- 
 }

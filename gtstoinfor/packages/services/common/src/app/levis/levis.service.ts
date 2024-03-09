@@ -24,6 +24,8 @@ import * as puppeteer from 'puppeteer';
 import { Cron } from "@nestjs/schedule";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
+import { EditLevisCOLineEntity } from "./entities/edit-levis-co-line.entity";
+import { EditLevisCOLineRepository } from "./repositories/edit-levis-co-line.repository";
 
 
 
@@ -41,7 +43,8 @@ export class LevisService {
     private sizeRepo: SizeRepository,
     private AddressRepo: AddressRepository,
     private AddressService: AddressService,
-    private LevisOrdersChildRepo: LevisOrdersChildRepository
+    private LevisOrdersChildRepo: LevisOrdersChildRepository,
+    private EditRepo: EditLevisCOLineRepository
 
 
 
@@ -216,7 +219,8 @@ export class LevisService {
             const update = await transactionManager.getRepository(LevisOrdersEntity).update(
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
               {
-                deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo, totalQuantity: req.totalQuantity,
+                
+                deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo,  totalQuantity:  req.totalQuantity,
                 splitPoTotalQuantity:req.splitPoTotalQuantity,
                 material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
                 itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
@@ -575,9 +579,10 @@ export class LevisService {
     }
   }
 
-  async getPdfFileInfo(): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+    console.log(req,'reqqqqqqqq')
     try {
-      const data = await this.pdfRepo.getPDFInfo()
+      const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {
@@ -859,6 +864,13 @@ export class LevisService {
       const compareModel: LevisCompareModel[] = []
 
       for (const rec of Originaldata) {
+        console.log(rec, "rec")
+        const itemNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coDate = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        console.log(itemNumber, 'kkkkkkkkkkkkkkkk')
+        console.log(coNumber, 'lllllllllll')
+        console.log(coDate, 'mmmmmmmm')
         const childData = await this.LevisOrdersChildRepo.find({
           where: {
             poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
@@ -890,6 +902,12 @@ export class LevisService {
                 rec.transmode,
                 oldData.deliveryAddress,
                 rec.delivery_address,
+                oldData.status,
+                itemNumber?.item_no ? itemNumber?.item_no : "-",
+                coNumber?.co_number,
+                coDate?.co_date,
+                rec.material
+
               ));
           }
         }
@@ -1328,7 +1346,7 @@ export class LevisService {
   }
 
   async editCOline(req: any): Promise<CommonResponseModel> {
-    const [po] = await this.levisCoLineRepo.getDataforCOLineEdit();
+    const po = await this.EditRepo.getDataforCOLineEdit();
     if (!po) {
       return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
     }
@@ -1430,13 +1448,13 @@ export class LevisService {
 
       await driver.wait(until.elementLocated(By.id('ViewOrderID')))
       await driver.findElement(By.id('ViewOrderID')).click();
+        //   await driver.executeScript("document.body.style.zoom = '80%'");
+        // console.log("Screen zoomed out by 80%");
+     
       await driver.sleep(50000)
-
-      // await driver.wait(until.elementLocated(By.id('vieworderpo')))
-      // await driver.findElement(By.id('vieworderpo')).click();
-
-      // const maxRows = 1000;
       console.log("startLoop")
+     
+
       let j;
       for (let i = 1; i <= 1000; i++) {
         const buyerpoPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`;
@@ -1453,7 +1471,11 @@ export class LevisService {
 
         console.log("==============================")
         console.log(BuyerPoelementContainingNumber, "elementContainingNumber")
+
+        console.log("hiiiiiiiiiii")
         const textContainingBuyerPo = await BuyerPoelementContainingNumber.getText();
+        console.log("uuuuuuuuuuuuuuu")
+         
         const textContainingCoNumber = await coNumberelementContaining.getText();
         console.log(`Element containing the number in row ${i}:`, textContainingBuyerPo);
         console.log(coLine.coNumber, "coLine.coNumber")
@@ -1463,10 +1485,12 @@ export class LevisService {
           break;
         }
       }
-
+       console.log("janiii")
+       
       const viewButtonPo = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[21]/div`));
       await viewButtonPo.click();
       console.log(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[31]/td[21]/div`, "kkkkkkkk")
+      console.log(viewButtonPo,"viewButtonPo")
 
       console.log("ExfactroyDate starts")
       await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
@@ -1815,107 +1839,124 @@ export class LevisService {
   }
 
 
-  // async getSplitOrderComparisionData(req?: any): Promise<CommonResponseModel> {
-  //   // eslint-disable-next-line no-useless-catch
-  //   try {
-  //     const Originaldata = await this.LevisOrdersRepo.getSplitOrderComparisionData(req)
-  //     const compareModel: LevisSplitCompareModel[] = []
 
-  //     for (const rec of Originaldata) {
-  //       const childData = await this.LevisOrdersChildRepo.find({
-  //         where: {
-  //           poNumber: rec.po_number, splitPo:rec.split_po,poLine: rec.po_line, size: rec.size
-  //         }, order: { id: 'DESC' }, take: 1, skip: 1
-  //       })
-  //       if (childData.length > 0) {
-  //         const oldData = childData[0];
-  //         if (
-  //           oldData.totalQuantity !== rec.totalQuantity||
-  //           oldData.splitPoTotalQuantity !== rec.splitPoTotalQuantity
-  //         ) {
-  //           compareModel.push(new
-  //             LevisSplitCompareModel(
-  //               rec.po_number,
-  //               rec.split_po,
-  //               rec.po_line,
-  //               rec.size,
-  //               parseInt(oldData.totalQuantity),
-  //               rec.splitPoTotalQuantity,
-  //               // parseInt(oldData.splitPoTotalQuantity),
-  //               // rec.splitPoTotalQuantity,
-  //             ));
-  //         }
-  //       }
-  //     }
-  //     if (compareModel) {
 
-  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
-  //     } else {
-  //       return new CommonResponseModel(false, 0, 'No data found');
-  //     }
-  //   } catch (err) {
-  //     throw err
-  //   }
-  // }
+  async editCoLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      // console.log(req,'req')
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.LevisOrdersChildRepo.find({ where: { poNumber: req.poNumber } });
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const empty = [];
 
-  async getSplitOrderComparisionData(req:any): Promise<CommonResponseModel> {
-    console.log(req,"req")
-    const data = await this.LevisOrdersRepo.getSplitOrderComparisionData(req)
-    console.log("data",data)
+      //console.log(rec,'reccccccccc')
+      const entity = new EditLevisCOLineEntity()
+      entity.poLine = uniquePoLines.join(',');
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      entity.material = req.material;
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      // entity.deliveryDate = req.deliveryDate;
+      entity.createdUser = 'admin';
+      entity.coDate = req?.coDate;
+      entity.coNumber = req?.coNumber
+      empty.push(entity)
+
+      // console.log(empty,'emptyyyyy')
+      const save = await this.EditRepo.save(empty);
+
+
+
+      if (save) {
+        const update = await this.LevisOrdersChildRepo.update(
+          { poNumber: req.poNumber }, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
+        );
+        return new CommonResponseModel(true, 1, 'Edit CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      //  console.log(err,',,,,,,,,,,,,,,,')
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+  async getEditCoLineData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
+    const data = await this.EditRepo.getEditCoLineData(req)
     if (data.length > 0)
       return new CommonResponseModel(true, 1, 'data retrived', data)
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
 
+  async getEditCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.EditRepo.getEditCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
 
-  // async getSplitOrderComparisionData(req?: any): Promise<CommonResponseModel> {
-  //   try {
-  //     const originalData = await this.LevisOrdersRepo.getSplitOrderComparisionData(req);
-  //     const compareModel: LevisSplitCompareModel[] = [];
-  
-  //     for (const rec of originalData) {
-  //       // Find the corresponding child data for each splitPo
-  //       const childData = await this.LevisOrdersChildRepo.find({
-  //         where: {
-  //           poNumber: rec.split_po // Assuming split_po represents poNumber in child data
-  //         },
-  //         order: { id: 'DESC' },
-  //         take: 1
-  //       });
-  
-  //       if (childData.length > 0) {
-  //         // Get the totalQuantity from the corresponding child data
-  //         const totalQuantity = childData[0].totalQuantity;
-  
-  //         // Push the comparison model with the splitPo totalQuantity
-  //         compareModel.push(new LevisSplitCompareModel(
-  //           rec.po_number,
-  //           rec.split_po,
-  //           rec.po_line,
-  //           rec.size,
-  //           parseInt(totalQuantity), // Using the totalQuantity from the corresponding child data
-  //           parseInt(totalQuantity) // Using the totalQuantity from the corresponding child data as splitPo totalQuantity
-  //         ));
-  //       }
-  //     }
-  
-  //     if (compareModel.length > 0) {
-  //       return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', compareModel);
-  //     } else {
-  //       return new CommonResponseModel(false, 0, 'No data found');
-  //     }
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
-  
-  
+  async getEditItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.EditRepo.getEditItem()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
+  async getHistoryPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.getHistoryPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
+  async deleteEditCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.EditRepo.delete({ id: Number(req.id) });
 
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 
-
-
-
+  async updateStatusInOrderAcceptance(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqOpenStatus")
+    try {
+      const update = await this.LevisOrdersChildRepo.update(
+        { poNumber: req.poNumber },
+        { status: StatusEnum.OPEN }
+      );
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 }

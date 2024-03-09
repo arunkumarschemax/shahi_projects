@@ -15,12 +15,22 @@ export class LevisPdfRepo extends Repository<LevisPdfInfoEntity> {
     }
  
 
-    async getPDFInfo(): Promise<any[]> {
+    async getPDFInfo(req:any): Promise<any[]> {
         const query = this.createQueryBuilder('co')
           .select(`*,DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as upload_date`);
+          if (req.poNumber !== undefined) {
+            query.andWhere(`co.po_number ='${req.poNumber}'`)
+        }
+          
         return await query.getRawMany();
       }
 
  
+      async getHistoryPoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('co')
+            .select(`DISTINCT po_number`)
+        
+        return await query.getRawMany()
+    }
   
 }

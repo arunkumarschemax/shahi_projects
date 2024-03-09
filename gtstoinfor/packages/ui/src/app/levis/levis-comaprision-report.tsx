@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
+import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Spin, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import { CentricService, EddieService, LevisService, OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useRef, useState } from "react"
@@ -6,7 +6,7 @@ import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons
 import AlertMessages from "../common/common-functions/alert-messages"
 import moment from "moment"
 import { Excel } from "antd-table-saveas-excel"
-import { LevisOrderFilter, PoOrderFilter } from "@project-management-system/shared-models"
+import { EditLevisOrderAcceptanceRequest, LevisOrderAcceptanceRequest, LevisOrderFilter, PoOrderFilter } from "@project-management-system/shared-models"
 import Highlighter from "react-highlight-words"
 
 
@@ -23,6 +23,8 @@ export const LevisComaparisionReport = () => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [itemNoValues, setItemNoValues] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const { Option } = Select;
 
@@ -32,6 +34,7 @@ export const LevisComaparisionReport = () => {
   }, []);
   
   const getordercomparationData = () => {
+    setLoading(true);
     const req = new LevisOrderFilter();
 
     if (form.getFieldValue("poNumber") !== undefined) {
@@ -40,6 +43,7 @@ export const LevisComaparisionReport = () => {
   
 
     service.getordercomparationData(req).then((res) => {
+      setLoading(false);
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -159,7 +163,88 @@ export const LevisComaparisionReport = () => {
       ) : null,
   });
 
+  const handleItemNoChange = (value, record, index) => {
+    const formValues = form.getFieldsValue();
+    const itemNoValue = formValues[index]?.itemNo;
 
+    console.log("Item No from form:", itemNoValue);
+
+    setItemNoValues((prevValues) => ({
+      ...prevValues,
+      [index]: value,
+    }));
+  };
+
+
+  const editCOLineReq = (record, index) => {
+    //const formValues = form.getFieldsValue();
+    // const itemNoValue = formValues[index]?.itemNo;
+    // console.log(record,'hhhhhhhhhhhhhhhh');
+    const req = new EditLevisOrderAcceptanceRequest();
+    req.poNumber = record.poNumber;
+    req.material=record.material
+    req.poLine=record.poLine
+    req.itemNo=record.itemNo
+    req.coNumber=record.coNumber
+    req.coDate=record.coDate
+    req.material=record.material
+    // req.itemNo = itemNoValue;
+    req.buyer = 'LEVIS';
+    // req.deliveryDate = record.deliveryDate;
+  
+    console.log("Request Payload:", req);
+  
+    service.editCoLineCreationReq(req).then((res) => {
+      if (res.status) {
+        getordercomparationData();
+        setItemNoValues({});
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
+  };
+
+  
+
+  const processData = (tableData: EditLevisOrderAcceptanceRequest[]) => {
+    const dataTobeReturned = [];
+    const roleWiseMapData = new Map<string, EditLevisOrderAcceptanceRequest[]>();
+
+    tableData.forEach(rec => {
+      const key = `${rec.poNumber}_${rec.itemNo} `;
+
+      if (!roleWiseMapData.has(key)) {
+        roleWiseMapData.set(key, [rec]);
+      } else {
+        roleWiseMapData.get(key).push(rec);
+      }
+    });
+
+    for (const [, roleData] of roleWiseMapData) {
+      roleData.forEach((element, index) => {
+        dataTobeReturned.push({
+          ...element,
+          rowSpan: index === 0 ? roleData.length : 0,
+          groupedIds: roleData.map(rec => rec.id)
+        });
+      });
+    }
+
+    return dataTobeReturned;
+  };
+
+
+
+
+
+  // const isActionButtonEnabled = (index) => {
+  //   return (
+  //     itemNoValues[index] &&
+  //     itemNoValues[index].trim() !== ""
+  //   );
+  // };
   
   // const getSizeWiseHeaders = (data) => {
   //   const sizeHeaders = new Set<string>();
@@ -200,11 +285,20 @@ export const LevisComaparisionReport = () => {
         title: "PO Number",
         dataIndex: "poNumber",
         width: 90,
-        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-        sortDirections: ["ascend", "descend"],
+       // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
+     //   sortDirections: ["ascend", "descend"],
+       // render: (text) => text ? text : "-",
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+
         fixed: "left",
-        // ...getColumnSearchProps('poNumber'),
-        render: (text) => text ? text : "-"
+        // ...getColumnSearchProps('poNumber')
       },
  
       {
@@ -284,7 +378,7 @@ export const LevisComaparisionReport = () => {
   ]
       },
       {
-        title: "Delivery Date",
+        title: "Ex-Factory Date",
         dataIndex: "",
         width: 90,
         // sorter: (a, b) => a.size.localeCompare(b.size),
@@ -387,6 +481,112 @@ export const LevisComaparisionReport = () => {
             ),
           },
   ]
+      },
+
+      {
+        title: "Item status",
+        dataIndex: "status",
+        align: "center",
+        width: 90,
+        fixed:"right",
+        render: (text, record) => {
+          return {
+            children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+          {
+            text: 'FAILED',
+            value: 'FAILED',
+          },
+          {
+            text: 'SUCCESS',
+            value: 'SUCCESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
+      },
+
+      // {
+      //   title: "Item No",
+      //   dataIndex: "itemNo",
+      //   width: 100,
+      //   align: "center",
+      //   fixed: 'right',
+      //   render: (text, record, index) => {
+      //     console.log(record,"ppp")
+      //     return {
+      //       children: (
+
+      //         <Form.Item name={[index, 'itemNo']}>
+      //           <Input
+      //             style={{ width: '95px' }}
+      //             placeholder="Enter Item No"
+      //             onChange={(e) => handleItemNoChange(e.target.value, record, index)}
+      //            // disabled={record.status == 'OPEN' ? false : true}
+      //           />
+      //         </Form.Item>
+
+      //       ),
+      //       props: {
+      //         rowSpan: record.rowSpan,
+      //       },
+      //     };
+      //   },
+      // },
+    //   {
+    //     title: "Item No",
+    //     dataIndex: "itemNo",
+    //     width: 90,
+    //    // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
+    //  //   sortDirections: ["ascend", "descend"],
+    //    // render: (text) => text ? text : "-",
+    //     render: (text, record, index) => {
+    //       return {
+    //         children: text,
+    //         props: {
+    //           rowSpan: record.rowSpan,
+    //         },
+    //       };
+    //     },
+
+    //     fixed:"right",
+    //     // ...getColumnSearchProps('poNumber')
+    //   },
+      {
+        title: "Action",
+        dataIndex: "action",
+        width: 80,
+        align: "center",
+        fixed: 'right',
+        render: (text, record, index) => {
+         // const isEnabled = isActionButtonEnabled(index);
+          return {
+            children: (
+              <Button
+                  style={{ position: "relative", top: "-7.5px" }}
+                  onClick={() => editCOLineReq(record, index)}
+                  disabled={record.status !== 'OPEN'}
+                >
+                  {record.status === 'OPEN' ? "Accept" : "Accepted"}
+                </Button>
+            ),
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
       },
 
     ];
@@ -569,11 +769,17 @@ export const LevisComaparisionReport = () => {
 
     return (
       <>
+{loading ? (
+  <Spin spinning={loading}>
+    {/* Content to show while loading */}
+    <div>Loading...</div>
+  </Spin>
+) : (
 
           <Table
             // loading={tableLoading}
             columns={columns}
-            dataSource={filterData}
+            dataSource={processData(filterData)}
             size="small"
             // pagination={false}
             pagination={{
@@ -588,6 +794,7 @@ export const LevisComaparisionReport = () => {
             rowClassName={getRowClassName}
             bordered
           />
+)}
       
       </>
     );
@@ -683,7 +890,7 @@ export const LevisComaparisionReport = () => {
   ]
       },
       {
-        title: "Delivery Date",
+        title: "Ex-Factory Date",
         dataIndex: "",
         width: 90,
         children: [

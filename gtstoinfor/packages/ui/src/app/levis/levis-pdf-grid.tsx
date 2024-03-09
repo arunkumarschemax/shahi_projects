@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
+import { LevisOrderFilter } from "@project-management-system/shared-models";
 
 
 export function LevisPdFInfoGrid() {
@@ -20,10 +21,12 @@ export function LevisPdFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [poNumber, setPoNumber] = useState('');
+    const [poNumber, setPoNumber] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
+    const [orderData, setOrderData] = useState<any>([]);
+    const [filterData, setFilterData] = useState([]);
     let location = useLocation();
     
 
@@ -39,14 +42,40 @@ export function LevisPdFInfoGrid() {
 
     useEffect(() => {
         getPdfFileInfo();
+        getHistoryPoNumber()
     }, []);
     
     
     const getPdfFileInfo = () => {
-        service.getPdfFileInfo().then(res => {
-            setPdfData(res.data)
-        })
+        const req = new LevisOrderFilter();
+  
+        if (form.getFieldValue("poNumber") !== undefined) {
+          req.poNumber = form.getFieldValue("poNumber");
+        }
+        service.getPdfFileInfo(req).then(res => {
+            if (res.status) {
+                setOrderData(res.data);
+                setFilterData(res.data);
+              } else {
+                setOrderData([]);
+                setFilterData([])
+                AlertMessages.getErrorMessage(res.internalMessage);
+              }
+            }).catch((err) => {
+              console.log(err.message);
+            });
+        
     }
+
+    
+    const getHistoryPoNumber = () => {
+        service.getHistoryPoNumber().then((res) => {
+          if (res.status) {
+            setPoNumber(res.data);
+          
+          }
+        });
+      };
     const onReset = () => {
         form.resetFields()
         getPdfFileInfo()
@@ -254,9 +283,116 @@ export function LevisPdFInfoGrid() {
     return (
         <>
             <Card title="Orders History" headStyle={{ fontWeight: 'bold' }}>
+            <Form
+            onFinish={getPdfFileInfo}
+            form={form}
+          layout='vertical'
+          >
+            <Row gutter={24}>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item name="poNumber" label="PO Number">
+                  <Select
+                    showSearch
+                    placeholder="Select PO Number"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {poNumber.map((inc: any) => {
+                      return (
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+                {/* <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 4 }}
+                >
+                 <Form.Item label="Style" name="style"  >
+                    <Input placeholder="Enter Style " allowClear />
+                  </Form.Item>
+                </Col> */}
+                {/* <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 4 }}
+                >
+                 <Form.Item label="Color" name="color"  >
+                    <Input placeholder="Enter Color "  allowClear />
+                  </Form.Item>
+                </Col> */}
+                {/* <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 4 }}
+                  xl={{ span: 4 }}
+                >
+                 <Form.Item label="Delivery Date" name="deliveryDate"  >
+                    <RangePicker style={{width:180}}   />
+                  </Form.Item>
+                </Col> */}
+                <Row>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 4 }}
+                  style={{marginTop:20,marginLeft:60}}
+                >
+                  <Form.Item >
+                    <Button
+                      htmlType="submit"
+                      icon={<SearchOutlined />}
+                      type="primary"
+                      onClick={getPdfFileInfo}
+                    >
+                      Search
+                    </Button>
+                  
+                  </Form.Item>
+                </Col>
+                <Col
+                  xs={{ span: 24 }}
+                  sm={{ span: 24 }}
+                  md={{ span: 5 }}
+                  lg={{ span: 5 }}
+                  xl={{ span: 4 }}
+                  style={{ marginLeft: 80 }}
+
+                >
+                  <Form.Item style={{marginTop:20}}>
+                    <Button
+                      htmlType="submit"
+                      type="primary"
+                      onClick={onReset}
+                      icon={<UndoOutlined />}
+                    >
+                      Reset
+                    </Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Row>
+          </Form>
                 <Table
                     columns={columns}
-                    dataSource={pdfData}
+                    dataSource={filterData}
                     bordered
                     className="custom-table-wrapper"
                     pagination={{
