@@ -19,8 +19,7 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 
 export interface TissuePaperprops {
     bomInfo: any[]
-}
-export const TissuePaper = (props: TissuePaperprops) => {
+} const TissuePaper = (props: TissuePaperprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const data = props.bomInfo;
@@ -92,44 +91,45 @@ console.log(bomInfo,"bomInfo----------------------------------------");
         }
         groupedData[key].push(item);
       });
-    return (
-        <div id='print'>
-            <Card title={'Tissue Paper'}
-                extra={<Button onClick={handlePrint}>Print</Button>} >
-             
-       <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                <tr >
-                <th style={{ width: '3%' }}>SL.NO</th>
-                    <th style={{ width: '3%' }}>ITEM#</th>
-                    <th style={{ width: '3%' }}>UNIT</th>
-                    <th style={{ width: '3%' }}>STYLE NO</th>
-                    <th style={{ width: '3%' }}>BUTTER PAPAER DIMENSION</th>
-                    <th style={{ width: '3%' }}>REQD QTY IN NOS(INCL +2%)</th>
+      return (
+        
+          <Card title={'Tissue Paper'} extra={<Button onClick={handlePrint}>Print</Button>}>
+            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+              <thead>
+                <tr>
+                  <th style={{ width: '3%' }}>SL.NO</th>
+                  <th style={{ width: '3%' }}>ITEM#</th>
+                  <th style={{ width: '3%' }}>UNIT</th>
+                  <th style={{ width: '3%' }}>STYLE NO</th>
+                  <th style={{ width: '3%' }}>BUTTER PAPAER DIMENSION</th>
+                  <th style={{ width: '3%' }}>REQD QTY IN NOS(INCL +2%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.length === 0 ? (
+                  <tr>
+                    <td  style={{ textAlign: 'center' }}>
+                      No data available
+                    </td>
+                  </tr>
+                ) : (
+                  data.map((rec, index) => (
+                    <tr key={index + 1}>
+                      <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                      <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
+                      <td style={{ textAlign: 'center' }}></td>
+                      <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
+                      <td style={{ textAlign: 'center' }}>L 10" X W 10" BUTTER PAPER</td>
+                      <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
                     </tr>
-                    {data.map((rec,index) =>{
-                        return(
-                            <tr key={index + 1}>
-                            <td style={{ textAlign: 'center' }} >{index + 1}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-                            <td style={{ textAlign: 'center' }} ></td>
-                            <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                            <td style={{ textAlign: 'center' }} >L 10" X W 10" BUTTER PAPER</td>
-                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
-                         </tr>
-                        )
-                      
-                    })}
-               
+                  ))
+                )}
+              </tbody>
             </table>
-
-            </Card>
-
-        </div>
-    )
+          </Card>
+       
+      );
+      
 
 }
-export default TissuePaper
-
-
-
-// Bholenathh
+export default TissuePaper ;

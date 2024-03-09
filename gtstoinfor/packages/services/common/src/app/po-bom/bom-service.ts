@@ -1053,13 +1053,19 @@ async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonRespons
 //     return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
 // }
 async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
+
     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
     const poBomData = await this.poBomRepo.getProposalsData(req);
     const groupedData: any[] = poBomData.reduce((result: any[], currentItem: BomProposalDataModel) => {
         const { styleNumber, bomQty, itemNo, destination } = currentItem;
         const bomGeoCode = destinations.find((v) => v.destination === destination);
         const key = `${styleNumber}-${itemNo}`;
+        console.log(poBomData,"poBomData")
+        console.log(groupedData,"groupedData")
+
         const existingGroup = result.find((group) => group.key === key);
+        console.log(existingGroup,"existingGroup")
+
         if (!existingGroup) {
             result.push({
                 key,
@@ -1067,6 +1073,8 @@ async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonRespons
                 itemNo,
                 bomQty: 0,
             });
+            console.log(key,"key")
+
         }
         const groupToUpdate = result.find((group) => group.key === key);
         if (groupToUpdate) {

@@ -74,7 +74,7 @@ export default function GenerateProposal(props: Props) {
     "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
-    "Tissue paper":<TissuePaper bomInfo={tissueData}/>,
+    "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
 
   }
 
@@ -213,12 +213,12 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
-  function handleTissuePaper(item){
+  function handleTissuePaper(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()
-    bomProposalReq.itemId = [item.itemId]
+    bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    bomProposalReq.trimName = item.item
+    // bomProposalReq.trimName = item
     service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
       if(res.status){
         setTissueData(res.data)
