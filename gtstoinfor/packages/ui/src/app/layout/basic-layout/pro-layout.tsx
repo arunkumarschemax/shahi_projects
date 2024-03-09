@@ -116,7 +116,7 @@ export default function LayoutTwo() {
                 }
             }}
         >
-            <ProConfigProvider dark={!dark}>
+            <ProConfigProvider dark={dark}>
                 <div
                     id="main-layout"
                     style={{

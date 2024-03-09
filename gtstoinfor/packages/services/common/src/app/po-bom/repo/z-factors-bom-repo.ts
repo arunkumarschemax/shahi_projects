@@ -28,7 +28,7 @@ export class ZFactorsBomRepo extends Repository<ZFactorsBomEntity> {
     
     async getZfactorBomValuesToAdd(){
         const query = this.createQueryBuilder('zb')
-        .select('zb.id,zb.im_code as imCode,zb.item_name as itemName,zb.geo_code as geoCode,zb.destination,zb.size,z.actual_im as actualIm,z.item_id as itemId,zb.plant_code as plantCode,zb.is_equal_to as isEqualTo')
+        .select('zb.id,zb.im_code as imCode,zb.item_name as itemName,zb.geo_code as geoCode,zb.destination,zb.size,z.actual_im as actualIm,z.item_id as itemId,zb.plant_code as plantCode,zb.is_equal_to as isEqualTo,zb.style')
         .leftJoin(ZFactorsEntity,'z','z.id = zb.zfactor_id')
         .where(`z.action = 'ADD'`)
         return await query.getRawMany()

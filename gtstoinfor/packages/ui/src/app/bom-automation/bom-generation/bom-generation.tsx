@@ -261,7 +261,6 @@ export default function BomGeneration(props: Props) {
 
     const onSelectChange = (newSelectedRowKeys: any, selectedRows: any[]) => {
         const isItemNoNull = selectedRows.find((v) => v.item == null)
-        console.log(selectedRows,isItemNoNull)
         if(isItemNoNull){
             notification.info({message : `Please update ItemNo for all the selected PO's`,placement:'topRight'})
             return
@@ -338,7 +337,7 @@ export default function BomGeneration(props: Props) {
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
                         <Form.Item name='item' label='Item' >
-                            <Select onDropdownVisibleChange={getItem} mode='multiple' placeholder='Select Item' showSearch >
+                            <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch >
                                 {
                                     itemDropdownData.map(e => {
                                         return (

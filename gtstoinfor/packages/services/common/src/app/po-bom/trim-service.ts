@@ -26,7 +26,7 @@ export class TrimService {
 
     async getAllTrimInfo(): Promise<CommonResponseModel> {
         try {
-            const data = await this.itemRepo.find({ where: { isActive: true } })
+            const data = await this.itemRepo.find({ where: { isActive: true },order:{consumptionRequired : "DESC"} })
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', data)
             } else {
