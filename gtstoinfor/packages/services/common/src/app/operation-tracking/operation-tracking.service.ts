@@ -405,7 +405,7 @@ export class OperationTrackingService {
               sampleReqStatus = LifeCycleStatusEnum.QUALITY_CONTROL
   
             }else if(req.operationCode == 'Washing'){
-              // sampleReqStatus = LifeCycleStatusEnum.CUTTING
+              sampleReqStatus = LifeCycleStatusEnum.WASHING
   
             }else if(req.operationCode == 'Finishing'){
               sampleReqStatus = LifeCycleStatusEnum.FINISHING
@@ -420,8 +420,10 @@ export class OperationTrackingService {
             if(nextOperation == 'NA'){
               sampleReqStatus = LifeCycleStatusEnum.READY_TO_DISPATCH
             }
-  
+            console.log("haiii")
+            console.log(sampleReqStatus)
               const SampleReqStatusUpdate = await this.sampleReqRepo.update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:sampleReqStatus})
+              console.log(SampleReqStatusUpdate)
               // `update sample_request set life_cycle_status = '${dto.operation}' where sample_request_id = ${dto.styleId}`
               // const update  = await this.dataSource.query(SampleReqStatusUpdate)
               if(SampleReqStatusUpdate.affected){
