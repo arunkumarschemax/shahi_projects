@@ -223,9 +223,9 @@ export class LevisController {
     }
 
     @Post('/getPdfFileInfo')
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.Service.getPdfFileInfo();
+            return this.Service.getPdfFileInfo(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
@@ -336,5 +336,31 @@ export class LevisController {
     }
 
 
+    @Post('/getHistoryPoNumber')
+    async getHistoryPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getHistoryPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
  
+    @Post('/deleteEditCoLine')
+    async deleteEditCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.deleteEditCoLine(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Post('/updateStatusInOrderAcceptance')
+    async updateStatusInOrderAcceptance(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.updateStatusInOrderAcceptance(req);
+        } catch (error) {
+            return error
+        }
+    }
+
 }

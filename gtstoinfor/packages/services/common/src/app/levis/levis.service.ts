@@ -44,7 +44,7 @@ export class LevisService {
     private AddressRepo: AddressRepository,
     private AddressService: AddressService,
     private LevisOrdersChildRepo: LevisOrdersChildRepository,
-    private EditRepo:EditLevisCOLineRepository
+    private EditRepo: EditLevisCOLineRepository
 
 
 
@@ -217,7 +217,8 @@ export class LevisService {
           if (orderData) {
             const update = await transactionManager.getRepository(LevisOrdersEntity).update(
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
-              {deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo,totalQuantity:req.totalQuantity,
+              {
+                deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo, totalQuantity: req.totalQuantity,
                 material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
                 itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
               }
@@ -573,9 +574,10 @@ export class LevisService {
     }
   }
 
-  async getPdfFileInfo(): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+    console.log(req,'reqqqqqqqq')
     try {
-      const data = await this.pdfRepo.getPDFInfo()
+      const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {
@@ -857,13 +859,13 @@ export class LevisService {
       const compareModel: LevisCompareModel[] = []
 
       for (const rec of Originaldata) {
-        console.log(rec,"rec")
-        const itemNumber=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
-        const coNumber=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
-        const coDate=await this.LevisOrdersRepo.getItemsNo(rec.po_number)
-        console.log(itemNumber,'kkkkkkkkkkkkkkkk')
-        console.log(coNumber,'lllllllllll')
-        console.log(coDate,'mmmmmmmm')
+        console.log(rec, "rec")
+        const itemNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        const coDate = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
+        console.log(itemNumber, 'kkkkkkkkkkkkkkkk')
+        console.log(coNumber, 'lllllllllll')
+        console.log(coDate, 'mmmmmmmm')
         const childData = await this.LevisOrdersChildRepo.find({
           where: {
             poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
@@ -895,8 +897,8 @@ export class LevisService {
                 rec.transmode,
                 oldData.deliveryAddress,
                 rec.delivery_address,
-                rec.status,
-                itemNumber?.item_no  ? itemNumber?.item_no :"-",
+                oldData.status,
+                itemNumber?.item_no ? itemNumber?.item_no : "-",
                 coNumber?.co_number,
                 coDate?.co_date,
                 rec.material
@@ -1849,8 +1851,8 @@ export class LevisService {
       entity.status = 'Open';
       // entity.deliveryDate = req.deliveryDate;
       entity.createdUser = 'admin';
-      entity.coDate=req?.coDate;
-      entity.coNumber=req?.coNumber
+      entity.coDate = req?.coDate;
+      entity.coNumber = req?.coNumber
       empty.push(entity)
 
       // console.log(empty,'emptyyyyy')
@@ -1902,7 +1904,48 @@ export class LevisService {
     }
   }
 
+  async getHistoryPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.getHistoryPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
+  async deleteEditCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.EditRepo.delete({ id: Number(req.id) });
 
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 
+  async updateStatusInOrderAcceptance(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqOpenStatus")
+    try {
+      const update = await this.LevisOrdersChildRepo.update(
+        { poNumber: req.poNumber },
+        { status: StatusEnum.OPEN }
+      );
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 }

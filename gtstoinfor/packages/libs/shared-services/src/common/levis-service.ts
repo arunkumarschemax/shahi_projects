@@ -53,8 +53,8 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/updateStatusInOrder",req)
     }
 
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.levisOrdersController + "/getPdfFileInfo")
+    async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getPdfFileInfo",req)
     }
  
     async getordercomparationData(req:any): Promise<CommonResponseModel> {
@@ -85,5 +85,18 @@ export class LevisService extends CommonAxiosService {
     async getEditCoPoNumber(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.levisOrdersController + "/getEditCoPoNumber")
     }
+
+    async getHistoryPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getHistoryPoNumber")
+    }
+
+    async deleteEditCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/deleteEditCoLine", payload)
+    }
+
+    async updateStatusInOrderAcceptance(req:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/updateStatusInOrderAcceptance",req)
+    }
+
 
 }

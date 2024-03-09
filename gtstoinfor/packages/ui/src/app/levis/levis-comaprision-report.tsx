@@ -236,12 +236,12 @@ export const LevisComaparisionReport = () => {
 
 
 
-  const isActionButtonEnabled = (index) => {
-    return (
-      itemNoValues[index] &&
-      itemNoValues[index].trim() !== ""
-    );
-  };
+  // const isActionButtonEnabled = (index) => {
+  //   return (
+  //     itemNoValues[index] &&
+  //     itemNoValues[index].trim() !== ""
+  //   );
+  // };
   
   // const getSizeWiseHeaders = (data) => {
   //   const sizeHeaders = new Set<string>();
@@ -480,40 +480,40 @@ export const LevisComaparisionReport = () => {
   ]
       },
 
-      // {
-      //   title: "Item status",
-      //   dataIndex: "status",
-      //   align: "center",
-      //   width: 90,
-      //   fixed:"right",
-      //   render: (text, record) => {
-      //     return {
-      //       children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
-      //       props: {
-      //         rowSpan: record.rowSpan,
-      //       },
-      //     };
-      //   },
-      //   filters: [
-      //     {
-      //       text: 'OPEN',
-      //       value: 'OPEN',
-      //     },
-      //     {
-      //       text: 'INPROGRESS',
-      //       value: 'INPROGRESS',
-      //     },
-      //     {
-      //       text: 'FAILED',
-      //       value: 'FAILED',
-      //     },
-      //     {
-      //       text: 'SUCCESS',
-      //       value: 'SUCCESS',
-      //     },
-      //   ],
-      //   onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
-      // },
+      {
+        title: "Item status",
+        dataIndex: "status",
+        align: "center",
+        width: 90,
+        fixed:"right",
+        render: (text, record) => {
+          return {
+            children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+          {
+            text: 'FAILED',
+            value: 'FAILED',
+          },
+          {
+            text: 'SUCCESS',
+            value: 'SUCCESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
+      },
 
       // {
       //   title: "Item No",
@@ -568,13 +568,13 @@ export const LevisComaparisionReport = () => {
         align: "center",
         fixed: 'right',
         render: (text, record, index) => {
-          const isEnabled = isActionButtonEnabled(index);
+         // const isEnabled = isActionButtonEnabled(index);
           return {
             children: (
               <Button
                   style={{ position: "relative", top: "-7.5px" }}
                   onClick={() => editCOLineReq(record, index)}
-                  disabled={record.status === 'OPEN' ? !isEnabled : true}
+                  disabled={record.status !== 'OPEN'}
                 >
                   {record.status === 'OPEN' ? "Accept" : "Accepted"}
                 </Button>
