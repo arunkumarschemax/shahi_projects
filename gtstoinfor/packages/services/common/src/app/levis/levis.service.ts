@@ -1341,7 +1341,7 @@ export class LevisService {
   }
 
   async editCOline(req: any): Promise<CommonResponseModel> {
-    const [po] = await this.levisCoLineRepo.getDataforCOLineEdit();
+    const po = await this.EditRepo.getDataforCOLineEdit();
     if (!po) {
       return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
     }
@@ -1443,13 +1443,13 @@ export class LevisService {
 
       await driver.wait(until.elementLocated(By.id('ViewOrderID')))
       await driver.findElement(By.id('ViewOrderID')).click();
+        //   await driver.executeScript("document.body.style.zoom = '80%'");
+        // console.log("Screen zoomed out by 80%");
+     
       await driver.sleep(50000)
-
-      // await driver.wait(until.elementLocated(By.id('vieworderpo')))
-      // await driver.findElement(By.id('vieworderpo')).click();
-
-      // const maxRows = 1000;
       console.log("startLoop")
+     
+
       let j;
       for (let i = 1; i <= 1000; i++) {
         const buyerpoPath = `//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`;
@@ -1466,7 +1466,11 @@ export class LevisService {
 
         console.log("==============================")
         console.log(BuyerPoelementContainingNumber, "elementContainingNumber")
+
+        console.log("hiiiiiiiiiii")
         const textContainingBuyerPo = await BuyerPoelementContainingNumber.getText();
+        console.log("uuuuuuuuuuuuuuu")
+         
         const textContainingCoNumber = await coNumberelementContaining.getText();
         console.log(`Element containing the number in row ${i}:`, textContainingBuyerPo);
         console.log(coLine.coNumber, "coLine.coNumber")
@@ -1476,10 +1480,12 @@ export class LevisService {
           break;
         }
       }
-
+       console.log("janiii")
+       
       const viewButtonPo = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[21]/div`));
       await viewButtonPo.click();
       console.log(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[31]/td[21]/div`, "kkkkkkkk")
+      console.log(viewButtonPo,"viewButtonPo")
 
       console.log("ExfactroyDate starts")
       await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
