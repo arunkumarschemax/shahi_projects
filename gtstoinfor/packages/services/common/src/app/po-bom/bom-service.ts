@@ -388,7 +388,7 @@ export class BomService {
                         if (styleBom.imCode == zfactor.actualIm && styleBom.itemId == zfactor.itemId) {
                             const bomGeoCode = destinations.find((v) => v.destination == po.destination)
 
-                            if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
+                            if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination ) {
                                 const zfactorID = new ZFactorsBomEntity()
                                 zfactorID.id = zfactor.id
                                 poBomEntity.zFactorBom = zfactor
@@ -403,7 +403,7 @@ export class BomService {
                 }
                 const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd()
                 for (const ab of zfactorsToAdd) {
-                    if (po.destination == ab.destination && po.plant != ab.platCode) {
+                    if (po.destination == ab.destination || po.styleNumber == ab.style) {
                         const poBomExtraITem = new PoBomEntity()
                         poBomExtraITem.consumption = 1
                         poBomExtraITem.moq = 1
