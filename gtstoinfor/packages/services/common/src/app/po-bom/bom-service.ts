@@ -1027,6 +1027,57 @@ async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonRespons
     const groupedArray: any[] = Object.values(groupedData);
     return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
 }
+// async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
+//     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+//     const poBomData = await this.poBomRepo.getProposalsData(req)
+
+//     const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+//         const { styleNumber, bomQty,itemNo,  destination } = currentItem;
+//         const bomGeoCode = destinations.find((v) => v.destination == destination)
+//         let key = `${styleNumber}-${itemNo}`;
+    
+//         if (!result[key]) {
+//             result[key] = {
+                
+//                 styleNumber,
+//                  itemNo,
+//                   bomQty: 0,
+//             };
+//         }
+//         result[key].bomQty += bomQty;
+
+
+//         return result
+//     }, {})
+//     const groupedArray: any[] = Object.values(groupedData);
+//     return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
+// }
+async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
+    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
+    const poBomData = await this.poBomRepo.getProposalsData(req);
+    const groupedData: any[] = poBomData.reduce((result: any[], currentItem: BomProposalDataModel) => {
+        const { styleNumber, bomQty, itemNo, destination } = currentItem;
+        const bomGeoCode = destinations.find((v) => v.destination === destination);
+        const key = `${styleNumber}-${itemNo}`;
+        const existingGroup = result.find((group) => group.key === key);
+        if (!existingGroup) {
+            result.push({
+                key,
+                styleNumber,
+                itemNo,
+                bomQty: 0,
+            });
+        }
+        const groupToUpdate = result.find((group) => group.key === key);
+        if (groupToUpdate) {
+            groupToUpdate.bomQty += bomQty;
+        }
+
+        return result;
+    }, []);
+
+    return new CommonResponseModel(true, 1, 'Data Retrieved', groupedData);
+}
 
 
 }

@@ -54,13 +54,11 @@ export const Malaysia = () => {
             <Card style={{ width: '50%', border: 'none', marginRight: '0' }}>
                 <div style={{ marginLeft: '150px' }} id="print">
                     <div style={{marginBottom:'20px'}}>
-                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm</h3>
-                    <h3 style={{ marginLeft: '300px',fontFamily: 'sans-serif' }}>(1.275")</h3>
+                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm (1.275")</h3>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-start'  }}>
     <div style={{ marginLeft: '30px', marginBottom: '-100px' }}>
-        <h3 style={{ fontFamily: 'sans-serif' }}>19mm</h3>
-        <h3 style={{ fontFamily: 'sans-serif' }}>(0.75")</h3>
+        <h3 style={{ fontFamily: 'sans-serif' }}>19mm (0.75")</h3>
     </div>
 </div>
 
