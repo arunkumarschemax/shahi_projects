@@ -1,10 +1,11 @@
 import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualitysService,ShapeService,SizeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
+import { Button, Card, Col, Form, Input, Row, Select, Upload, UploadProps, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { useEffect, useState } from "react";
 import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -38,6 +39,8 @@ export function M3TrimItemsForm({props}) {
   const sliderService = new SliderService()
   const trimSizeService = new TrimSizeService()
 
+  const [imageUrl, setImageUrl] = useState('');
+  const [filelist, setfilelist] = useState<any>([])
   const [structureData, setStructureData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [contentData, setContentData] = useState<any[]>([]);
@@ -62,7 +65,57 @@ export function M3TrimItemsForm({props}) {
   const [shapeData, setShapeData] = useState<any[]>([])
   const [sliderData, setSliderData] = useState<any[]>([])
   const [trimSizeData, setTrimSizeData] = useState<any[]>([])
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload Style</div>
+    </div>
+  );
+  const uploadFieldProps: UploadProps = {
+    // alert();
+    multiple: false,
+    onRemove: file => {
+      setfilelist([]);
+      setImageUrl('');
+    },
+    beforeUpload: (file: any) => {
+      if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+        // return true;
+      }
+      var reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = data => {
+        if (filelist.length == 1) {
+          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+          return true;
+        } else {
+          setfilelist([file]);
+          getBase64(file, imageUrl =>
+            setImageUrl(imageUrl)
+          );
+          return false;
+        }
+      }
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: filelist,
+  };
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
   useEffect(() => {
     if (mapData[0]?.structure === true) {
       getStructures();
@@ -296,6 +349,24 @@ export function M3TrimItemsForm({props}) {
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
         console.log(props);
+        console.log(filelist);
+        if(filelist.length >0){
+          // console.log(res)
+          const formData = new FormData();
+          filelist.forEach((file: any) => {
+              formData.append('file', file);
+          });
+
+          formData.append('m3TrimId', `${res.data?.m3TrimId}`)
+          m3TrimService.fileUpload(formData).then(fileres => {
+            if(fileres.status){
+              // AlertMessages.getSuccessMessage("File uploaded successfully. ");
+            }
+            else{
+              AlertMessages.getErrorMessage("Upload failed. ");
+            }
+          })
+        }
         if(props != undefined){
           trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId, m3ItemsId:res.data?.m3TrimId}).then((res) => {
             if(res.status){
@@ -1153,6 +1224,20 @@ export function M3TrimItemsForm({props}) {
                     <TextArea rows={3} disabled={true} />
                 </Form.Item>
             </Col>
+
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
+                <Form.Item name="fabricUpload" label='Fabric Upload'
+                  rules={[
+                      {required:false,message:'Upload Fabric'}
+                  ]}  
+                  // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
+                  >
+                  <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+                  
+                  {uploadButton}
+                  </Upload>
+                </Form.Item>
+                </Col>
         </Row>
         <Row>
             <Col span={24} style={{ textAlign: "right" }}>

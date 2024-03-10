@@ -4,7 +4,7 @@ import { Not, DataSource } from "typeorm";
 import { M3TrimsEntity } from "./m3-trims.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3TrimsRepo } from "./m3-trims.repository";
-import {  BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import {  BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO, UploadResponse } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 
 @Injectable()
@@ -532,5 +532,26 @@ export class M3TrimsService {
       throw(err)
     }
   }
+
+  async updateTrimPath(filePath: string, filename: string, m3TrimId: number): Promise<UploadResponse> {
+    console.log('upload service id---------------', m3TrimId)
+    try {
+        let filePathUpdate;   
+            filePathUpdate = await this.repository.update(
+                { m3TrimId: m3TrimId },
+                { filePath: filePath, fileName: filename },
+            )
+        if (filePathUpdate.affected > 0) {
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+        }
+        else {
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 
 }

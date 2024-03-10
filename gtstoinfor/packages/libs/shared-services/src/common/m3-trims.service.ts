@@ -1,4 +1,4 @@
-import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO, RackPositionDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO, RackPositionDTO, UploadResponse } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class M3TrimsService extends CommonAxiosService {
@@ -76,5 +76,8 @@ export class M3TrimsService extends CommonAxiosService {
     async getAllBuyers(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllBuyers")
     }
+    async fileUpload(file: any): Promise<UploadResponse> {
+        return await this.axiosPostCall(this.URL + '/fileUpload', file);
+      }
 
 }
