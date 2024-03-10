@@ -103,6 +103,10 @@ export class BomProposalDataModel {
     attribute?:string
     attributeValue?:string
     bQty?:number
+    fabricContent?:string
+    fabricCode?:string
+    fabricCombination?:string
+    fit?:string
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }

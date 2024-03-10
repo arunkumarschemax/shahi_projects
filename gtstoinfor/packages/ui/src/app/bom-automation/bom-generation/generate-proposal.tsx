@@ -199,6 +199,14 @@ export default function GenerateProposal(props: Props) {
       setHtlabel(v.data)
     })
   }
+  function getSizeHtLabelData(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.getSizeHtLabelData(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
+    })
+  }
 
 
   function handleMobilontape(item){
@@ -448,7 +456,8 @@ export default function GenerateProposal(props: Props) {
       handleElasticTrim(val.itemId)
     }
     if(val.item == 'Size Ht label'){
-      handleSizeHtLabel(val.itemId)
+      // handleSizeHtLabel(val.itemId)
+      getSizeHtLabelData(val.itemId)
     }
    
     if(val.item === 'Swoosh HT label'){

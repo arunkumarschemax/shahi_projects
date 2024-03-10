@@ -55,12 +55,14 @@ export function SizehtLabel(props:SizehtLabelProps){
         }
     }
     const data =props.bomInfo
-    console.log(data)
+    console.log(data.teeStyle)
+    console.log(data.poloStyle)
 
 
+/////// polo style size wise data construction
     const allSizes = new Set();
     const allTallSizes = new Set()
-    data.forEach(item => {
+    data.poloStyle?.forEach(item => {
         item?.sizeWiseQty?.forEach(sizeQty => {
             allSizes.add(sizeQty.size);
         });
@@ -68,8 +70,7 @@ export function SizehtLabel(props:SizehtLabelProps){
             allTallSizes.add(extSize.size) 
         })
     });
-
-    const newData = data.map(item => {
+    const newData = data?.poloStyle?.map(item => {
         const sizesWithQty = Array.from(allSizes).map(size => {
             const existingSize = item.sizeWiseQty.find(sq => sq.size === size);
             return {
@@ -86,59 +87,80 @@ export function SizehtLabel(props:SizehtLabelProps){
         })
     
         return {
-            // imcode: item.imcode,
             sizewiseqty: sizesWithQty,
             tallSizes :tallSizeWithQty
         };
     });
-console.log(newData)
+
+// console.log(newData) 
+///// tee styele data construction
+const teeStyles = new Set()
+data?.teeStyle?.forEach(item =>{
+    item?.sizeWiseQty?.forEach(sizeQty =>{
+        teeStyles.add(sizeQty.size)
+    })
+})
 
 
-
-
-
+const newTeeData = data?.teeStyle?.map(item =>{
+    const sizeWithQty =Array.from(teeStyles).map(size =>{
+        const exItem = item.sizeWiseQty.find(sq => sq.size === size)
+        return{
+            size:size,
+            qty:exItem ?exItem.qty: 0
+        }
+    })
+    return{
+        sizewiseqty:sizeWithQty
+    }
+});
+console.log(newTeeData)
 
 return(
    <>
    <Card title={'Size Ht Label'}>
+    {data?.poloStyle?.length >0 ?
+    <>
         <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-            <tr>
-                <th>{'ITEM'}</th>
-                <th>{'STYLE'}</th>
-                <th>{'SEASON'}</th>
-                <th>{'IM.SIZE(MATRIX)'}</th>
-                <th>{'FIT'}</th>
-                <th>{'GARMENT COLOR CODE'}</th>
-                <th>{'FABRIC CODE'}</th>
-                <th>{'FABRIC CONTENT'}</th>
-                <th>{'HT LEBEL COLORS'}</th>
-                {newData[0]?.sizewiseqty?.map((e, index) => {
-                    return (<th style={{ width: '50px' }}>{e.size}</th>);
-                })}
-            </tr>
-            {data.map((rec, index) => {
-                return (
                     <tr>
-                        <td>{rec.itemNo}</td>
-                        <td>{rec.styleNumber}</td>
-                        <td>{rec.season}</td>
-                        <td>{'723459/'+rec.imCode}</td>
-                        <td>{'STANDARD'}</td>
-                        <td>{'GMT CODE-' + `${rec.combination}`}</td>
-                        <td>{'A0729274'}</td>
-                        <td>{'83% POLYESTER,10%SPANDEX,7% LYOCELL;'}</td>
-                        <td>{rec.itemColor}</td>
-                {newData[0]?.sizewiseqty?.map((sizeData, sizeIndex) => {
-                        const sizeWiseQty = rec.sizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
-                        return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>;
-                    })}
+                        <th>{'ITEM'}</th>
+                        <th>{'STYLE'}</th>
+                        <th>{'SEASON'}</th>
+                        <th>{'IM.SIZE(MATRIX)'}</th>
+                        <th>{'FIT'}</th>
+                        <th>{'GARMENT COLOR CODE'}</th>
+                        <th>{'FABRIC CODE'}</th>
+                        <th>{'FABRIC CONTENT'}</th>
+                        <th>{'HT LEBEL COLORS'}</th>
+                        {newData[0]?.sizewiseqty?.map((e, index) => {
+                            return (<th style={{ width: '50px' }}>{e.size}</th>);
+                        })}
                     </tr>
-                );
-            })}
-        </table>
-        <br></br>
+                    {data.poloStyl.map((rec, index) => {
+                        return (
+                            <tr>
+                                <td>{rec.itemNo?rec.itemNo:''}</td>
+                                <td>{rec.styleNumber?rec.styleNumber:''}</td>
+                                <td>{rec.season?rec.season:''}</td>
+                                <td>{'723459/' + rec.imCode?rec.imCode:''}</td>
+                                <td>{rec.fit?rec.fit:''}</td>
+                                <td>{'GMT CODE-' + `${rec.combination}`}</td>
+                                <td>{rec.fabricCode?rec.fabricCode:''}</td>
 
-    <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+                                {/* <td>{'A0729274'}</td> */}
+                                <td>{rec.fabricContent?rec.fabricContent:''}</td>
+                                <td>{rec.itemColor}</td>
+                                {newData[0]?.sizewiseqty?.map((sizeData, sizeIndex) => {
+                                    const sizeWiseQty = rec.sizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
+                                    return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>;
+                                })}
+                            </tr>
+                        );
+                    })}
+         </table>
+         <br></br>
+         {/* /////////// tallsizes tavle for polo style/ */}
+        <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
             <tr>
                 <th>{'ITEM'}</th>
                 <th>{'STYLE'}</th>
@@ -155,25 +177,87 @@ return(
             </tr>
             {data.map((rec,index) =>{
                 return(
-                    rec.extraSizeWiseQty.length >0?<tr>
-                       <td>{rec.itemNo}</td>
-                        <td>{rec.styleNumber}</td>
-                        <td>{rec.season}</td>
-                        <td>{'723459/'+rec.imCode+'-TALL'}</td>
-                        <td>{'STANDARD'}</td>
-                        <td>{'GMT CODE-' + `${rec.combination}`}</td>
-                        <td>{'A0729274'}</td>
-                        <td>{'83% POLYESTER,10%SPANDEX,7% LYOCELL;'}</td>
-                        <td>{rec.itemColor}</td>
+                    // rec.extraSizeWiseQty.length >0?
+                      <tr>
+                        
+                       <td>{rec.itemNo?rec.itemNo:''}</td>
+                                <td>{rec.styleNumber?rec.styleNumber:''}</td>
+                                <td>{rec.season?rec.season:''}</td>
+                                <td>{'723459/' + rec.imCode?rec.imCode:''}</td>
+                                <td>{rec.fit?rec.fit:''}</td>
+                                <td>{'GMT CODE-' + `${rec.combination}`}</td>
+                                <td>{rec.fabricCode?rec.fabricCode:''}</td>
+
+                                {/* <td>{'A0729274'}</td> */}
+                                <td>{rec.fabricContent?rec.fabricContent:''}</td>
+                                <td>{rec.itemColor}</td>
                         {newData[0]?.tallSizes?.map((sizeData, sizeIndex) => {
                         const sizeWiseQty = rec.extraSizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
                         return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>;
                     })}
-                    </tr>:<></>
+                    </tr>
+                    // :<></>
                 )
                 
             })}
-        </table>
+        </table> 
+        </>
+    :<></>
+    }
+      {
+        data?.teeStyle?.length >0?
+        <>
+         <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+            <tr>
+            <th>{'ITEM'}</th>
+                <th>{'STYLE'}</th>
+                <th>{'SEASON'}</th>
+                <th>{'IM.SIZE(MATRIX)'}</th>
+                <th>{'FIT'}</th>
+                <th>{'GARMENT COLOR CODE'}</th>
+                <th>{'FABRIC CODE'}</th>
+                <th>{'FABRIC CONTENT'}</th>
+                <th>{'HT LEBEL COLORS'}</th> 
+                {newTeeData[0]?.sizewiseqty?.map((e, index) => {
+                    return (<th style={{ width: '50px' }}>{e.size}</th>);
+                })}
+                <th>{'TOTAL'}</th>
+            </tr>
+
+            {data.teeStyle.map((rec,index) =>{
+                const combination=rec.combination
+                const comboVal = combination.toString()
+                return(
+                    // rec.extraSizeWiseQty ?
+                    <tr>
+                              <td>{rec.itemNo?rec.itemNo:''}</td>
+                                <td>{rec.styleNumber?rec.styleNumber:''}</td>
+                                <td>{rec.season?rec.season:''}</td>
+                                <td>{'724864/' + rec.imCode}</td>
+                                <td>{rec.fit?rec.fit:''}</td>
+                                <td>{'GMT CODE-' + `${rec.combination}`}</td>
+                                <td>{rec.fabricCode?rec.fabricCode:''}</td>
+                                <td>{rec.fabricContent?rec.fabricContent:''}</td>
+                                <td>
+                                    {comboVal.startsWith('1') ?'GCW#3 PMSCG6C':comboVal.startsWith('7')?'GCW#3 PMSCG6C':rec.itemColor}
+                                    {/* {rec.itemColor?rec.itemColor:''} */}
+                                    </td>
+                             {newTeeData[0]?.sizewiseqty?.map((sizeData, sizeIndex) => {
+                                    const sizeWiseQty = rec.sizeWiseQty.find(qtyData => qtyData.size === sizeData.size);
+                                    grandTotal +=sizeWiseQty ? sizeWiseQty.qty : 0
+                                    return <td key={sizeIndex}>{sizeWiseQty ? sizeWiseQty.qty : 0}</td>
+                                })}
+                                <td>{grandTotal}</td>
+                    </tr>
+                    // :<></>
+                )
+                
+            })}
+
+         </table>
+        </>:<></>
+      }
+
    </Card>
    </>
 )
