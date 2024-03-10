@@ -7,9 +7,10 @@
 // }
 export class BomItemReq {
     purchaseOrderNumber?: string;
-    poLineItemNumber?: number;
+    poLineItemNumber?: string[];
     itemNo?: string;
     id?:  number[];  
     bomItem?: string;
+    poAndLine : string[]
 }
 

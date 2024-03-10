@@ -79,7 +79,13 @@ export default function BomGenerationSteps() {
 
     const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
+    const isNextButoonDisable = () => {
+        if(current == 0){
+            return selectedPoLines.length ? false : true
+        }
+        return false
 
+    }
 
     return (
         <>
@@ -88,7 +94,7 @@ export default function BomGenerationSteps() {
             <div style={contentStyle} >{steps[current].content}</div>
             <div style={{ marginTop: 24 }}>
                 {current < steps.length - 1 && (
-                    <Button type="primary" onClick={() => next()}>
+                    <Button type="primary" onClick={() => next()} disabled={isNextButoonDisable()} >
                         {steps[current + 1].title + ">>"}
                     </Button>
                 )}

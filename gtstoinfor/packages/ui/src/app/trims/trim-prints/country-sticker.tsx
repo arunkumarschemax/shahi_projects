@@ -1,190 +1,299 @@
-import { StyleNumberReq } from "@project-management-system/shared-models"
-import { BomService } from "@project-management-system/shared-services"
-import { Button, Card, Descriptions } from "antd"
-import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
-import { Malaysia } from "./malasia-sticker"
-import Indonesia, { Philippines } from "./philippines"
-import React from "react"
+// import { Button, Card } from "antd"
+// import { useEffect, useState } from "react"
+// import { Malaysia } from "./malasia-sticker"
+// import Indonesia, { Philippines } from "./philippines"
+// import React from "react"
+
+//   export interface CountrystickerPrintProps{
+//     bomInfo: any[]
+    
+// }
 
 
-export const getCssFromComponent = (fromDoc, toDoc) => {
-    Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
-      if (styleSheet.cssRules) {
-        // true for inline styles
-        const newStyleElement = toDoc.createElement("style");
-        Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
-          newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
-        });
-        toDoc.head.appendChild(newStyleElement);
-      }
-    });
+
+// export const CountryStickerPrint=(props:CountrystickerPrintProps)=>{
+    
+//     const [bomInfo,setBomInfo] = useState<any>([])
+    
+//     useEffect(() => {
+//         if(props.bomInfo){
+//             setBomInfo(props.bomInfo)
+//         }
+//     },[props.bomInfo])
+//     const handlePrint = () => {
+//       const invoiceContent = document.getElementById("print");
+  
+//       if (invoiceContent) {
+//         const devContent = invoiceContent.innerHTML;
+//         const printWindow = window.open("", "PRINT", "height=900,width=1600");
+  
+//         printWindow.document.write(`
+//             <html>
+//                 <head>
+//                     <style>
+//                         @page {
+//                             size: legal;
+//                             margin: 0;
+//                         }
+//                         body {
+//                             margin: 0;
+//                             transform: scale(1);
+//                             transform-origin: top center;
+//                             width:100%;
+//                         }
+//                         /* Additional styles for your content */
+//                     </style>
+//                 </head>
+//                 <body>${devContent}</body>
+//             </html>
+//         `);
+//         printWindow.document.close();
+//         setTimeout(function () {
+//           printWindow.print();
+//           printWindow.close();
+//         }, 1000); // Add a delay to ensure all content is loaded
+//       }
+//     };
+//     let tablesRendered = false;
+
+//     return (
+//       <>
+//         <div id="print">
+//           <Card title={"Country Sticker"} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+//             {bomInfo && bomInfo.length > 0 && (
+//               <>
+//                 <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1}>
+//                   <thead>
+//                     <tr>
+//                       <th>COUNTRY#</th>
+//                       <th>IM#</th>
+//                       <th>ITEM#</th>
+//                       <th>STYLE#</th>
+//                       <th>QTY IN PCS#</th>
+//                     </tr>
+//                   </thead>
+//                   <tbody>
+//                     {bomInfo.map((e, index) => (
+//                       <tr key={index}>
+//                         <td>{e.destination}</td>
+//                         <td>{e.imCode}</td>
+//                         <td>{e.itemNo}</td>
+//                         <td>{e.styleNumber}</td>
+//                         <td style={{ textAlign: 'right' }}>{e.bomQty}</td>
+//                       </tr>
+//                     ))}
+//                   </tbody>
+//                 </table>
+//                 <div>
+//                   {bomInfo[bomInfo.length - 1]?.destination === 'Malaysia' && <Malaysia />}
+//                   {bomInfo[bomInfo.length - 1]?.destination === 'Philippines' && <Philippines />}
+//                 </div>
+//               </>
+//             )}
+//           </Card>
+//         </div>
+//       </>
+//     );
+//   };
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Card } from 'antd';
+import Malaysia from './malasia-sticker';
+import Philippines from './philippines';
+
+const CountryStickerPrint = (props) => {
+  const [bomInfo, setBomInfo] = useState([]);
+
+  const tableCellStyle = {
+    padding: '8px',
   };
-  export interface CountrystickerPrintProps{
-    info: any[]
-    
-}
-const countryToIMCodeMapping = {
-    Indonesia: '574080',
-    Philippines: '658749',
-    Malaysia: '520460'
-  };
-export const CountryStickerPrint=(props:CountrystickerPrintProps)=>{
-    
-    const bomData = useLocation()
-    const bomservice = new BomService()
-    const [bomInfo,setBomInfo] = useState<any>([])
-    
-    useEffect(() => {
-        if(props.info){
-            console.log(props.info,'oooo');
 
-            setBomInfo(props.info)
+  const tableRef = useRef(null);
 
-        }
-
-    },[props.info])
-
-    console.log(bomInfo);
-    
-    // useEffect(()=>{ 
-    //     // console.log(bomInfo[0].destinationCountry,'oooooooooo');
-        
-    //     isValidCountry(bomInfo.destinationCountry) },[])
-    
-    // console.log(bomInfo,'----------')
-
-
-    // const isValidCountry = (country: string) => {
-    //     console.log(country, 'ooooo');
-
-    //     const allowedCountries = ["Malaysia", "Philippines", "Indonesia"];
-    //     return allowedCountries.includes(country);
-    // };
-    
-
-    
-    const handlePrint = () => {     
-        const invoiceContent = document.getElementById("print");
-
-
-        if (invoiceContent) {
-            const devContent = invoiceContent.innerHTML;
-            const printWindow = window.open("", "PRINT", "height=900,width=1600");
-    
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <style>
-                            @page {
-                                size: legal;
-                                margin: 0;
-                            }
-                            body {
-                                margin: 0;
-                                transform: scale(1);
-                                transform-origin: top center;
-                                width:100%;
-                            }
-                            /* Additional styles for your content */
-                        </style>
-                    </head>
-                    <body>${devContent}</body>
-                </html>
-            `);
-    
-            getCssFromComponent(document, printWindow.document);
-    
-            printWindow.document.close();
-            setTimeout(function () {
-                printWindow.print();
-                printWindow.close();
-            }, 1000); // Add a delay to ensure all content is loaded
-        }
+  useEffect(() => {
+    console.log(props.bomInfo);
+    if (props.bomInfo) {
+      setBomInfo(props.bomInfo);
     }
-  
-return (
-    <>
-    <div id='print'>
-        
-    {/* {bomInfo.destination_country === 'Malaysia' || 'Philippines' ||  'Indonesia' ? ( */}
-    <Card title={'Country Sticker'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-  {bomInfo?.map(e => {
-    console.log(e,'--22222---------------------')
-    return (
-      e?.regionInfo?.map(rec => {
-        if (
-          rec.destinationCountry === 'Malaysia' ||
-          rec.destinationCountry === 'Philippines' ||
-          rec.destinationCountry === 'Indonesia'
-        ) {
-    {console.log('???????????????????')}
+  }, [props.bomInfo]);
 
-          return (
-            
-            
-            <>
-    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1}>
-        
-      <tr>
-        <th>COUNTRY#</th>
-        <th>IM#</th>
-        <th>ITEM#</th>
-        <th>STYLE#</th>
-        <th>QTY IN PCS#</th>
-      </tr>
-      <tr>
-        <td>{rec?.destinationCountry}</td>
-        <td>{countryToIMCodeMapping[rec?.destinationCountry]}</td>
-        <td>{e?.item}</td>
-        <td>{e?.styleNumber}</td>
-        <td style={{ textAlign: 'right' }}>{e?.totalItemQty}</td>
-      </tr>
-    </table>
-              {rec?.destinationCountry === "Malaysia" && <Malaysia />}
-                    {rec?.destinationCountry === "Philippines" && <Philippines />}  </>
-  
-          );
+  const handlePrint = () => {
+    const invoiceContent = document.getElementById('print');
+    if (invoiceContent) {
+      const devContent = invoiceContent.innerHTML;
+      const printWindow = window.open('', 'PRINT', 'height=900,width=1600');
+
+      printWindow.document.write(`
+      <html>
+        <head>
+          <style>
+            @page {
+              size: legal;
+              margin: 20;
+            }
+            body {
+              margin: 0;
+              transform: scale(1);
+              transform-origin: top center;
+              width: 100%;
+            }
+    
+            /* Additional styles for your content */
+            /* Add a counter to track the page number */
+            @page {
+              counter-increment: page;
+            }
+    
+            /* Apply styles only to the last page */
+            body:after {
+              content: counter(page);
+              position: absolute;
+              top: 0;
+              right: 0;
+              padding: 10px;
+              background-color: white;
+              color: black;
+            }
+    
+            body:last-of-type:after {
+              content: 'Last Page';
+              /* Additional styles for the last page marker */
+            }
+    
+            /* Hide elements in print mode */
+            @media print {
+              .no-print {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>${devContent}</body>
+      </html>
+    `);
+    
+
+      printWindow.document.close();
+      setTimeout(function () {
+        printWindow.print();
+        printWindow.close();
+      }, 1000);
+    }
+  };
+
+  const groupDataByCountry = () => {
+    if (bomInfo && bomInfo.length > 0) {
+      const groupedData = {};
+      bomInfo.forEach((item) => {
+        if (!groupedData[item.destination]) {
+          groupedData[item.destination] = [];
         }
-        return null;
-      })
+        groupedData[item.destination].push(item);
+      });
+      return groupedData;
+    }
+    return null;
+  };
+
+ const generateTables = () => {
+  const groupedData = groupDataByCountry();
+  if (groupedData) {
+    return (
+      <>
+        {groupedData['Philippines'] && (
+          <div style={{ marginBottom: '20px' }}>
+            <h3>Country: Philippines</h3>
+            <table
+              style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+              border={1}
+              cellSpacing="0"
+              cellPadding="0"
+            >
+              <thead>
+                <tr>
+                  <th style={tableCellStyle}>COUNTRY#</th>
+                  <th style={tableCellStyle}>IM#</th>
+                  <th style={tableCellStyle}>ITEM#</th>
+                  <th style={tableCellStyle}>STYLE#</th>
+                  <th style={tableCellStyle}>QTY IN PCS#</th>
+                </tr>
+              </thead>
+              <tbody>{generateRows(groupedData['Philippines'])}</tbody>
+            </table>
+            {bomInfo[bomInfo.length - 1]?.destination === 'Philippines' && <Philippines />}
+          </div>
+        )}
+
+        {groupedData['Malaysia'] && (
+          <div style={{ marginBottom: '20px' }}>
+            <h3>Country: Malaysia</h3>
+            <table
+              style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+              border={1}
+              cellSpacing="0"
+              cellPadding="0"
+            >
+              <thead>
+                <tr>
+                  <th style={tableCellStyle}>COUNTRY#</th>
+                  <th style={tableCellStyle}>IM#</th>
+                  <th style={tableCellStyle}>ITEM#</th>
+                  <th style={tableCellStyle}>STYLE#</th>
+                  <th style={tableCellStyle}>QTY IN PCS#</th>
+                </tr>
+              </thead>
+              <tbody>{generateRows(groupedData['Malaysia'])}</tbody>
+            </table>
+            {bomInfo[bomInfo.length - 1]?.destination === 'Malaysia' && <Malaysia />}
+          </div>
+        )}
+      </>
     );
-  })}
-</Card>
+  }
+  return null;
+};
 
-</div>
-</>
-)
+  const generateRows = (data) => {
+    return data.map((item, index) => (
+      <tr key={index}>
+        {index === 0 && (
+          <>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={data.length}>
+              {item.destination}
+            </td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'right' }}>{item.bomQty}</td>
+          </>
+        )}
+        {index !== 0 && (
+          <>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'right' }}>{item.bomQty}</td>
+          </>
+        )}
+      </tr>
+    ));
+  };
 
-// return (
-//     <><></>
-//       {bomInfo && bomInfo.length > 0 && (
-//         <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1}>
-//           <tr>
-//             <th>COUNTRY#</th>
-//             <th>IM#</th>
-//             <th>ITEM#</th>
-//             <th>STYLE#</th>
-//             <th>QTY IN PCS#</th>
-// </tr>          {bomInfo.map(e =>
+  return (
+    <div id="print">
+      {bomInfo && bomInfo.length > 0 ? (
+        <Card title={'Country Sticker'} extra={<Button className="no-print" onClick={handlePrint}>Print</Button>}>
+          {generateTables()}
+        </Card>
+      ) : (
+        <div>No data available</div>
+      )}
+    </div>
+  );
+};
 
-//             e?.regionInfo?.map(rec =>
-//               rec.destinationCountry === 'Malaysia' ||
-//               rec.destinationCountry === 'Philippines' ||
-//               rec.destinationCountry === 'Indonesia' ? (
-//                 <tr key={e}>
-//                   <td>{rec?.destinationCountry}</td>
-//                   <td>{countryToIMCodeMapping[rec?.destinationCountry]}</td>
-//                   <td>{e?.item}</td>
-//                   <td>{e?.styleNumber}</td>
-//                   <td style={{ textAlign: 'right' }}>{e?.totalItemQty}</td>
-//                 </tr>
-//               ) : null
-//             )
-//           )}
-//         </table>
-//       )}
-//     </>
-//   );
+export default CountryStickerPrint;
+
+
   
-}
+
+

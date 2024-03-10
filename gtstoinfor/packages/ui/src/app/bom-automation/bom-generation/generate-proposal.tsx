@@ -16,9 +16,10 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
-import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
+import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
+import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 type Props = {
   poLine: string[]
 }
@@ -40,12 +41,10 @@ export default function GenerateProposal(props: Props) {
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
   const [mobilontape, setMobilontape] = useState<any>([])
-
-
   const [elasticData, setElasticData] = useState<any>([]);
   const [countrySticker,setCountrySticker]= useState<any>([])
-  const [swoosth,setSwoosthData]= useState<any>([])
   const [htLabel, setHtlabel] = useState<any>([])
+  const [tissueData,setTissueData]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -70,10 +69,12 @@ export default function GenerateProposal(props: Props) {
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
+    // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
-    "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
+    "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
 
   }
 
@@ -208,17 +209,30 @@ export default function GenerateProposal(props: Props) {
   }
 
 
-  function handleMobilontape(itemId){
+  function handleMobilontape(item){
     const bomProposalReq = new BomProposalReq()
-    bomProposalReq.itemId = [itemId]
+    bomProposalReq.itemId = [item.itemId]
     bomProposalReq.poLine = props.poLine
-    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
-      if (v.status) {
-        setNeckTapeData(v.data)
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setMobilontape(res.data)
       }
     })
   }
 
+  function handleTissuePaper(itemId){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item
+    service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
+      if(res.status){
+        setTissueData(res.data)
+      }
+    })
+  }
 
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
@@ -451,7 +465,7 @@ export default function GenerateProposal(props: Props) {
     } 
 
     if(val.item === 'Mobilon Tape'){
-      handleMobilontape(val.itemId)
+      handleMobilontape(val)
     } 
     
      if(val.item === 'Snap Button'){
@@ -459,6 +473,10 @@ export default function GenerateProposal(props: Props) {
     }
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
+    } 
+    
+    if(val.item === 'Tissue Paper'){
+      handleTissuePaper(val.itemId)
     } 
   }
 

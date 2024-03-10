@@ -183,57 +183,6 @@ const NeckType = (props) => {
     ));
   };
   
-  
-  
-  // const generateRows = (data) => {
-    
-  //   return data.map((item, index) => (
-  //     <React.Fragment key={index}>
-  //       {index === 0 && (
-  //         <tr>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  //             {item.itemNo}
-  //           </td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  //             {item.styleNumber}
-  //           </td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  // {`${item.season}${item.year.slice(2)}`}</td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  //             {item.imCode}
-  //           </td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-  //             {item.description}
-  //           </td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
-  //           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
-  //         </tr>
-  //       )}
-     
-  //       {item.colors.slice(1).map((color, colorIndex) => (
-  //           <tr key={`${index}-${colorIndex}`}>
-  //           {index !== 0 && colorIndex === 0 && (
-  //             <>
-  //               <td style={{ ...tableCellStyle, textAlign: 'center'}} >
-  //                 {item.itemNo}
-  //               </td>
-  //               <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-  //               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
-  //             </>
-  //           )}
-  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
-  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
-  //           <td  style={{ ...tableCellStyle, textAlign: 'center' }}>{color.bomQty}</td>
-  //         </tr>
-  //       ))}
-  //     </React.Fragment>
-  //   ));
-  // };
-  
- 
   return (
     <div id="print">
       {bomInfo && bomInfo.length > 0 ? (

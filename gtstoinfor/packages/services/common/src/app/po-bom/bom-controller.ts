@@ -291,4 +291,14 @@ export class BomController {
         }
     }
     
+    @Post('/generateProposalForTissuePaper')
+    @ApiBody({type:BomProposalReq})
+    async generateProposalForTissuePaper(@Body() req:any): Promise<CommonResponseModel>{
+        try{
+            return this.bomService.generateProposalForTissuePaper(req)
+        }
+        catch(error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
+    }
 }

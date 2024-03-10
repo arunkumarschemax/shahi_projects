@@ -103,4 +103,8 @@ export class BomService extends CommonAxiosService {
     }
     
     
+    async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
+        console.log(req)
+        return this.axiosPostCall(this.URL + "/generateProposalForTissuePaper", req)
+    }
 }

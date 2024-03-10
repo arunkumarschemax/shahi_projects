@@ -54,17 +54,15 @@ export const Malaysia = () => {
             <Card style={{ width: '50%', border: 'none', marginRight: '0' }}>
                 <div style={{ marginLeft: '150px' }} id="print">
                     <div style={{marginBottom:'20px'}}>
-                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm</h3>
-                    <h3 style={{ marginLeft: '300px',fontFamily: 'sans-serif' }}>(1.275")</h3>
+                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm (1.275")</h3>
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-start'  }}>
     <div style={{ marginLeft: '30px', marginBottom: '-100px' }}>
-        <h3 style={{ fontFamily: 'sans-serif' }}>19mm</h3>
-        <h3 style={{ fontFamily: 'sans-serif' }}>(0.75")</h3>
+        <h3 style={{ fontFamily: 'sans-serif' }}>19mm (0.75")</h3>
     </div>
 </div>
 
-                    <div style={{ marginTop: '20px', marginLeft: '140px', height: '180px', borderLeft: '2px solid black', paddingLeft: '20px' }}>
+                    <div style={{ marginTop: '40px',paddingTop:'3px', marginLeft: '140px', height: '180px', borderLeft: '2px solid black', paddingLeft: '20px' }}>
                         <div style={{ borderTop: '2px solid black', width: '360px', paddingTop: '20px' }}>
                             <table>
                                 <tbody>
@@ -74,7 +72,7 @@ export const Malaysia = () => {
                                                 <span style={{ fontSize: '', verticalAlign: 'top' }}>Diimport & Diedarkan oleh</span>
                                             </div>
                                             <div style={{ verticalAlign: 'top' }}>
-                                                <span style={{ fontFamily: 'Arial Narrow' }}>NIKE SALES (MALAYSIA) SDN BHD</span>
+                                                <span style={{ fontFamily: 'Arial Narrow' }}><h3>NIKE SALES (MALAYSIA) SDN BHD</h3></span>
                                             </div>
                                             <div>199001007138(198708-M)</div>
                                             <div>Unit 10-1 & 10-2,Level 10, Menara OBYU No. 4 Jalan PJU 8/8A, Damansara Perdana 47820 Petaling Jaya, Selangor D.E Malaysia</div>
