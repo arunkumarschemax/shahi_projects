@@ -385,7 +385,7 @@ const M3Items = ({props}) => {
 
   const onKniteFinish = (val) => {
     console.log("val");
-    // console.log(val.target.value);
+    console.log(val);
     // console.log(val.kniteContent)
     // console.log(val.kniteDescription)
     // console.log(val.kniteGauze)
@@ -396,6 +396,24 @@ const M3Items = ({props}) => {
     console.log(req);
     service.createKnittedFabric(req).then((res) => {
       if(res.status){
+        console.log(filelist);
+        if(filelist.length >0){
+          // console.log(res)
+          const formData = new FormData();
+          filelist.forEach((file: any) => {
+              formData.append('file', file);
+          });
+
+          formData.append('m3ItemId', `${res.data?.m3ItemsId}`)
+          service.fileUpload(formData).then(fileres => {
+            if(fileres.status){
+              AlertMessages.getSuccessMessage("File uploaded successfully. ");
+            }
+            else{
+              AlertMessages.getErrorMessage("Upload failed. ");
+            }
+          })
+        }
         AlertMessages.getSuccessMessage(res.internalMessage);
         setTimeout(() => {
           message.success("Submitted successfully")
@@ -441,11 +459,13 @@ const M3Items = ({props}) => {
       return;
     }
   }
-     const req = new M3FabricsDTO(0,form.getFieldValue("buyerId"),form.getFieldValue("itemCode"),form.getFieldValue("fabricTypeId"),form.getFieldValue("weaveId"),weightChange,weightUom,epiData.length>0?epiData:0,ppiData.length>0?ppiData:0,(yarnType).replace(/""/g, '"'),widthChange.length>0?widthChange:0,form.getFieldValue('widthUomId'),form.getFieldValue("finishId"),form.getFieldValue("shrinkage"),form.getFieldValue("description"),form.getFieldValue("buyerCode"),form.getFieldValue("m3Code"),form.getFieldValue("hsnCode"),yarn,formData,undefined,undefined,undefined,undefined,form.getFieldValue("remarks"),form.getFieldValue("fabricUpload"))
-    //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
+     const req = new M3FabricsDTO(0,form.getFieldValue("buyerId"),form.getFieldValue("itemCode"),form.getFieldValue("fabricTypeId"),form.getFieldValue("weaveId"),weightChange,weightUom,epiData.length>0?epiData:0,ppiData.length>0?ppiData:0,(yarnType).replace(/""/g, '"'),widthChange.length>0?widthChange:0,form.getFieldValue('widthUomId'),form.getFieldValue("finishId"),form.getFieldValue("shrinkage"),form.getFieldValue("description"),form.getFieldValue("buyerCode"),form.getFieldValue("m3Code"),form.getFieldValue("hsnCode"),yarn,formData,undefined,undefined,undefined,undefined,form.getFieldValue("remarks"),"","","","","","","",form.getFieldValue("fabricUpload"))
+     console.log(req);
     service.createM3Items(req).then((res) => {
       if (res.status) {
-        // console.log(props);
+        console.log(res.data)
+
+        console.log(filelist);
         if(filelist.length >0){
           // console.log(res)
           const formData = new FormData();
@@ -453,9 +473,14 @@ const M3Items = ({props}) => {
               formData.append('file', file);
           });
 
-          formData.append('m3ItemId', `${res.data[0]?.m3ItemId}`)
+          formData.append('m3ItemId', `${res.data?.m3ItemsId}`)
           service.fileUpload(formData).then(fileres => {
-              res.data[0].styleFilePath = fileres.data
+            if(fileres.status){
+              AlertMessages.getSuccessMessage("File uploaded successfully. ");
+            }
+            else{
+              AlertMessages.getErrorMessage("Upload failed. ");
+            }
           })
         }
         if(props != undefined){
@@ -1237,6 +1262,19 @@ const uploadButton = (
                       )}
                     </Form.List>
                   </Card>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
+                <Form.Item name="knittedfabricUpload" label='Fabric Upload'
+                  rules={[
+                      {required:false,message:'Upload Fabric'}
+                  ]}  
+                  // initialValue={props.isUpdate ? props.styleData.styleFileName:''}
+                  >
+                  <Upload  {...uploadFieldProps} style={{  width:'100%' }} listType="picture-card">
+                  
+                  {uploadButton}
+                  </Upload>
+                </Form.Item>
                 </Col>
             </Row>
             <Row>
