@@ -12,7 +12,6 @@ const NeckType = (props) => {
   const tableRef = useRef(null);
 
   useEffect(() => {
-    console.log(props.bomInfo);
     if (props.bomInfo) {
       setBomInfo(props.bomInfo);
     }
@@ -184,15 +183,20 @@ const NeckType = (props) => {
   };
   
   return (
+    <Card title={'Neck Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
+
     <div id="print">
+
       {bomInfo && bomInfo.length > 0 ? (
-        <Card title={'Neck Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
+        <>
           {generateTables()}
-        </Card>
+          </>
       ) : (
         <div>No data available</div>
       )}
     </div>
+    </Card>
+
   );
 };
 

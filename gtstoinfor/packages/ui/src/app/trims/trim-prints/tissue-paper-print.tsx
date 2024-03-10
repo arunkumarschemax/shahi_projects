@@ -33,7 +33,6 @@ export interface TissuePaperprops {
             setBomInfo(props.bomInfo)
         }
     }, [props.bomInfo])
-console.log(bomInfo,"bomInfo----------------------------------------");
 
    
 
@@ -55,7 +54,7 @@ console.log(bomInfo,"bomInfo----------------------------------------");
                                 margin: 0;
                                 transform: scale(1);
                                 transform-origin: top center;
-                                width:100%;
+                                width: 100%;
                             }
                             /* Additional styles for your content */
                         </style>
@@ -64,16 +63,23 @@ console.log(bomInfo,"bomInfo----------------------------------------");
                 </html>
             `);
     
-                getCssFromComponent(document, printWindow.document);
+            // Step 6: Apply CSS styles from the original document to the new window
+            getCssFromComponent(document, printWindow.document);
     
-                printWindow.document.close();
-                setTimeout(function () {
-                    printWindow.print();
-                    printWindow.close();
-                }, 1000); // Add a delay to ensure all content is loaded
-            }
-       }
-
+            // Step 7: Close the document after it is fully loaded
+            printWindow.onload = () => {
+                console.log("Content loaded into the print window");
+                // Step 8: Trigger the print operation
+                printWindow.print();
+                // Step 9: Close the print window after printing
+                printWindow.close();
+            };
+            
+            console.log("end of the table");
+            
+        }
+    };
+    
    
     const tableCellStyle: React.CSSProperties = {
         border: '1px solid #dddddd',
@@ -94,6 +100,7 @@ console.log(bomInfo,"bomInfo----------------------------------------");
       return (
         
           <Card title={'Tissue Paper'} extra={<Button onClick={handlePrint}>Print</Button>}>
+            <div id="print">
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
               <thead>
                 <tr>
@@ -126,6 +133,7 @@ console.log(bomInfo,"bomInfo----------------------------------------");
                 )}
               </tbody>
             </table>
+            </div>
           </Card>
        
       );
