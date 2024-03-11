@@ -91,6 +91,8 @@ import { LevisComaparisionReport } from "./levis/levis-comaprision-report"
 import LevisOrderReport from "./levis/levis-order-report"
 import LevisSplitComaparisionReport, { LevisSplitComparisionReport } from "./levis/levis-split-comparision-report"
 import LevisEditColineView from "./levis/levis-edit-co-line-view"
+import GapAddressUpload from "./masters/gap-address/gap-address-excel-upload"
+import GapAddressView from "./masters/gap-address/gap-address-view"
 
 
 export const AppRoutes = () => {
@@ -326,7 +328,8 @@ export const AppRoutes = () => {
                 </Route>
 
                 <Route path='/pvh'>
-                   
+                <Route path='masters/gap-address/gap-address-excel-upload' key='/address/address-excel-upload' element={<GapAddressUpload/>} />
+                   <Route path='masters/gap-address/gap-address-view' key='/address/address-view' element={<GapAddressView/>} />
         
             
                 </Route>
