@@ -1064,31 +1064,7 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
     }
-    // async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
-    //     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-    //     const poBomData = await this.poBomRepo.getProposalsData(req)
 
-    //     const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-    //         const { styleNumber, bomQty,itemNo,  destination } = currentItem;
-    //         const bomGeoCode = destinations.find((v) => v.destination == destination)
-    //         let key = `${styleNumber}-${itemNo}`;
-
-    //         if (!result[key]) {
-    //             result[key] = {
-
-    //                 styleNumber,
-    //                  itemNo,
-    //                   bomQty: 0,
-    //             };
-    //         }
-    //         result[key].bomQty += bomQty;
-
-
-    //         return result
-    //     }, {})
-    //     const groupedArray: any[] = Object.values(groupedData);
-    //     return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
-    // }
     async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
 
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
