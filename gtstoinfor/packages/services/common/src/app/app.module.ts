@@ -14,6 +14,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PVHModule } from './pvh/pvh.module';
 import { GapAddressModule } from './Entites@Shahi/gap-address/gap-address-module';
+import { CkAddressModule } from './Entites@Shahi/ck-address/ck-address-module';
 
 
 @Module({
@@ -45,7 +46,7 @@ import { GapAddressModule } from './Entites@Shahi/gap-address/gap-address-module
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,PVHModule,GapAddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,PVHModule,GapAddressModule,CkAddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

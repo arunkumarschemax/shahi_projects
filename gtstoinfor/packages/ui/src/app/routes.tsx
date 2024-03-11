@@ -93,6 +93,8 @@ import LevisSplitComaparisionReport, { LevisSplitComparisionReport } from "./lev
 import LevisEditColineView from "./levis/levis-edit-co-line-view"
 import GapAddressUpload from "./masters/gap-address/gap-address-excel-upload"
 import GapAddressView from "./masters/gap-address/gap-address-view"
+import CkAddressUpload from "./masters/ck-address/ck-address-excel-upload"
+import CkAddressView from "./masters/ck-address/ck-address-view"
 
 
 export const AppRoutes = () => {
@@ -120,7 +122,7 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} /> */}
-             
+
                 </Route>
                 <Route path='/nike'>
                     <Route path='file-import' element={<PoFileImport />} />
@@ -231,8 +233,8 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance-view' element={<OrderAcceptanceGrid />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='co-line-view' element={<ColineView />} />
-                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload />} />
+                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView />} />
 
                 </Route>
 
@@ -241,97 +243,99 @@ export const AppRoutes = () => {
                     <Route path='ppk-po-report' element={<PPKPOReport />} />
                     {/* <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} /> */}
-                   <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
-                   <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
-                   
-                   <Route path='centric-order-acceptance' element={<CentricOrderAcceptanceGrid />} />
-                   <Route path='centric-pdf-upload' element={<CentricPdfUpload />} />
+                    <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
+                    <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
 
-                   <Route path='centric-co-line-view' element={<CentriColineView />} />
-                   <Route path='solid-pack-po-report' element={<SolidPOReport />} />
-                   <Route path='pdf-info-detail-view' element={<PdfInfoDetailView />} />
+                    <Route path='centric-order-acceptance' element={<CentricOrderAcceptanceGrid />} />
+                    <Route path='centric-pdf-upload' element={<CentricPdfUpload />} />
+
+                    <Route path='centric-co-line-view' element={<CentriColineView />} />
+                    <Route path='solid-pack-po-report' element={<SolidPOReport />} />
+                    <Route path='pdf-info-detail-view' element={<PdfInfoDetailView />} />
 
 
-                    
+
 
                 </Route>
 
                 <Route path='/hb-athletics'>
-                   <Route path='hb-pdf-upload' element={<HbPdfUpload />} />
-                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
-                   <Route path='pdf-info' element={<HbPdFInfoGrid />} />
-                   <Route path='pdf-info-detail-view' element={<HbPdfInfoDetailView />} />
+                    <Route path='hb-pdf-upload' element={<HbPdfUpload />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload />} />
+                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView />} />
+                    <Route path='pdf-info' element={<HbPdFInfoGrid />} />
+                    <Route path='pdf-info-detail-view' element={<HbPdfInfoDetailView />} />
 
-                   <Route path='hb-order-acceptance' element={<HbOrderAcceptanceGrid />} />
-                   <Route path='hb-order-data-info-grid' element={<HBOrdersGrid />} />
-                   <Route path='hb-order-data-detail-view' element={<HBOrdersDetailView />} />
+                    <Route path='hb-order-acceptance' element={<HbOrderAcceptanceGrid />} />
+                    <Route path='hb-order-data-info-grid' element={<HBOrdersGrid />} />
+                    <Route path='hb-order-data-detail-view' element={<HBOrdersDetailView />} />
 
 
-                   <Route path='hb-co-line-view' element={<HbColineView />} />
-                   <Route path='hb-order-comparision-report' element={<OrderComparisionReport />} />
+                    <Route path='hb-co-line-view' element={<HbColineView />} />
+                    <Route path='hb-order-comparision-report' element={<OrderComparisionReport />} />
 
                 </Route>
                 <Route path='/sanmar'>
-                   <Route path='sanmar-pdf-upload' element={<SanmarPdfUpload />} />
-                   <Route path='sanmar-order-data-info-grid' element={<SanmarOrdersGrid />} />
-                   <Route path='sanmar-order-data-detail-view' element={<SanmarOrdersDetailView />} />
-                   <Route path='pdf-info' element={<SanmarPdFInfoGrid />} />
-                   <Route path='pdf-info-detail-view' element={<SanmarPdfTable />} />
-                   <Route path="sanmar-order-acceptance" element={<SanmarOrderAcceptanceGrid/>}/>
-                   <Route path="sanmar-co-line-view" element={<SanmarColineView/>}/>
-                   <Route path='sanmar-order-comparision-report' element={<SanmarOrderComparisionReport />} />
-                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
-              
+                    <Route path='sanmar-pdf-upload' element={<SanmarPdfUpload />} />
+                    <Route path='sanmar-order-data-info-grid' element={<SanmarOrdersGrid />} />
+                    <Route path='sanmar-order-data-detail-view' element={<SanmarOrdersDetailView />} />
+                    <Route path='pdf-info' element={<SanmarPdFInfoGrid />} />
+                    <Route path='pdf-info-detail-view' element={<SanmarPdfTable />} />
+                    <Route path="sanmar-order-acceptance" element={<SanmarOrderAcceptanceGrid />} />
+                    <Route path="sanmar-co-line-view" element={<SanmarColineView />} />
+                    <Route path='sanmar-order-comparision-report' element={<SanmarOrderComparisionReport />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload />} />
+                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView />} />
+
                 </Route>
                 <Route path='/eddiebauer'>
-                   
-                   <Route path='eddiebauer-order-data-info-grid' element={<EddieOrdersGrid />} />
-                   <Route path='eddiebauer-pdf-upload' element={<EddiePdfUpload />} />
-                   <Route path='pdf-info' element={<EddiePdFInfoGrid />} />
-                   <Route path="eddiebauer-order-acceptance" element={<EddieOrderAcceptanceGrid/>}/>
-                   <Route path="eddiebauer-co-line-view" element={<EddieColineView/>}/>
-                   <Route path='pdf-info-detail-view' element={<EddiePdfTable />} />
-                   <Route path='eddiebauer-order-data-detail-view' element={<EddieOrdersDetailView />} />
-                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
-                   <Route path="eddiebauer-comparision-report" element={<EddieComparisionReport/>}/>
-                   
+
+                    <Route path='eddiebauer-order-data-info-grid' element={<EddieOrdersGrid />} />
+                    <Route path='eddiebauer-pdf-upload' element={<EddiePdfUpload />} />
+                    <Route path='pdf-info' element={<EddiePdFInfoGrid />} />
+                    <Route path="eddiebauer-order-acceptance" element={<EddieOrderAcceptanceGrid />} />
+                    <Route path="eddiebauer-co-line-view" element={<EddieColineView />} />
+                    <Route path='pdf-info-detail-view' element={<EddiePdfTable />} />
+                    <Route path='eddiebauer-order-data-detail-view' element={<EddieOrdersDetailView />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload />} />
+                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView />} />
+                    <Route path="eddiebauer-comparision-report" element={<EddieComparisionReport />} />
 
 
 
-                  
-              
+
+
+
                 </Route>
                 <Route path='/levis'>
-                   
-                   <Route path='levis-order-data-info-grid' element={<LevisOrdersGrid />} />
-                   <Route path='levis-pdf-upload' element={<LevisPdfUpload />} />
-                   <Route path="levis-order-acceptance" element={<LevisOrderAcceptanceGrid/>}/>
-                   <Route path="levis-co-line-view" element={<LevisColineView/>}/>
-                   <Route path='levis-order-data-detail-view' element={<LevisOrdersDetailView />} />
-                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
-                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
-                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
-                   <Route path='masters/size/size-excel-upload' key='/size/size-excel-upload' element={<SizeUpload/>} />
-                   <Route path='masters/size/size-view' key='/size/size-view' element={<SizeView/>} />
-                   <Route path='pdf-info' element={<LevisPdFInfoGrid />} />
-                   <Route path='pdf-info-detail-view' element={<LevisPdfInfoDetailView />} />
-                   <Route path="levis-comparision-report" element={<LevisComaparisionReport/>}/>
-                   <Route path='levis-order-report' element={<LevisOrderReport />} />
-                   <Route path="levis-split-comparision-report" element={<LevisSplitComparisionReport/>}/>
-                   <Route path="edit-co-line-view" element={<LevisEditColineView/>}/>
 
-            
+                    <Route path='levis-order-data-info-grid' element={<LevisOrdersGrid />} />
+                    <Route path='levis-pdf-upload' element={<LevisPdfUpload />} />
+                    <Route path="levis-order-acceptance" element={<LevisOrderAcceptanceGrid />} />
+                    <Route path="levis-co-line-view" element={<LevisColineView />} />
+                    <Route path='levis-order-data-detail-view' element={<LevisOrdersDetailView />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload />} />
+                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView />} />
+                    <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload />} />
+                    <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView />} />
+                    <Route path='masters/size/size-excel-upload' key='/size/size-excel-upload' element={<SizeUpload />} />
+                    <Route path='masters/size/size-view' key='/size/size-view' element={<SizeView />} />
+                    <Route path='pdf-info' element={<LevisPdFInfoGrid />} />
+                    <Route path='pdf-info-detail-view' element={<LevisPdfInfoDetailView />} />
+                    <Route path="levis-comparision-report" element={<LevisComaparisionReport />} />
+                    <Route path='levis-order-report' element={<LevisOrderReport />} />
+                    <Route path="levis-split-comparision-report" element={<LevisSplitComparisionReport />} />
+                    <Route path="edit-co-line-view" element={<LevisEditColineView />} />
+
+
                 </Route>
 
                 <Route path='/pvh'>
-                <Route path='masters/gap-address/gap-address-excel-upload' key='/address/address-excel-upload' element={<GapAddressUpload/>} />
-                   <Route path='masters/gap-address/gap-address-view' key='/address/address-view' element={<GapAddressView/>} />
-        
-            
+                    <Route path='masters/gap-address/gap-address-excel-upload' key='/address/address-excel-upload' element={<GapAddressUpload />} />
+                    <Route path='masters/gap-address/gap-address-view' key='/address/address-view' element={<GapAddressView />} />
+                    <Route path='masters/ck-address/ck-address-excel-upload' key='/address/address-excel-upload' element={<CkAddressUpload />} />
+                    <Route path='masters/ck-address/ck-address-view' key='/address/address-view' element={<CkAddressView />} />
+
+
                 </Route>
 
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

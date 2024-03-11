@@ -9,6 +9,9 @@ import { PVHOrdersRepository } from "./repositories/pvh-orders.repo";
 import { GapAddressService } from "../Entites@Shahi/gap-address/gap-address-service";
 import { GapAddressRepository } from "../Entites@Shahi/gap-address/gap-address.repo";
 import { GapAddressEntity } from "../Entites@Shahi/gap-address/gap-address-entity";
+import { CkAddressService } from "../Entites@Shahi/ck-address/ck-address-service";
+import { CkAddressRepository } from "../Entites@Shahi/ck-address/ck-address.repo";
+import { CkAddressEntity } from "../Entites@Shahi/ck-address/ck-address-entity";
 
 
 @Module({
@@ -16,9 +19,10 @@ import { GapAddressEntity } from "../Entites@Shahi/gap-address/gap-address-entit
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
         PVHOrdersEntity,
-        GapAddressEntity
+        GapAddressEntity,
+        CkAddressEntity
     ])],
   controllers: [PVHController],
-  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository]
+  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository,CkAddressService,CkAddressRepository]
 })
 export class PVHModule { }
