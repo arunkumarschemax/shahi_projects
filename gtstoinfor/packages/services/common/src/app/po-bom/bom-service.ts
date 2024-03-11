@@ -368,9 +368,14 @@ export class BomService {
             for (const po of poData) {
                 const bomDestinations = destinations.find((v) => v.destination == po.destination)
                 const { geoCode } = bomDestinations
-                const regionQty = regionDataMap.get(geoCode).totalQty || 0;
-                const regionPoData = regionDataMap.get(geoCode).poData || [po]
-                regionDataMap.set(geoCode, { poData: regionPoData, totalQty: regionQty });
+                if (!regionDataMap.has(geoCode)) {
+                    regionDataMap.set(geoCode, { poData: [po], totalQty: po.qty });
+                } else {
+                    const poData = regionDataMap.get(geoCode).poData
+                    poData.push(po)
+                    const totalQty = regionDataMap.get(geoCode).totalQty + po.qty
+                    regionDataMap.set(geoCode, { poData, totalQty })
+                }
                 let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
                     styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
@@ -413,7 +418,7 @@ export class BomService {
                             if (geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
                                 const zfactorID = new ZFactorsBomEntity()
                                 zfactorID.id = zfactor.id
-                                poBomEntity.zFactorBom = zfactor
+                                poBomEntity.zFactorBom = zfactorID
                                 poBomEntity.bom = null
                                 // console.log(poBomEntity)
                             }
@@ -444,13 +449,16 @@ export class BomService {
                         // await transactionManager.getRepository(PoBomEntity).insert(poBomExtraITem)
                     }
                 }
-
-
-
             }
             // moq logic before insering
 
-            await transactionManager.getRepository(PoBomEntity).insert(poBomEntities)
+            for (const rec of poBomEntities) {
+                const isBomRecExist = await this.poBomRepo.checkIfBomGenerated( rec.dpom.id ,rec.bom ? rec.bom.id : null,rec.zFactorBom ? rec.zFactorBom.id : null)
+                console.log(isBomRecExist)
+                if(isBomRecExist) continue
+                await transactionManager.getRepository(PoBomEntity).insert(rec)
+
+            }
 
             await transactionManager.completeTransaction()
             return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
@@ -1287,6 +1295,8 @@ export class BomService {
             throw err
         }
     }
+
+   
 
 }
 

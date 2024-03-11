@@ -22,7 +22,6 @@ export interface washCareprops {
     bomInfo: any[]
 }
 export const WasCarelabel = (props: washCareprops) => {
-    console.log(props.bomInfo)
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
@@ -40,7 +39,6 @@ export const WasCarelabel = (props: washCareprops) => {
 
     useEffect(() => {
         if (props.bomInfo) {
-            console.log(props.bomInfo)
 
             setBomInfo(props.bomInfo)
         }
@@ -52,14 +50,12 @@ export const WasCarelabel = (props: washCareprops) => {
         //     console.log(e.style)
         // })
         const data = bomInfo.some(item => item.item == '012H' && item.geoCode === 'EMEA')
-        console.log(data)
         if (data) {
             setGender(true)
         }
     }
 
     useEffect(() => {
-        console.log(bomInfo)
         for (const rec of bomInfo) {
             if (bomInfo.destinationCountry === 'ARGENTINA ') {
                 if (bomInfo.shipToAddress.includes('Nike Trading')) {
@@ -295,8 +291,6 @@ export const WasCarelabel = (props: washCareprops) => {
                         //   ref={tableRef}
                         id="table-to-xls"
                     >
-
-
                         {data[0]?.chinaSizes?.length ? <>
                             <tr></tr>
                             <tr></tr>

@@ -7,7 +7,8 @@ import { BomEntity } from "./bom-entity";
 import { ZFactorsBomEntity } from "./z-factors-bom.entity";
 
 @Entity('po_bom')
-@Index(['dpom', 'bom','zFactorBom'], {unique:true })
+@Unique(['dpom', 'bom',])
+@Unique(['dpom', 'zFactorBom',])
 export class PoBomEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id'
