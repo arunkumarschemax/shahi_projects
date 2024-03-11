@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StructureService } from "./structure.service";
-import { ColumnResponseModel, CommonResponseModel, StructureActivateReq, StructureReq, StructureResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, ColumnResponseModel, CommonResponseModel, StructureActivateReq, StructureReq, StructureResponseModel } from "@project-management-system/shared-models";
 
 @ApiTags('structure')
 @Controller('structure')
@@ -57,6 +57,16 @@ export class StructureController {
     async getAllActiveThicknessInfo(): Promise<StructureResponseModel> {
         try {
             return await this.structureService.getAllActiveStructure();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(StructureResponseModel, error)
+        }
+    }
+
+    @Post('/getAllActiveStructureForCategory')
+    @ApiBody({type:CategoryIdRequest})
+    async getAllActiveStructureForCategory(@Body() req:any): Promise<StructureResponseModel> {
+        try {
+            return await this.structureService.getAllActiveStructureForCategory(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(StructureResponseModel, error)
         }

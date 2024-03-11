@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { QualityService } from "./quality.service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { QualityDTO } from "./quality.dto";
 
 
@@ -35,5 +35,14 @@ async activateOrDeactivateQuality(@Body() req: any): Promise<CommonResponseModel
   return await this.Service.activateOrDeactivateQuality(req);
 
 }
+
+@Post('/getAllQualitiesByCategory')
+@ApiBody({type:CategoryIdRequest})
+async getAllQualitiesByCategory(@Body() req: any): Promise<CommonResponseModel> {
+  return await this.Service.getAllQualitiesByCategory(req);
+
+}
+
+
 
   }

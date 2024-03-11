@@ -1,5 +1,6 @@
 import {
     AllTrimResponseModel,
+    CategoryIdRequest,
     CommonResponseModel,
     TrimDtos,
   } from "@project-management-system/shared-models";
@@ -31,6 +32,9 @@ import {
       return this.axiosPostCall(this.URL + "/getFabricContentData");
     }
   
+    async getAllContentForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+      return this.axiosPostCall(this.URL + "/getAllContentForCategory",req);
+    }
 
   }
   

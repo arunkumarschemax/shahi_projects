@@ -1,4 +1,4 @@
-import { ColumnActivateReq, ColumnReq, ColumnResponseModel, StructureActivateReq, StructureReq } from "@project-management-system/shared-models";
+import { CategoryIdRequest, ColumnActivateReq, ColumnReq, ColumnResponseModel, StructureActivateReq, StructureReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StructureService extends CommonAxiosService{
@@ -19,8 +19,8 @@ export class StructureService extends CommonAxiosService{
     async activateOrDeactivateStructure(req:StructureActivateReq): Promise<ColumnResponseModel> {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateStructure",req)
     }
-
-    async getAllActiveStructureInfo(): Promise<ColumnResponseModel> {
-      return this.axiosPostCall(this.URL + "/getAllActiveStructureInfo")
+    async getAllActiveStructureForCategory(req:CategoryIdRequest): Promise<ColumnResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllActiveStructureForCategory",req)
     }
+
 }

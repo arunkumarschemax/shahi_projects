@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
-import { AllColourResponseModel, AllProfitControlHeadResponseModel } from '@project-management-system/shared-models';
+import { AllColourResponseModel, AllProfitControlHeadResponseModel, CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { ProfitControlHeadResponseModel } from '@project-management-system/shared-models';
 import {ColourResponseModel} from '@project-management-system/shared-models'
 // import { UserRequestDto } from '../currencies/dto/user-logs-dto';
@@ -12,6 +12,7 @@ import { ColourRequest } from './dto/colour-request';
 // import { Console } from 'console';
 import { ColourDTO } from './dto/colour-dto';
 import { BuyerDestinationService } from 'packages/libs/shared-services/src/common';
+import { M3TrimsCategoryMappingRepo } from '../m3-trims/m3-trims-category-mapping.repo';
 
 @Injectable()
 export class ColourService{
@@ -19,7 +20,8 @@ export class ColourService{
         @InjectRepository(Colour)
         private ColourRepository: Repository<Colour>,
         private ColourAdapter: ColourAdapter,
-        private buyersDestinationService:BuyerDestinationService
+        private buyersDestinationService:BuyerDestinationService,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
 
       ){}
       async getColourWithoutRelations(Colour: string, bbuyerId:number): Promise<Colour>{
@@ -248,4 +250,17 @@ export class ColourService{
             return null;
             }
         } 
+        async getAllColorsForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+          try {
+            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&")
+              const data = await this.m3TrimsCategoryMappingRepo.getAllColorsByCategory(req.categoryId)
+              if(data.status){
+                  return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data.data)
+              }else{
+                  return new CommonResponseModel(false, 0, 'No data found',[])
+              }
+          } catch (err) {
+            return err;
+          }
+        }
 }

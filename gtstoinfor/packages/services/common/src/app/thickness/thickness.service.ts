@@ -2,14 +2,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Thickness } from "./thickness.entity";
 import { ThicknessRepository } from "./thickness.repo";
 import { Injectable } from "@nestjs/common";
-import { ThicknessReq, ThicknessResponseModel, ThicknessModel, ThicknessActivateReq } from "@project-management-system/shared-models";
+import { ThicknessReq, ThicknessResponseModel, ThicknessModel, ThicknessActivateReq, CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
+import { M3TrimsCategoryMappingRepo } from "../m3-trims/m3-trims-category-mapping.repo";
 
 
 
 @Injectable()
 export class ThicknessService {
     constructor(
-        private repo : ThicknessRepository
+        private repo : ThicknessRepository,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) { }
 
     async createThickness(req: ThicknessReq,isUpdate:boolean) : Promise<ThicknessResponseModel>{
@@ -113,4 +115,19 @@ export class ThicknessService {
             throw err
         }
    }
+
+   async getAllActiveThicknessForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    try{
+        const data = await this.m3TrimsCategoryMappingRepo.getAllThicknessByCategory(req.categoryId)
+        let info = []
+        if(data.status){
+            return new CommonResponseModel(true,1,'Data retrieved',data.data)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
 }

@@ -1,4 +1,4 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualitysService,ShapeService,SizeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualityService,QualitysService,ShapeService,SizeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, Upload, UploadProps, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -21,6 +21,8 @@ export function M3TrimItemsForm({props}) {
   const finishService = new FinishService();
   const holeService = new HoleService();
   const qtyService = new QualitysService();
+  const qualityService = new QualityService();
+
   const thickService = new ThicknessService();
   const varietyService = new VarietyService();
   const trimService = new TrimService();
@@ -117,29 +119,30 @@ export function M3TrimItemsForm({props}) {
     reader.readAsDataURL(img);
   }
   useEffect(() => {
+    console.log(mapData)
     if (mapData[0]?.structure === true) {
-      getStructures();
+      getStructures(mapData[0].trimId);
     }
     if (mapData[0]?.category === true) {
-      getCategories();
+      getCategories(mapData[0].trimId);
     }
     if (mapData[0]?.content === true) {
-      getContents();
+      getContents(mapData[0].trimId);
     }
     if (mapData[0]?.type === true) {
       getTypes();
     }
     if (mapData[0]?.finish === true) {
-      getFinishes();
+      getFinishes(mapData[0].trimId);
     }
     if (mapData[0]?.hole === true) {
-      getHoles();
+      getHoles(mapData[0].trimId);
     }
     if (mapData[0]?.quality === true) {
-      getQuality();
+      getQuality(mapData[0].trimId);
     }
     if (mapData[0]?.thickness === true) {
-      getThicks();
+      getThicks(mapData[0].trimId);
     }
     if (mapData[0]?.variety === true) {
       getVarieties();
@@ -148,7 +151,7 @@ export function M3TrimItemsForm({props}) {
       getUom();
     }
     if (mapData[0]?.color === true) {
-      getColors();
+      getColors(mapData[0].trimId);
     }
     if (mapData[0]?.buyer === true) {
       getAllTrimBuyers();
@@ -178,24 +181,24 @@ export function M3TrimItemsForm({props}) {
     getBuyers();
   }, [mapData]);
 
-  const getStructures = () => {
-    structureService.getAllStructureInfo().then((res) => {
+  const getStructures = (val) => {
+    structureService.getAllActiveStructureForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setStructureData(res.data);
       }
     });
   };
 
-  const getCategories = () => {
-    categoryService.getAllCategory().then((res) => {
+  const getCategories = (val) => {
+    categoryService.getAllCategoriesForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setCategoryData(res.data);
       }
     });
   };
 
-  const getContents = () => {
-    contentService.getAllContent().then((res) => {
+  const getContents = (val) => {
+    contentService.getAllContentForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setContentData(res.data);
       }
@@ -210,32 +213,32 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getFinishes = () => {
-    finishService.getAllFinish().then((res) => {
+  const getFinishes = (val) => {
+    finishService.getAllActiveForCategoryFinish({categoryId:val}).then((res) => {
       if (res.status) {
         setFinishData(res.data);
       }
     });
   };
 
-  const getHoles = () => {
-    holeService.getAllHoles().then((res) => {
+  const getHoles = (val) => {
+    holeService.getAllHolesForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setHoleData(res.data);
       }
     });
   };
 
-  const getQuality = () => {
-    qtyService.getAllQualitys().then((res) => {
+  const getQuality = (val) => {
+    qualityService.getAllQualitiesByCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setQtyData(res.data);
       }
     });
   };
 
-  const getThicks = () => {
-    thickService.getAllThicknessInfo().then((res) => {
+  const getThicks = (val) => {
+    thickService.getAllActiveThicknessForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setThickData(res.data);
       }
@@ -266,8 +269,8 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getColors = () => {
-    colorService.getAllColour().then((res) => {
+  const getColors = (val) => {
+    colorService.getAllColorsForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setColorData(res.data);
       }

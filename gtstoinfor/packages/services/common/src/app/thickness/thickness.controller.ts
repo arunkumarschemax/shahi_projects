@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { ThicknessService } from "./thickness.service";
-import { ColumnResponseModel, CommonResponseModel, ThicknessActivateReq, ThicknessResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, ColumnResponseModel, CommonResponseModel, ThicknessActivateReq, ThicknessResponseModel } from "@project-management-system/shared-models";
 
 @ApiTags('thickness')
 @Controller('thicknesss')
@@ -56,6 +56,16 @@ export class ThicknessController {
             return await this.thicknessService.getAllActiveThicknessInfo();
         } catch (error) {
             return this.applicationExceptionhandler.returnException(ThicknessResponseModel, error)
+        }
+    }
+
+    @Post('/getAllActiveThicknessForCategory')
+    @ApiBody({type:CategoryIdRequest})
+    async getAllActiveThicknessForCategory(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.thicknessService.getAllActiveThicknessForCategory(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
 

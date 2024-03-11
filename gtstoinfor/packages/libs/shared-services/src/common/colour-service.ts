@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
-import { AllColourResponseModel,ColourResponseModel,CommissionResponseModel,ColourDto,ColourRequestDto } from "@project-management-system/shared-models";
+import { AllColourResponseModel,ColourResponseModel,CommissionResponseModel,ColourDto,ColourRequestDto, CategoryIdRequest } from "@project-management-system/shared-models";
 export class ColourService extends CommonAxiosService{
 
     URL ="/colurs";
@@ -32,4 +32,8 @@ export class ColourService extends CommonAxiosService{
           async getActiveColour(): Promise<ColourResponseModel> {
             return this.axiosPostCall(this.URL + '/getActiveColour')
           }
-}
+          async getAllColorsForCategory(req:CategoryIdRequest): Promise<ColourResponseModel> {
+            return this.axiosPostCall(this.URL + '/getAllColorsForCategory',req)
+          }
+        }
+

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { ContentService } from "./content-service";
 import { ContentDto } from "./dto/content-dto";
 
@@ -63,6 +63,16 @@ export class ContentController{
     async getFabricContentData(): Promise<CommonResponseModel> {
         try {
             return await this.contentService.getFabricContentData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getAllContentForCategory')
+    @ApiBody({type:CategoryIdRequest})
+    async getAllContentForCategory(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.contentService.getAllContentForCategory(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

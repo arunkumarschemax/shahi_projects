@@ -14,13 +14,15 @@ import { BuyerDestinationService, UomService } from '@project-management-system/
 import { ColourService } from '../colours/colour.service';
 import { Colour } from '../colours/colour.entity';
 import { ColourAdapter } from '../colours/dto/colour-adapter';
+import { M3TrimsCategoryMappingRepo } from '../m3-trims/m3-trims-category-mapping.repo';
+import { CategoryMappingEntity } from '../m3-trims/m3-trims-category-mapping.entity';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity,Colour]),
+        TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity,Colour,CategoryMappingEntity]),
       ],
-providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter,ColourService,ColourAdapter,BuyerDestinationService],
+providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter,ColourService,ColourAdapter,BuyerDestinationService,M3TrimsCategoryMappingRepo],
       controllers: [IndentController],
       exports: []
 })

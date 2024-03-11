@@ -1,4 +1,4 @@
-import { ThicknessActivateReq, ThicknessReq, ThicknessResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, ThicknessActivateReq, ThicknessReq, ThicknessResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class ThicknessService extends CommonAxiosService{
@@ -22,5 +22,8 @@ export class ThicknessService extends CommonAxiosService{
 
     async getAllActiveThicknessInfo(): Promise<ThicknessResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllActiveThicknessInfo")
+    }
+    async getAllActiveThicknessForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllActiveThicknessForCategory",req)
     }
 }

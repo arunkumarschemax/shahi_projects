@@ -2,10 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { HoleEntity } from "./hole.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { retry } from "rxjs";
 import { HoleDTO } from "./dto/hole.dto";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
+import { CategoryMappingEntity } from "../../m3-trims/m3-trims-category-mapping.entity";
 
 @Injectable()
 export class HoleService {
@@ -13,6 +15,7 @@ export class HoleService {
       
         @InjectRepository(HoleEntity)
         private holeRepo: Repository<HoleEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ){}
   
   
@@ -21,6 +24,20 @@ export class HoleService {
             const data = await this.holeRepo.find({order:{hole:"ASC"}})
             if(data.length > 0){
                 return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data)
+            }else{
+                return new CommonResponseModel(false, 0, 'No data found',[])
+            }
+        } catch (err) {
+          return err;
+        }
+      }
+
+      async getAllHolesForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        try {
+          console.log("&&&&&&&&&&&&&&&&&&&&&&&&&")
+            const data = await this.m3TrimsCategoryMappingRepo.getAllHolesByCategory(req.categoryId)
+            if(data.status){
+                return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data.data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }

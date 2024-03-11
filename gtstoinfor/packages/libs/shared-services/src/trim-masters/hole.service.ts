@@ -1,4 +1,4 @@
-import { CommonResponseModel, HoleDTO } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, HoleDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class HoleService extends CommonAxiosService{
@@ -28,4 +28,9 @@ export class HoleService extends CommonAxiosService{
     async  getHoleById(req: HoleDTO): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getHoleById',req)
     }
+
+    async  getAllHolesForCategory(req: CategoryIdRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllHolesForCategory',req)
+    }
+
 }

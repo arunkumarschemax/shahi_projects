@@ -3,16 +3,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { OrdersRepository } from './dto/category-repo';
-import { CategoryActivateReq, CategoryReq, CategoryResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { CategoryActivateReq, CategoryIdRequest, CategoryReq, CategoryResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { CategoryEntity } from './dto/category-entity';
 import { CategoryDto } from './dto/category-dto';
+import { M3TrimsCategoryMappingRepo } from '../../m3-trims/m3-trims-category-mapping.repo';
 @Injectable()
 
 export class CategoryService{
     @InjectDataSource()
     private datasource: DataSource
     constructor(
-        private categoryRepo:OrdersRepository
+        private categoryRepo:OrdersRepository,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
+
     ){}
 
     async createCategory(req:CategoryDto,isUpdate: boolean):Promise<CommonResponseModel>{
@@ -103,4 +106,18 @@ export class CategoryService{
                 return err;
             }
         }
+
+        async getAllCategoriesForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+            try {
+              console.log("&&&&&&&&&&&&&&&&&&&&&&&&&")
+                const data = await this.m3TrimsCategoryMappingRepo.getAllCategoriesByCategory(req.categoryId)
+                if(data.status){
+                    return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data.data)
+                }else{
+                    return new CommonResponseModel(false, 0, 'No data found',[])
+                }
+            } catch (err) {
+              return err;
+            }
+          }
 }
