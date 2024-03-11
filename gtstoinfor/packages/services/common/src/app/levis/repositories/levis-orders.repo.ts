@@ -110,7 +110,7 @@ export class LevisOrdersRepository extends Repository<LevisOrdersEntity> {
             .where('co.split_po IS NOT NULL')
             .andWhere('co.split_po != :splitPoValue', { splitPoValue: '-' });
         if (req.poNumber !== undefined) {
-            query.andWhere(`o.po_number ='${req.poNumber}'`)
+            query.andWhere(`co.po_number ='${req.poNumber}'`)
         }
         // else if (req.splitPo !== undefined) {
         //     query.andWhere(`o.split_po ='${req.splitPo}'`)
@@ -120,12 +120,12 @@ export class LevisOrdersRepository extends Repository<LevisOrdersEntity> {
         // }
 
 
-
         return await query.getRawMany();
     }
 
-    async getItemsNo(req: any): Promise<any> {
-        console.log(req, "jjjjjjj")
+
+      async getItemsNo(req:any): Promise<any> {
+       // console.log(req,"jjjjjjj")
         const query = this.createQueryBuilder('o')
             .select(`lc.item_no,lc.co_date,lc.co_number`)
             .leftJoin(`LevisCOLineEntity`, 'lc', 'lc.po_number = o.po_number')

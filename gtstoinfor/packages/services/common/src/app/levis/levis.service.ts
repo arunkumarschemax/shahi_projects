@@ -369,7 +369,7 @@ export class LevisService {
 
 
   async getorderacceptanceData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
-    console.log(req, "servvv")
+   // console.log(req, "servvv")
     try {
       const details = await this.LevisOrdersRepo.getorderacceptanceData(req);
       if (details.length === 0) {
@@ -397,7 +397,7 @@ export class LevisService {
 
 
     } catch (e) {
-      console.log(e, "errrrrrrrrr")
+     // console.log(e, "errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
@@ -863,13 +863,13 @@ export class LevisService {
       const compareModel: LevisCompareModel[] = []
 
       for (const rec of Originaldata) {
-        console.log(rec, "rec")
+        //console.log(rec, "rec")
         const itemNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
         const coNumber = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
         const coDate = await this.LevisOrdersRepo.getItemsNo(rec.po_number)
-        console.log(itemNumber, 'kkkkkkkkkkkkkkkk')
-        console.log(coNumber, 'lllllllllll')
-        console.log(coDate, 'mmmmmmmm')
+        // console.log(itemNumber, 'kkkkkkkkkkkkkkkk')
+        // console.log(coNumber, 'lllllllllll')
+        // console.log(coDate, 'mmmmmmmm')
         const childData = await this.LevisOrdersChildRepo.find({
           where: {
             poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
