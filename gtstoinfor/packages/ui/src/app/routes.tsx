@@ -325,6 +325,12 @@ export const AppRoutes = () => {
             
                 </Route>
 
+                <Route path='/pvh'>
+                   
+        
+            
+                </Route>
+
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
