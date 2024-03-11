@@ -124,7 +124,7 @@ export class LevisOrdersRepository extends Repository<LevisOrdersEntity> {
       }
 
       async getItemsNo(req:any): Promise<any> {
-        console.log(req,"jjjjjjj")
+       // console.log(req,"jjjjjjj")
         const query = this.createQueryBuilder('o')
             .select(`lc.item_no,lc.co_date,lc.co_number`)
             .leftJoin(`LevisCOLineEntity`,'lc','lc.po_number = o.po_number')
