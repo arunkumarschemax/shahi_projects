@@ -37,7 +37,7 @@ import { PoBomEntity } from './po-bom/entittes/po-bom.entity';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: false,
+      logging: true,
       extra: {
         connectionLimit: 20
       },

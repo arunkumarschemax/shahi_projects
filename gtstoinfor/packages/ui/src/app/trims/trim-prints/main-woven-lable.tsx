@@ -2,14 +2,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
 
-const NeckType = (props) => {
+const MainWovenLabel = (props) => {
   const [bomInfo, setBomInfo] = useState([]);
 
   const tableCellStyle = {
      padding: '8px',
   };
-
-  const tableRef = useRef(null);
 
   useEffect(() => {
     if (props.bomInfo) {
@@ -183,7 +181,7 @@ const NeckType = (props) => {
   };
   
   return (
-    <Card title={'Neck Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
+    <Card title={'Main Woven Label'} extra={<Button onClick={handlePrint}>Print</Button>}>
 
     <div id="print">
 
@@ -200,5 +198,5 @@ const NeckType = (props) => {
   );
 };
 
-export default NeckType;
+export default MainWovenLabel;
 

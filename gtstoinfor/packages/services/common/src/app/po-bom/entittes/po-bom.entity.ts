@@ -1,5 +1,5 @@
 import { ItemtypeEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique, UpdateDateColumn, VersionColumn } from "typeorm";
 import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
@@ -7,6 +7,8 @@ import { BomEntity } from "./bom-entity";
 import { ZFactorsBomEntity } from "./z-factors-bom.entity";
 
 @Entity('po_bom')
+@Unique(['dpom', 'bom',])
+@Unique(['dpom', 'zFactorBom',])
 export class PoBomEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id'
@@ -24,6 +26,11 @@ export class PoBomEntity {
     bomQty: number;
 
     @Column('int', {
+        name: 'procurement_qty'
+    })
+    procurementQty: number;
+
+    @Column('int', {
         name: 'consumption'
     })
     consumption: number;
@@ -38,10 +45,10 @@ export class PoBomEntity {
     })
     moq: number;
 
-    @Column('int', {
-        name: 'dpom_id'
-    })
-    dpomId: number;
+    // @Column('int', {
+    //     name: 'dpom_id'
+    // })
+    // dpomId: number;
 
     @CreateDateColumn({
         name: 'created_at'
@@ -84,9 +91,9 @@ export class PoBomEntity {
     // @JoinColumn({ name: 'style_id' })
     // styleEntityy: StyleEntity
 
-    // @ManyToOne(type => DpomEntity, dpom => dpom.poBom)
-    // @JoinColumn({ name: 'dpom_id' })
-    // dpom: DpomEntity
+    @ManyToOne(type => DpomEntity, dpom => dpom.poBom)
+    @JoinColumn({ name: 'dpom_id' })
+    dpom: DpomEntity
 
     @ManyToOne(type => BomEntity, dpom => dpom.poBom)
     @JoinColumn({ name: 'bom_id' })

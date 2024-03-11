@@ -55,7 +55,6 @@ import TrimList from "./trims/trims-cardview"
 import JokerTagPrint from "./trims/trim-prints/joker-tag"
 import WasCarelabel from "./trims/trim-prints/wash-care-label"
 import { HangTag } from "./trims/trim-prints/hang-tag"
-import { CountryStickerPrint } from "./trims/trim-prints/country-sticker"
 import ItemInfo from "./trims/item-info"
 import ProLayout from "@ant-design/pro-layout"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
@@ -73,6 +72,7 @@ import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
 import Elastic from "./trims/trim-prints/elastic-print"
 import Mobilontape from "./trims/trim-prints/mobilon-tape"
 import Twilltape from "./trims/trim-prints/twill-tape"
+import CountryStickerPrint from "./trims/trim-prints/country-sticker"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';

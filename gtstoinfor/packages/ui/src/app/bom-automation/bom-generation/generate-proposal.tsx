@@ -16,10 +16,12 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
-import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 import Twilltape from '../../trims/trim-prints/twill-tape';
+import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
+import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
+import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 type Props = {
   poLine: string[]
 }
@@ -43,12 +45,10 @@ export default function GenerateProposal(props: Props) {
   const [twilltape, setTwilltape] = useState<any>([])
 
   const [mobilontape, setMobilontape] = useState<any>([])
-
-
   const [elasticData, setElasticData] = useState<any>([]);
   const [countrySticker,setCountrySticker]= useState<any>([])
-  const [swoosth,setSwoosthData]= useState<any>([])
   const [htLabel, setHtlabel] = useState<any>([])
+  const [tissueData,setTissueData]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -78,8 +78,10 @@ export default function GenerateProposal(props: Props) {
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
-
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
+    "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
+    "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
+    
   }
 
 
@@ -117,10 +119,10 @@ export default function GenerateProposal(props: Props) {
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
     console.log(bomProposalReq,"requesttttttttt");
+    
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
         setButtonData(v.data)
-        console.log(v.data,"ppppppppppppppppp");
       }
     })
   }
@@ -201,6 +203,14 @@ export default function GenerateProposal(props: Props) {
       setHtlabel(v.data)
     })
   }
+  function getSizeHtLabelData(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.getSizeHtLabelData(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
+    })
+  }
 
 
   function handleMobilontape(item){
@@ -227,6 +237,31 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+  function handleTissuePaper(itemId){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item
+    service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
+      if(res.status){
+        setTissueData(res.data)
+      }
+    })
+  } 
+  function handleMainWovenLable(itemId){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item
+    service.getMainWovenLableData(bomProposalReq).then((res) =>{
+      if(res.status){
+        setTissueData(res.data)
+      }
+    })
+  }
+
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -418,7 +453,6 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
-    console.log(val.item)
 
     setTrimName(val.item)
     setModalOpen(true)
@@ -449,7 +483,8 @@ export default function GenerateProposal(props: Props) {
       handleElasticTrim(val.itemId)
     }
     if(val.item == 'Size Ht label'){
-      handleSizeHtLabel(val.itemId)
+      // handleSizeHtLabel(val.itemId)
+      getSizeHtLabelData(val.itemId)
     }
    
     if(val.item === 'Swoosh HT label'){
@@ -471,6 +506,13 @@ export default function GenerateProposal(props: Props) {
     } 
 
     
+    
+    if(val.item === 'Tissue Paper'){
+      handleTissuePaper(val.itemId)
+    } 
+    if(val.item === 'Main Woven labels'){
+      handleMainWovenLable(val.itemId)
+    }
   }
 
 

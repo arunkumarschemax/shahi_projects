@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { BomItemReq, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomItemReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import moment from "moment";
@@ -7,9 +7,9 @@ import { useEffect, useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
 
 const BomOrderAcceptance = () => {
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); 
-       const [page, setPage] = useState<number>(1);
-    const [data,setData] = useState<any[]>([])
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [page, setPage] = useState<number>(1);
+    const [data, setData] = useState<any[]>([])
     const [form] = Form.useForm();
     const nikeService = new NikeService();
     const [styleNumber, setStyleNumber] = useState<any>([]);
@@ -24,24 +24,24 @@ const BomOrderAcceptance = () => {
     const [showModal, setShowModal] = useState<boolean>(false)
 
     useEffect(() => {
-    
+
         getOrderAcceptanceData()
         getStyleNumber();
         getSesonCode();
         getSesonYear();
-    }, []) 
-   
+    }, [])
+
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
-      };
+    };
     const rowSelection = {
         selectedRowKeys,
         onChange: onSelectChange,
     };
-    
 
-    
+
+
     const onReset = () => {
         form.resetFields()
         setData([])
@@ -66,10 +66,10 @@ const BomOrderAcceptance = () => {
         })
     }
     const getOrderAcceptanceData = () => {
-        const req = new PpmDateFilterRequest();
-        
+        const req = new UpdateBomITemNoFilters();
+
         if (form.getFieldValue('styleNumber') !== undefined) {
-            req.styleNumber = form.getFieldValue('styleNumber');
+            req.styleNo = form.getFieldValue('styleNumber');
         }
         if (form.getFieldValue('planningSeasonCode') !== undefined) {
             req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
@@ -170,7 +170,7 @@ const BomOrderAcceptance = () => {
         {
             title: 'PO Number and Line',
             dataIndex: 'po_and_line',
-            key: 'po_and_line', 
+            key: 'po_and_line',
             fixed: 'left',
             width: 80,
             ...getColumnSearchProps('po_and_line')
@@ -179,10 +179,10 @@ const BomOrderAcceptance = () => {
             title: 'Style Number',
             dataIndex: 'style_number', width: 80,
         },
-        {
-            title: 'Item',
-            dataIndex: 'item', width: 80,
-        },
+        // {
+        //     title: 'Item',
+        //     dataIndex: 'item', width: 80,
+        // },
         // {
         //     title: 'PO Line Item No',
         //     dataIndex: 'po_line_item_number', width: 80,
@@ -261,7 +261,7 @@ const BomOrderAcceptance = () => {
         //         );
         //     },
         // },
-        
+
     ];
     const handleItemNoChange = (value, record) => {
         setItemNoValues((prevValues) => ({
@@ -270,26 +270,26 @@ const BomOrderAcceptance = () => {
         }));
     };
 
-    const openModeal =( )=>{
+    const openModeal = () => {
         setShowModal(true)
-
     }
-  
-   
+
+
     const handleBatchUpdate = () => {
         const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
-    
-        const idsToUpdate = selectedRecords.map(record => record.dpom_id);
+
+        const idsToUpdate = selectedRecords.map(record => record.po_and_line);
         const itemNoValue = form.getFieldValue('itemNo');
-    
+
         const payload: BomItemReq = {
-            id: idsToUpdate,
+            poAndLine: idsToUpdate,
             itemNo: itemNoValue,
         };
-    
+
         nikeService.updateBomItems(payload).then((res) => {
             if (res.status) {
-                getOrderAcceptanceData();
+                form.resetFields()
+                setData([])
                 message.success(res.internalMessage);
                 setShowModal(false);
             } else {
@@ -297,120 +297,122 @@ const BomOrderAcceptance = () => {
             }
         });
     };
-    
-  return (
-    <Card title="Bom Item Register - Unaccepted Orders" headStyle={{ fontWeight: 'bold' }}>
-          <Form
-                    onFinish={getOrderAcceptanceData}
-                    form={form}
-                    layout='vertical'>
-                    <Row gutter={24}>
-                     
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                            <Form.Item name='styleNumber' label='Style Number' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Style Number"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {styleNumber?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                            <Form.Item name='planningSeasonCode' label='Planning Season Code' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Planning Season Code"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {planSesCode?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                            <Form.Item name='planningSeasonYear' label='Planning Season Year' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Planning Season Year"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {planSesYear?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
-                                    })
-                                    }
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
-                            <Form.Item>
-                                <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
-                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
-                            </Form.Item>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
-                            <Button onClick={openModeal} style={{
-                         backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
-                         color: selectedRowKeys.length > 0 ? "black" : "black", }}
+
+    return (
+        <Card title="Bom Item Register - Item missing Orders" headStyle={{ fontWeight: 'bold' }}>
+            <Form
+                onFinish={getOrderAcceptanceData}
+                form={form}
+                layout='vertical'>
+                <Row gutter={24}>
+
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='styleNumber' label='Style Number' >
+                            <Select
+                                mode="multiple"
+                                showSearch
+                                placeholder="Select Style Number"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {styleNumber?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                            <Select
+                                showSearch
+                                placeholder="Select Planning Season Code"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesCode?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                            <Select
+                                showSearch
+                                placeholder="Select Planning Season Year"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesYear?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
+                            <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                        <Button onClick={openModeal} style={{
+                            backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
+                            color: selectedRowKeys.length > 0 ? "black" : "black",
+                        }}
                             disabled={selectedRowKeys.length === 0}>Update Bom Items</Button>
-                            </Col>
-                        
-                    </Row>
-                </Form>
-               
-{data.length > 0 ? (
-  <Table
-    columns={columns}
-    rowKey={record => record}
-    dataSource={data}
-    rowSelection={rowSelection}
-    pagination={{
-      pageSize: 50,
-      onChange(current, pageSize) {
-        setPage(current);
-        setPageSize(pageSize);
-      },
-    }}
-    className="custom-table-wrapper"
-    scroll={{ x: 'max-content', y: 450 }}
-    bordered
-  />
-) : (
-  <Table size='large' />
-)}
+                    </Col>
 
-<Modal open={showModal} closable footer={false} onCancel={() => setShowModal(false)} >
-<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 12 }} style={{alignContent:'center'}} >
-            <Form  onFinish={handleBatchUpdate}
-                    form={form}
-                    layout='vertical'>
-                         <Form.Item  name='itemNo' label='Item No'>
-                             <Input
-                                 placeholder="Enter Item No"
-                                // onChange={(e) => handleItemNoChange(e.target.value, record)}
-                             /> 
-                         </Form.Item>
-                     </Form>
-                     </Col>
+                </Row>
+            </Form>
+
+            {data.length > 0 ? (
+                <Table
+                    columns={columns}
+                    rowKey={record => record}
+                    dataSource={data}
+                    rowSelection={rowSelection}
+                    pagination={{
+                        pageSize: 50,
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        },
+                    }}
+                    className="custom-table-wrapper"
+                    scroll={{ x: 'max-content', y: 450 }}
+                    bordered
+                />
+            ) : (
+                <Table size='large' />
+            )}
+
+            <Modal open={showModal} closable footer={false} onCancel={() => setShowModal(false)} >
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 12 }} style={{ alignContent: 'center' }} >
+                    <Form onFinish={handleBatchUpdate}
+                        form={form}
+                        layout='vertical'>
+                        <Form.Item name='itemNo' label='Item No'>
+                            <Input
+                                placeholder="Enter Item No"
+                            // onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }}
-                 xl={{ span: 4 }} style={{ marginTop: 20 }} >
-                            <Button onClick={handleBatchUpdate} style={{
-                         backgroundColor:  "aqua" 
-                          }}
-                            disabled={selectedRowKeys.length === 0}>Update</Button>
-                            </Col>
+                    xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                    <Button onClick={handleBatchUpdate} style={{
+                        backgroundColor: "aqua"
+                    }}
+                        disabled={selectedRowKeys.length === 0}>Update</Button>
+                </Col>
             </Modal>
-    </Card>
+        </Card>
 
-  )
+    )
 }
 export default BomOrderAcceptance

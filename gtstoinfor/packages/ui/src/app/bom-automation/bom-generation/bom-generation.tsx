@@ -2,7 +2,7 @@ import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout'
 import { BomCreationFiltersReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdatedSizes, bomGenerationColumnsMapping } from '@project-management-system/shared-models';
 import { BomService, NikeService } from '@project-management-system/shared-services';
-import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Table } from 'antd'
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Table, message, notification } from 'antd'
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
@@ -37,7 +37,7 @@ export default function BomGeneration(props: Props) {
     const [changedSizes, setChangedSizes] = useState<any>([])
     const [updatedData, setUpdatedData] = useState<any>([])
     const [selectedData, setSelectedData] = useState<any[]>()
-    const [itemDropdownData,setItemDropdownData] = useState<any[]>([])
+    const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
 
     const bomService = new BomService()
     useEffect(() => {
@@ -48,17 +48,8 @@ export default function BomGeneration(props: Props) {
     }, [])
 
     const createdDateHandler = (val) => {
-        const req = new ItemInfoFilterReq()
-        req.fromDate = dayjs(val[0]).format('YYYY-MM-DD')
-        req.toDate = dayjs(val[1]).format('YYYY-MM-DD')
-        bomService.getItemDropdownByCreatedAt(req).then(res => {
-            if (res.status) {
-                setItemDropdownData(res.data)
-            } else {
-                setItemDropdownData([])
-            }
-        })
-        
+
+
     }
 
     const getData = () => {
@@ -72,10 +63,12 @@ export default function BomGeneration(props: Props) {
         if (form.getFieldValue('geoCode') !== undefined) {
             req.geoCode = form.getFieldValue('geoCode');
         }
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
         setTableLoading(true)
         bomservice.getBomCreationData(req).then(res => {
             if (res.status) {
-                setFilterData(prev => [...prev, ...res.data]);
+                setFilterData(res.data);
             } else {
                 setFilterData([]);
             }
@@ -93,8 +86,18 @@ export default function BomGeneration(props: Props) {
     }
 
     const getItem = () => {
-        service.getPpmItemForFactory().then(res => {
-            setItem(res.data)
+        // service.getPpmItemForFactory().then(res => {
+        //     setItem(res.data)
+        // })
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getItemDropdownByCreatedAt(req).then(res => {
+            if (res.status) {
+                setItemDropdownData(res.data)
+            } else {
+                setItemDropdownData([])
+            }
         })
     }
 
@@ -112,51 +115,6 @@ export default function BomGeneration(props: Props) {
         // Remove non-numeric characters and parse to number
         return parseFloat(value.replace(/\D/g, ''));
     }
-
-    const onSizeChange = useCallback((size, rec, val) => {
-        // Your existing logic for onSizeChange function
-        const existingIndex = changedSizes.findIndex(item => item.poLine === rec.poLine && item.size === size);
-        if (existingIndex !== -1) {
-            const changedSizesTemp = [...changedSizes];
-            changedSizesTemp[existingIndex] = { ...changedSizesTemp[existingIndex], qty: val, };
-            setChangedSizes(changedSizesTemp);
-        } else {
-            const newSizeObj = { poLine: rec.poLine, qty: val, size, key: rec.poLine + size };
-            setChangedSizes(prevState => [...prevState, newSizeObj]);
-
-        }
-        props.sendUpdatedData(changedSizes)
-    }, [changedSizes, setChangedSizes]);
-
-    function renderColumns(): any {
-        const unWantedColumns = ['poNumber', 'poLineItemNumber', 'planningSeasonCode', 'planningSeasonYear', 'destinationCountryCode', 'genderAgeDesc']
-        if (filterData.length)
-            return Object.keys(filterData[0]).filter((k) => !unWantedColumns.includes(k)).map((key) => {
-                return {
-                    title: bomGenerationColumnsMapping[key] ? bomGenerationColumnsMapping[key] : key,
-                    dataIndex: key,
-                    width: '100px',
-                    key,
-                    fixed: key == 'poLine',
-                    ...getColumnSearchProps(key),
-                    render: (value, row, index) => {
-                        if (bomGenerationColumnsMapping[key]) {
-                            return value
-                        } else {
-                            return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
-                        }
-                    }
-                    // bomGenerationColumnsMapping[key] && bomGenerationColumnsMapping[key] !='Item' ?
-                    //     value
-                    //     :
-                    //     <InputNumber onChange={(v) => onSizeChange(key, row, v)}  key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
-                }
-            }
-            );
-
-        return undefined
-    }
-
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -209,6 +167,84 @@ export default function BomGeneration(props: Props) {
                 : null
     });
 
+    const onSizeChange = useCallback((size, rec, val) => {
+        // Your existing logic for onSizeChange function
+        const existingIndex = changedSizes.findIndex(item => item.poLine === rec.poLine && item.size === size);
+        if (existingIndex !== -1) {
+            const changedSizesTemp = [...changedSizes];
+            changedSizesTemp[existingIndex] = { ...changedSizesTemp[existingIndex], qty: val, };
+            setChangedSizes(changedSizesTemp);
+        } else {
+            const newSizeObj = { poLine: rec.poLine, qty: val, size, key: rec.poLine + size };
+            setChangedSizes(prevState => [...prevState, newSizeObj]);
+
+        }
+        props.sendUpdatedData(changedSizes)
+    }, [changedSizes, setChangedSizes]);
+
+    const columns = [ 
+        {
+            title : 'Sno',
+            render : (v,r,i) => i+1
+        },{
+            title:"PO + Line",
+            dataIndex: 'poLine',
+            ...getColumnSearchProps('poLine'),
+        },{
+            title : "Style",
+            dataIndex: 'styleNumber'
+        },{
+            title : "Item",
+            dataIndex: 'item'
+        },{
+            title : "Geo code",
+            dataIndex: 'geoCode'
+        },{
+            title : "Destination",
+            dataIndex: 'destinationCountry'
+        },
+        {
+            title : "Destination",
+            dataIndex: 'destinationCountry'
+        }, {
+            title : "Plant",
+            dataIndex: 'plant'
+        },
+        
+    ]
+
+    function renderColumns(): any {
+        const unWantedColumns = ['poNumber', 'poLineItemNumber', 'planningSeasonCode', 'planningSeasonYear', 'destinationCountryCode', 'genderAgeDesc']
+        if (filterData.length)
+            return Object.keys(filterData[0]).filter((k) => !unWantedColumns.includes(k)).map((key) => {
+                return {
+                    title: bomGenerationColumnsMapping[key] ? bomGenerationColumnsMapping[key] : key,
+                    dataIndex: key,
+                    width: '100px',
+                    key,
+                    fixed: key == 'poLine',
+                    ...getColumnSearchProps(key),
+                    render: (value, row, index) => {
+                        if (bomGenerationColumnsMapping[key]) {
+                            return value
+                        }
+                        else {
+                            return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
+                        }
+                    }
+                    // bomGenerationColumnsMapping[key] && bomGenerationColumnsMapping[key] !='Item' ?
+                    //     value
+                    //     :
+                    //     <InputNumber onChange={(v) => onSizeChange(key, row, v)}  key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
+                }
+            }
+            );
+
+        return undefined
+    }
+
+  
+
     function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -224,7 +260,11 @@ export default function BomGeneration(props: Props) {
 
 
     const onSelectChange = (newSelectedRowKeys: any, selectedRows: any[]) => {
-        console.log(newSelectedRowKeys)
+        const isItemNoNull = selectedRows.find((v) => v.item == null)
+        if(isItemNoNull){
+            notification.info({message : `Please update ItemNo for all the selected PO's`,placement:'topRight'})
+            return
+        }
         setSelectedRowKeys(newSelectedRowKeys);
         setSelectedData(selectedRows)
         props.sendSelectedData(selectedRows)
@@ -245,10 +285,6 @@ export default function BomGeneration(props: Props) {
         // onSelectAll: onSelectAllChange,
     };
 
-    const onGenerate = () => {
-        navigate('/bom/trim-List', { state: { info: selectedRowKeys } })
-    }
-
 
     const changedSizesColumns = [
         {
@@ -267,7 +303,6 @@ export default function BomGeneration(props: Props) {
     ]
 
     function onReset() {
-        console.log('reset called')
         setFilterData([])
         setSelectedData([])
         setChangedSizes([])
@@ -283,7 +318,7 @@ export default function BomGeneration(props: Props) {
                 layout='vertical'
             >
                 <Row gutter={[24, 4]}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='item' label='Item' >
                             <Select
                                 onDropdownVisibleChange={getItem}
@@ -293,15 +328,15 @@ export default function BomGeneration(props: Props) {
                                 })}
                             </Select>
                         </Form.Item>
-                    </Col>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                    </Col> */}
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
                         <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
                         <Form.Item name='item' label='Item' >
-                            <Select placeholder='Select Item' showSearch >
+                            <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch >
                                 {
                                     itemDropdownData.map(e => {
                                         return (
@@ -312,7 +347,7 @@ export default function BomGeneration(props: Props) {
 
                             </Select>
                         </Form.Item>
-                    </Col> */}
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
@@ -364,14 +399,14 @@ export default function BomGeneration(props: Props) {
                 <Table
                     loading={tableLoading}
                     size='small'
-                    pagination={false}
-                    // pagination={{
-                    //     pageSize: 10,
-                    //     onChange(current, pageSize) {
-                    //         setPage(current);
-                    //         setPageSize(pageSize);
-                    //     }
-                    // }}
+                    // pagination={false}
+                    pagination={{
+                        pageSize: 50,
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        }
+                    }}
                     scroll={{ x: 'max-content', y: 450 }}
                     bordered
                     rowKey={record => record.poLine}

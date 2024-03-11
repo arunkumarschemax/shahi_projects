@@ -103,6 +103,10 @@ export class BomProposalDataModel {
     attribute?:string
     attributeValue?:string
     bQty?:number
+    fabricContent?:string
+    fabricCode?:string
+    fabricCombination?:string
+    fit?:string
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
@@ -131,4 +135,14 @@ export class BomExcelreq {
     pbId?:number
     geoCode: string []
 
+}
+
+
+export class UpdateBomITemNoFilters{
+    styleNo : string[]
+    fromDate : any
+    toDate : any
+    poLine : string []
+    planningSeasonCode:string;
+    planningSeasonYear:string
 }

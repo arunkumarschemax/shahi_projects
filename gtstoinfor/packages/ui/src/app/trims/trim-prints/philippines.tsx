@@ -54,11 +54,12 @@ export const Philippines = () => {
             <Card style={{ width: '50%', border: 'none', marginRight: '0' }}>
                 <div style={{ marginLeft: '150px' }} id="print">
                     <div style={{marginBottom:'20px'}}>
-                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm</h3>
+                    <h3 style={{ marginLeft: '300px',  fontFamily: 'sans-serif' }}>35mm (1.275")</h3>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
     <div style={{ marginLeft: '40px', marginBottom: '-100px' }}>
-        <h3 style={{ fontFamily: 'sans-serif' }}>19mm</h3>
+        <h3 style={{ fontFamily: 'sans-serif' }}>19mm (0.75")
+</h3>
     </div>
 </div>
 
@@ -72,7 +73,7 @@ export const Philippines = () => {
                                                 <span style={{ fontSize: '', verticalAlign: 'top' }}>IMPORTED BY:</span>
                                             </div>
                                             <div style={{ verticalAlign: 'top' }}>
-                                                <span style={{ fontFamily: 'Arial Narrow' }}>NIKE PHILIPPINES, INC.</span>
+                                                <span style={{ fontFamily: 'Arial Narrow' }}><h3>NIKE PHILIPPINES, INC.</h3></span>
                                             </div>
                                             <div>10TH FLR,MARAJO TOWER 312</div>
                                             <div>26TH ST. WEST CORNER 4TH AVE.</div>
@@ -87,7 +88,6 @@ export const Philippines = () => {
                     </div>
                 </div>
             </Card>
-            {/* <button onClick={handlePrint}>Print</button> */}
         </>
     );
 };
