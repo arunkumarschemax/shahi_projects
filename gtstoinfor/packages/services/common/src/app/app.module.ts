@@ -10,12 +10,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
-import { LevisModule } from './levis/levis.module';
-import { AddressModule } from './Entites@Shahi/address/address-module';
-import { ColorModule } from './Entites@Shahi/color/color-module';
-import { SizeModule } from './Entites@Shahi/size/size-module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PVHModule } from './pvh/pvh.module';
 
 
 @Module({
@@ -47,7 +44,7 @@ import { join } from 'path';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule,ColorModule,SizeModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,PVHModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
