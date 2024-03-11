@@ -20,6 +20,7 @@ import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
 import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
+import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 type Props = {
   poLine: string[]
 }
@@ -75,7 +76,8 @@ export default function GenerateProposal(props: Props) {
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
-
+    "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
+    
   }
 
 
@@ -112,13 +114,11 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    console.log(bomProposalReq,"requesttttttttt");
     
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
         
         setButtonData(v.data)
-        console.log(v.data,"ppppppppppppppppp");
       }
     })
   }
@@ -228,6 +228,18 @@ export default function GenerateProposal(props: Props) {
     bomProposalReq.poLine = props.poLine
     // bomProposalReq.trimName = item
     service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
+      if(res.status){
+        setTissueData(res.data)
+      }
+    })
+  } 
+  function handleMainWovenLable(itemId){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item
+    service.getMainWovenLableData(bomProposalReq).then((res) =>{
       if(res.status){
         setTissueData(res.data)
       }
@@ -425,7 +437,6 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
-    console.log(val.item)
 
     setTrimName(val.item)
     setModalOpen(true)
@@ -478,6 +489,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Tissue Paper'){
       handleTissuePaper(val.itemId)
     } 
+    if(val.item === 'Main Woven labels'){
+      handleMainWovenLable(val.itemId)
+    }
   }
 
 
