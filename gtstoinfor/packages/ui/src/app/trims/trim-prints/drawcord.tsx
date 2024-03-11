@@ -18,7 +18,7 @@ export interface DrawcordProps {
     bomInfo: any
 }
 export const  Drawcord = (props: DrawcordProps) => {
-console.log(props.bomInfo)
+// console.log(props.bomInfo)
  const data=props.bomInfo
  const [drawcord, setDrawcord] = useState<any>([])
 
@@ -83,7 +83,7 @@ console.log(props.bomInfo)
 
 
  useEffect(() => {
-    console.log(props.bomInfo);
+    // console.log(props.bomInfo);
     if (props.bomInfo) {
       setBomInfo(props.bomInfo);
     }

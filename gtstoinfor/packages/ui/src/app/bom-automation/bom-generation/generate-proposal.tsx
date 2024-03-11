@@ -18,6 +18,7 @@ import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
+import Twilltape from '../../trims/trim-prints/twill-tape';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
 import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
@@ -41,6 +42,8 @@ export default function GenerateProposal(props: Props) {
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
+  const [twilltape, setTwilltape] = useState<any>([])
+
   const [mobilontape, setMobilontape] = useState<any>([])
   const [elasticData, setElasticData] = useState<any>([]);
   const [countrySticker,setCountrySticker]= useState<any>([])
@@ -71,6 +74,7 @@ export default function GenerateProposal(props: Props) {
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
     "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
+    "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
@@ -114,10 +118,10 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
     
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
-        
         setButtonData(v.data)
       }
     })
@@ -221,6 +225,18 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
+  function handleTwilltape(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"rrrrrrrrrr");
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+      setTwilltape(v.data)
+        console.log(v.data,"jjjjjjjjjjjj");
+      }
+    })
+  }
   function handleTissuePaper(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()
@@ -485,6 +501,11 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
     } 
+    if(val.item === 'Twill Tape'){
+      handleTwilltape(val.itemId)
+    } 
+
+    
     
     if(val.item === 'Tissue Paper'){
       handleTissuePaper(val.itemId)
