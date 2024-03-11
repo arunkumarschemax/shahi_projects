@@ -19,6 +19,7 @@ import { BackingPaper } from '../../trims/trim-prints';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
+import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 type Props = {
   poLine: string[]
 }
@@ -40,12 +41,10 @@ export default function GenerateProposal(props: Props) {
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
   const [mobilontape, setMobilontape] = useState<any>([])
-
-
   const [elasticData, setElasticData] = useState<any>([]);
   const [countrySticker,setCountrySticker]= useState<any>([])
-  const [swoosth,setSwoosthData]= useState<any>([])
   const [htLabel, setHtlabel] = useState<any>([])
+  const [tissueData,setTissueData]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -74,7 +73,8 @@ export default function GenerateProposal(props: Props) {
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
+    "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
 
   }
 
@@ -199,6 +199,14 @@ export default function GenerateProposal(props: Props) {
       setHtlabel(v.data)
     })
   }
+  function getSizeHtLabelData(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.getSizeHtLabelData(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
+    })
+  }
 
 
   function handleMobilontape(item){
@@ -213,6 +221,18 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
+  function handleTissuePaper(itemId){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item
+    service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
+      if(res.status){
+        setTissueData(res.data)
+      }
+    })
+  }
 
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
@@ -436,7 +456,8 @@ export default function GenerateProposal(props: Props) {
       handleElasticTrim(val.itemId)
     }
     if(val.item == 'Size Ht label'){
-      handleSizeHtLabel(val.itemId)
+      // handleSizeHtLabel(val.itemId)
+      getSizeHtLabelData(val.itemId)
     }
    
     if(val.item === 'Swoosh HT label'){
@@ -452,6 +473,10 @@ export default function GenerateProposal(props: Props) {
     }
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
+    } 
+    
+    if(val.item === 'Tissue Paper'){
+      handleTissuePaper(val.itemId)
     } 
   }
 

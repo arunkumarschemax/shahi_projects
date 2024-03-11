@@ -110,7 +110,6 @@ const CountryStickerPrint = (props) => {
   const tableRef = useRef(null);
 
   useEffect(() => {
-    console.log(props.bomInfo);
     if (props.bomInfo) {
       setBomInfo(props.bomInfo);
     }
@@ -279,15 +278,19 @@ const CountryStickerPrint = (props) => {
   };
 
   return (
+    <Card title={'Country Sticker'} extra={<Button className="no-print" onClick={handlePrint}>Print</Button>}>
+
     <div id="print">
       {bomInfo && bomInfo.length > 0 ? (
-        <Card title={'Country Sticker'} extra={<Button className="no-print" onClick={handlePrint}>Print</Button>}>
+        <>
           {generateTables()}
-        </Card>
+          </>
       ) : (
         <div>No data available</div>
       )}
     </div>
+    </Card>
+
   );
 };
 
