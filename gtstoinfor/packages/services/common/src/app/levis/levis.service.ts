@@ -220,10 +220,7 @@ export class LevisService {
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
               {
                 deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo, totalQuantity: req.totalQuantity,
-<<<<<<< HEAD
                 splitPoTotalQuantity:req.splitPoTotalQuantity,
-=======
->>>>>>> 19028dec670c1e166efe80489ab5687a5607260a
                 material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
                 itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
               }
