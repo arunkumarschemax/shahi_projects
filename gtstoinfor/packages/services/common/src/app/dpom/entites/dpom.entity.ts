@@ -743,7 +743,7 @@ export class DpomEntity {
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;
 
-    // @OneToMany(type => PoBomEntity,poBom =>poBom.dpom)
-    // poBom:PoBomEntity[]
+    @OneToMany(type => PoBomEntity,poBom =>poBom.dpom)
+    poBom:PoBomEntity
 
 }
