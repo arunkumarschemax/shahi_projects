@@ -790,7 +790,13 @@ export class BomService {
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+
+            let key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+            if (req.trimName === 'Twill Tape') {
+                key += `-${season}`;
+                console.log(season,"seasonnnnnn")
+            }
+            console.log(key,"keyyyyyy")
             if (!result[key]) {
                 result[key] = {
                     geoCode,
