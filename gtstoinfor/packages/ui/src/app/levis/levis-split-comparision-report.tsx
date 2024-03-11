@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
+import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Spin, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import { CentricService, EddieService, LevisService, OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useRef, useState } from "react"
@@ -23,6 +23,7 @@ export const LevisSplitComparisionReport = () => {
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const { Option } = Select;
 
@@ -32,6 +33,7 @@ export const LevisSplitComparisionReport = () => {
     }, []);
 
     const getSplitOrderComparisionData = () => {
+        setLoading(true)
         const req = new LevisOrderFilter();
 
         if (form.getFieldValue("poNumber") !== undefined) {
@@ -40,6 +42,7 @@ export const LevisSplitComparisionReport = () => {
 
 
         service.getSplitOrderComparisionData(req).then((res) => {
+            setLoading(false)
             console.log(req, "req")
             if (res.status) {
                 setOrderData(res.data);
@@ -475,25 +478,31 @@ export const LevisSplitComparisionReport = () => {
 
         return (
             <>
+                {loading ? (
+                    <Spin spinning={loading}>
+                        <div>Loading...</div>
+                    </Spin>
+                ) : (
 
-                <Table
-                    // loading={tableLoading}
-                    columns={columns}
-                    dataSource={filterData}
-                    size="small"
-                    // pagination={false}
-                    pagination={{
-                        pageSize: 50,
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                    }}
-                    className="custom-table-wrapper"
-                    scroll={{ x: "max-content", y: 450 }}
-                    rowClassName={getRowClassName}
-                    bordered
-                />
+                    <Table
+                        // loading={tableLoading}
+                        columns={columns}
+                        dataSource={filterData}
+                        size="small"
+                        // pagination={false}
+                        pagination={{
+                            pageSize: 50,
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize);
+                            },
+                        }}
+                        className="custom-table-wrapper"
+                        scroll={{ x: "max-content", y: 450 }}
+                        rowClassName={getRowClassName}
+                        bordered
+                    />
+                )}
 
             </>
         );
@@ -573,7 +582,7 @@ export const LevisSplitComparisionReport = () => {
                 children: [
                     {
                         title: 'PO NUMBER',
-                        dataIndex: 'poNumber',
+                        dataIndex: 'po_number',
                         key: '',
                         width: 100,
                         className: "center",
@@ -582,7 +591,7 @@ export const LevisSplitComparisionReport = () => {
                     },
                     {
                         title: 'Spilt PO Number',
-                        dataIndex: 'splitPo',
+                        dataIndex: 'split_po',
                         key: '',
                         width: 100,
                         className: "center",
@@ -600,7 +609,7 @@ export const LevisSplitComparisionReport = () => {
                 children: [
                     {
                         title: 'PO Number Quantity',
-                        dataIndex: 'oldQuantity',
+                        dataIndex: 'total_quantity',
                         key: '',
                         width: 100,
                         className: "center",
@@ -609,7 +618,7 @@ export const LevisSplitComparisionReport = () => {
                     },
                     {
                         title: 'Split PO Number Quantity',
-                        dataIndex: 'oldQuantity',
+                        dataIndex: 'split_po_total_quantity',
                         key: '',
                         width: 100,
                         className: "center",
@@ -628,13 +637,13 @@ export const LevisSplitComparisionReport = () => {
 
 
         excel
-            .addSheet(`Order Split Po Comparision Report (${formattedDate})`)
+            .addSheet(`Order Split Po Report (${formattedDate})`)
             .addColumns(excelColumnsWH)
             .addDataSource(filterData, { str2num: false },);
 
 
 
-        excel.saveAs(`Order Split Po Comparision Report (${formattedDate}).xlsx`);
+        excel.saveAs(`Order Split Po Report (${formattedDate}).xlsx`);
 
 
     }
@@ -643,7 +652,7 @@ export const LevisSplitComparisionReport = () => {
 
     return (
         <>
-            <Card title="Order Split Po Comparision Report" headStyle={{ fontWeight: "bold" }}
+            <Card title="Order Split Po Report" headStyle={{ fontWeight: "bold" }}
                 extra={<Button
                     type="default"
                     style={{ color: 'green' }}

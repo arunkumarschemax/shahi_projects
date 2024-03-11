@@ -220,7 +220,7 @@ export class LevisService {
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
               {
                 deliveryAddress: req.deliveryAddress, currency: req.currency, poRemarks: req.poRemarks, splitPo: req.splitPo, totalQuantity: req.totalQuantity,
-                splitPoTotalQuantity:req.splitPoTotalQuantity,
+                splitPoTotalQuantity: req.splitPoTotalQuantity,
                 material: item.material, transMode: item.transMode, plannedExFactoryDate: item.plannedExFactoryDate, exFactoryDate: item.exFactoryDate,
                 itemNo: variant.itemNo, upc: variant.upc, quantity: variant.quantity, unitPrice: variant.unitPrice, scheduledDate: variant.scheduledDate
               }
@@ -578,8 +578,8 @@ export class LevisService {
     }
   }
 
-  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
-    console.log(req,'reqqqqqqqq')
+  async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
+    console.log(req, 'reqqqqqqqq')
     try {
       const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
@@ -1447,12 +1447,12 @@ export class LevisService {
 
       await driver.wait(until.elementLocated(By.id('ViewOrderID')))
       await driver.findElement(By.id('ViewOrderID')).click();
-        //   await driver.executeScript("document.body.style.zoom = '80%'");
-        // console.log("Screen zoomed out by 80%");
-     
+      //   await driver.executeScript("document.body.style.zoom = '80%'");
+      // console.log("Screen zoomed out by 80%");
+
       await driver.sleep(50000)
       console.log("startLoop")
-     
+
 
       let j;
       for (let i = 1; i <= 1000; i++) {
@@ -1474,7 +1474,7 @@ export class LevisService {
         console.log("hiiiiiiiiiii")
         const textContainingBuyerPo = await BuyerPoelementContainingNumber.getText();
         console.log("uuuuuuuuuuuuuuu")
-         
+
         const textContainingCoNumber = await coNumberelementContaining.getText();
         console.log(`Element containing the number in row ${i}:`, textContainingBuyerPo);
         console.log(coLine.coNumber, "coLine.coNumber")
@@ -1484,12 +1484,12 @@ export class LevisService {
           break;
         }
       }
-       console.log("janiii")
-       
+      console.log("janiii")
+
       const viewButtonPo = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[21]/div`));
       await viewButtonPo.click();
       console.log(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[31]/td[21]/div`, "kkkkkkkk")
-      console.log(viewButtonPo,"viewButtonPo")
+      console.log(viewButtonPo, "viewButtonPo")
 
       console.log("ExfactroyDate starts")
       await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
@@ -1838,104 +1838,23 @@ export class LevisService {
   }
 
 
-  // async getSplitOrderComparisionData(req?: any): Promise<CommonResponseModel> {
-  //   // eslint-disable-next-line no-useless-catch
-  //   try {
-  //     const Originaldata = await this.LevisOrdersRepo.getSplitOrderComparisionData(req)
-  //     const compareModel: LevisSplitCompareModel[] = []
-
-  //     for (const rec of Originaldata) {
-  //       const childData = await this.LevisOrdersChildRepo.find({
-  //         where: {
-  //           poNumber: rec.po_number, splitPo:rec.split_po,poLine: rec.po_line, size: rec.size
-  //         }, order: { id: 'DESC' }, take: 1, skip: 1
-  //       })
-  //       if (childData.length > 0) {
-  //         const oldData = childData[0];
-  //         if (
-  //           oldData.totalQuantity !== rec.totalQuantity||
-  //           oldData.splitPoTotalQuantity !== rec.splitPoTotalQuantity
-  //         ) {
-  //           compareModel.push(new
-  //             LevisSplitCompareModel(
-  //               rec.po_number,
-  //               rec.split_po,
-  //               rec.po_line,
-  //               rec.size,
-  //               parseInt(oldData.totalQuantity),
-  //               rec.splitPoTotalQuantity,
-  //               // parseInt(oldData.splitPoTotalQuantity),
-  //               // rec.splitPoTotalQuantity,
-  //             ));
-  //         }
-  //       }
-  //     }
-  //     if (compareModel) {
-
-  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
-  //     } else {
-  //       return new CommonResponseModel(false, 0, 'No data found');
-  //     }
-  //   } catch (err) {
-  //     throw err
-  //   }
-  // }
-
-  async getSplitOrderComparisionData(req:any): Promise<CommonResponseModel> {
-    console.log(req,"req")
+  async getSplitOrderComparisionData(req: any): Promise<CommonResponseModel> {
+    // console.log(req, "req")
     const data = await this.LevisOrdersRepo.getSplitOrderComparisionData(req)
-    console.log("data",data)
-    if (data.length > 0)
+    // console.log("data", data)
+    if (data.length) {
+      for (const rec of data) {
+        if (rec.split_po !== null && rec.split_po !== "-") {
+          // console.log(rec.split_po,"MMMMMMMMMMMMMM")
+          const splitQty = await this.LevisOrdersRepo.findOne({ select: ['splitPoTotalQuantity'], where: { poNumber: rec.split_po } })
+          rec.split_po_total_quantity = splitQty.splitPoTotalQuantity
+        } 
+      }
       return new CommonResponseModel(true, 1, 'data retrived', data)
+    }
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
-
-
-  // async getSplitOrderComparisionData(req?: any): Promise<CommonResponseModel> {
-  //   try {
-  //     const originalData = await this.LevisOrdersRepo.getSplitOrderComparisionData(req);
-  //     const compareModel: LevisSplitCompareModel[] = [];
-  
-  //     for (const rec of originalData) {
-  //       // Find the corresponding child data for each splitPo
-  //       const childData = await this.LevisOrdersChildRepo.find({
-  //         where: {
-  //           poNumber: rec.split_po // Assuming split_po represents poNumber in child data
-  //         },
-  //         order: { id: 'DESC' },
-  //         take: 1
-  //       });
-  
-  //       if (childData.length > 0) {
-  //         // Get the totalQuantity from the corresponding child data
-  //         const totalQuantity = childData[0].totalQuantity;
-  
-  //         // Push the comparison model with the splitPo totalQuantity
-  //         compareModel.push(new LevisSplitCompareModel(
-  //           rec.po_number,
-  //           rec.split_po,
-  //           rec.po_line,
-  //           rec.size,
-  //           parseInt(totalQuantity), // Using the totalQuantity from the corresponding child data
-  //           parseInt(totalQuantity) // Using the totalQuantity from the corresponding child data as splitPo totalQuantity
-  //         ));
-  //       }
-  //     }
-  
-  //     if (compareModel.length > 0) {
-  //       return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', compareModel);
-  //     } else {
-  //       return new CommonResponseModel(false, 0, 'No data found');
-  //     }
-  //   } catch (err) {
-  //     throw err;
-  //   }
-  // }
-  
-  
-
-
 
 
   async editCoLineCreationReq(req: any): Promise<CommonResponseModel> {
