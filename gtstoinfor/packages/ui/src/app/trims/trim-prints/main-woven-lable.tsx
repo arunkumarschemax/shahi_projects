@@ -104,17 +104,14 @@ const MainWovenLabel = (props) => {
                 <th style={tableCellStyle}>ITEM</th>
                 <th style={tableCellStyle}>STYLE</th>
                 <th style={tableCellStyle}>SEASON</th>
-                <th style={tableCellStyle}>IM#</th>
-                <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-                <th style={tableCellStyle}>GARMENT COLOR CODE</th>
-                <th style={tableCellStyle}>TAPE COLOR</th>
-                <th style={tableCellStyle}>QTY IN YARDS</th>
+                <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+                <th style={tableCellStyle}>TOTAL</th>
               </tr>
             </thead>
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
             <tfoot>
               <tr>
-              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
+              <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
@@ -140,7 +137,7 @@ const MainWovenLabel = (props) => {
     const groupedData = {};
   
     data.forEach((item) => {
-      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}`;
       if (!groupedData[key]) {
         groupedData[key] = [];
       }
@@ -166,14 +163,9 @@ const MainWovenLabel = (props) => {
                 <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.imCode}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
-                  {item.description}
-                </td>
+               
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
       </React.Fragment>
@@ -185,13 +177,11 @@ const MainWovenLabel = (props) => {
 
     <div id="print">
 
-      {bomInfo && bomInfo.length > 0 ? (
+      {/* {bomInfo && bomInfo.length > 0 ? ( */}
         <>
           {generateTables()}
           </>
-      ) : (
-        <div>No data available</div>
-      )}
+       {/* ) : (     <div>No data available</div>)} */}
     </div>
     </Card>
 
