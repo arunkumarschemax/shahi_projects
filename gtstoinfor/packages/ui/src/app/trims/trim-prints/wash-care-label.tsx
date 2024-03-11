@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import './table-styles.css'
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import * as XLSX from 'xlsx';
+import moment from "moment";
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -22,7 +23,6 @@ export interface washCareprops {
     bomInfo: any[]
 }
 export const WasCarelabel = (props: washCareprops) => {
-    console.log(props.bomInfo)
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
@@ -40,7 +40,6 @@ export const WasCarelabel = (props: washCareprops) => {
 
     useEffect(() => {
         if (props.bomInfo) {
-            console.log(props.bomInfo)
 
             setBomInfo(props.bomInfo)
         }
@@ -52,14 +51,12 @@ export const WasCarelabel = (props: washCareprops) => {
         //     console.log(e.style)
         // })
         const data = bomInfo.some(item => item.item == '012H' && item.geoCode === 'EMEA')
-        console.log(data)
         if (data) {
             setGender(true)
         }
     }
 
     useEffect(() => {
-        console.log(bomInfo)
         for (const rec of bomInfo) {
             if (bomInfo.destinationCountry === 'ARGENTINA ') {
                 if (bomInfo.shipToAddress.includes('Nike Trading')) {
@@ -130,6 +127,13 @@ export const WasCarelabel = (props: washCareprops) => {
             }
         }
         return ''
+    }
+    function formatToSixDigits(str: string): string {
+        // Parse the string to an integer
+        const num = parseInt(str, 10);
+    
+        // Convert the number back to a string with leading zeros
+        return num.toString().padStart(6, '0');
     }
 
     const sizewisedatamap = (bomInfo) => {
@@ -246,7 +250,7 @@ export const WasCarelabel = (props: washCareprops) => {
 
                         return <tr>
                             <td>{"APA"}</td>
-                            <td>{s.ogacDate}</td>
+                            <td>{moment(s.ogacDate,'yyyy-mm').format("mm yyyy")}</td>
                             {
                                 sizes.map((size) => {
                                     total += s[size] ? Number(s[size]) : 0
@@ -295,8 +299,6 @@ export const WasCarelabel = (props: washCareprops) => {
                         //   ref={tableRef}
                         id="table-to-xls"
                     >
-
-
                         {data[0]?.chinaSizes?.length ? <>
                             <tr></tr>
                             <tr></tr>
@@ -401,7 +403,7 @@ export const WasCarelabel = (props: washCareprops) => {
                                                 <td style={{ textAlign: 'center' }}>{row.poNumber}</td>
                                                 <td style={{ textAlign: 'center' }}>{row.season + "'" + row.year.substring(2)}</td>
                                                 <td style={{ textAlign: 'center' }}>{row.styleNumber}</td>
-                                                <td style={{ textAlign: 'center' }}>{row.imCode}</td>
+                                                <td style={{ textAlign: 'center' }}>{formatToSixDigits(row.imCode)}</td>
                                                 <td style={{ padding: '10px', textAlign: 'center' }}>{row.description}</td>
                                                 <td style={{ textAlign: 'center' }}>{row.geoCode}</td>
                                                 <td style={{ textAlign: 'center' }}>{row.bomQty}</td>
