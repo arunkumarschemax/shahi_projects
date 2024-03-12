@@ -1277,160 +1277,157 @@ export class BomService {
             throw err
         }
     }
-
-    async getMainWovenLableData(req: BomProposalReq):Promise<CommonResponseModel>{
-        try{
-           const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+    // async getMainWovenLableData(req: BomProposalReq): Promise<CommonResponseModel> {
+    //     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
     
-            const teeData = await this.poBomRepo.getProposalsDataForTeeStyle(req)
-            const poloData = await this.poBomRepo.getProposalsDataForPoloStyle(req)
+    //         const teeData = await this.poBomRepo.getProposalsDataForTeeStyle(req)
+    //         const poloData = await this.poBomRepo.getProposalsDataForPoloStyle(req)
     
-            const groupedTeeData: any = teeData.reduce((result, currentItem:BomProposalDataModel) => {
-                const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination,fabricCode,fabricCombination,fabricContent,fit} = currentItem;
-                const bomGeoCode = destinations.find((v) => v.destination == destination)
-                let htStyle 
-                const { geoCode } = bomGeoCode
-                const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+    //         const groupedTeeData: any = teeData.reduce((result, currentItem:BomProposalDataModel) => {
+    //             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination,fabricCode,fabricCombination,fabricContent,fit} = currentItem;
+    //             const bomGeoCode = destinations.find((v) => v.destination == destination)
+    //             let htStyle 
+    //             const { geoCode } = bomGeoCode
+    //             const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
                 
-                if (!result[key]) {
+    //             if (!result[key]) {
                    
-                    result[key] = { fabricCode,fabricCombination,fabricContent,fit,htStyle,
-                        geoCode,styleNumber,description,use,imCode,itemNo,bomQty: 0,destination,
-                        itemId,poNumber,gender, season,year,
-                        color,itemColor,productCode,combination,sizeWiseQty: [],
-                    };
-                }
-                const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
-                    if(!size.includes('-')){
-                    if (sizeIndex >= 0) {
-                        result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
-                    } else {
-                        result[key].sizeWiseQty.push({ size, qty: bomQty });
-                    }
-                }
-                result[key].bomQty += bomQty;
-                return result;
-            }, {});
-            const groupedTeeArray: any[] = Object.values(groupedTeeData);
+    //                 result[key] = { fabricCode,fabricCombination,fabricContent,fit,htStyle,
+    //                     geoCode,styleNumber,description,use,imCode,itemNo,bomQty: 0,destination,
+    //                     itemId,poNumber,gender, season,year,
+    //                     color,itemColor,productCode,combination,sizeWiseQty: [],
+    //                 };
+    //             }
+    //             const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+    //                 if(!size.includes('-')){
+    //                 if (sizeIndex >= 0) {
+    //                     result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+    //                 } else {
+    //                     result[key].sizeWiseQty.push({ size, qty: bomQty });
+    //                 }
+    //             }
+    //             result[key].bomQty += bomQty;
+    //             return result;
+    //         }, {});
+    //         const groupedTeeArray: any[] = Object.values(groupedTeeData);
     
-            const groupedPoloData: any = poloData.reduce((result, currentItem:BomProposalDataModel) => {
-                const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination,fabricCode,fabricCombination,fabricContent,              fit} = currentItem;
-                const bomGeoCode = destinations.find((v) => v.destination == destination)
-                const { geoCode } = bomGeoCode
-                const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
-                if (!result[key]) {
-                    result[key] = {
-                        fabricCode,
-                        fabricCombination,
-                        fabricContent,
-                        fit,
-                        geoCode,
-                        styleNumber,
-                        description,
-                        use,
-                        imCode,
-                        itemNo,
-                        bomQty: 0,
-                        destination,
-                        itemId,
-                        poNumber,
-                        gender,
-                        season,
-                        year,
-                        color,
-                        itemColor,
-                        productCode,
-                        combination,
-                        teeStyelArray:[],
-                        poloStyleArray:[],
-                        sizeWiseQty: [],
-                        extraSizeWiseQty: []
-                    };
-                }
-                const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
-                if(size.includes('-')){
-                    if (sizeIndex >= 0) {
-                        result[key]['extraSizeWiseQty'][sizeIndex].qty += bomQty
-                    } else {
-                        result[key].extraSizeWiseQty.push({ size, qty: bomQty });
-                    }
-                }
-                else{
-                    if (sizeIndex >= 0) {
-                        result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
-                    } else {
-                        result[key].sizeWiseQty.push({ size, qty: bomQty });
-                    }
-                }
+    //         const groupedPoloData: any = poloData.reduce((result, currentItem:BomProposalDataModel) => {
+    //             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination,fabricCode,fabricCombination,fabricContent,              fit} = currentItem;
+    //             const bomGeoCode = destinations.find((v) => v.destination == destination)
+    //             const { geoCode } = bomGeoCode
+    //             const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+    //             if (!result[key]) {
+    //                 result[key] = {
+    //                     fabricCode,
+    //                     fabricCombination,
+    //                     fabricContent,
+    //                     fit,
+    //                     geoCode,
+    //                     styleNumber,
+    //                     description,
+    //                     use,
+    //                     imCode,
+    //                     itemNo,
+    //                     bomQty: 0,
+    //                     destination,
+    //                     itemId,
+    //                     poNumber,
+    //                     gender,
+    //                     season,
+    //                     year,
+    //                     color,
+    //                     itemColor,
+    //                     productCode,
+    //                     combination,
+    //                     teeStyelArray:[],
+    //                     poloStyleArray:[],
+    //                     sizeWiseQty: [],
+    //                     extraSizeWiseQty: []
+    //                 };
+    //             }
+    //             const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+    //             if(size.includes('-')){
+    //                 if (sizeIndex >= 0) {
+    //                     result[key]['extraSizeWiseQty'][sizeIndex].qty += bomQty
+    //                 } else {
+    //                     result[key].extraSizeWiseQty.push({ size, qty: bomQty });
+    //                 }
+    //             }
+    //             else{
+    //                 if (sizeIndex >= 0) {
+    //                     result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+    //                 } else {
+    //                     result[key].sizeWiseQty.push({ size, qty: bomQty });
+    //                 }
+    //             }
               
-                result[key].bomQty += bomQty;
-                return result;
-            }, {});
-            const groupedPoloArray: any[] = Object.values(groupedPoloData);
-            const obj ={teeStyle:groupedTeeArray,poloStyle:groupedPoloArray}
-            return new CommonResponseModel(true,1,'Data retrived',obj)
+    //             result[key].bomQty += bomQty;
+    //             return result;
+    //         }, {});
+    //         const groupedPoloArray: any[] = Object.values(groupedPoloData);
+    //         const obj ={teeStyle:groupedTeeArray,poloStyle:groupedPoloArray}
+    //         return new CommonResponseModel(true,1,'Data retrived',obj)
     
-        }catch(err){
-            throw err
-        }
-    }
+    //     }catch(err){
+    //         throw err
+    //     }
+    // }
     
-    async getSizeStrip(req: BomProposalReq): Promise<CommonResponseModel> {
-        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+    // async getSizeStrip(req: BomProposalReq): Promise<CommonResponseModel> {
+    //     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
 
-        const poBomData = await this.poBomRepo.getSizeStrip(req)
-        // const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        // console.log(poBomZfactorData, '---po bom zfactord data')
-        let data = [...poBomData]
-        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
-            // console.log(season)
-            const bomGeoCode = destinations.find((v) => v.destination == destination)
-            const { geoCode } = bomGeoCode
-            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
-            if (!result[key]) {
-                result[key] = {
-                    geoCode,
-                    styleNumber,
-                    description,
-                    use,
-                    imCode,
-                    itemNo,
-                    bomQty: 0,
-                    destination,
-                    itemId,
-                    poNumber,
-                    gender,
-                    season,
-                    year,
-                    color,
-                    itemColor,
-                    productCode,
-                    bQty,
-                    poQty,
-                    attribute,
-                    attributeValue,
-                    sizeWiseQty: [],
-                    // colorData: []
-                };
-            }
-            const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
-            if (sizeIndex >= 0) {
-                result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
-            } else {
-                result[key].sizeWiseQty.push({ size, qty: bomQty });
-            }
-            result[key].bomQty += bomQty;
-            return result;
-        }, {});
-        // console.log(groupedData,'@@@@@@@@@@@@@@@')
-        const groupedArray: any[] = Object.values(groupedData);
-        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
-    }
+    //     const poBomData = await this.poBomRepo.getSizeStrip(req)
+    //     // const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+    //     // console.log(poBomZfactorData, '---po bom zfactord data')
+    //     let data = [...poBomData]
+    //     const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+    //         const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
+    //         // console.log(season)
+    //         const bomGeoCode = destinations.find((v) => v.destination == destination)
+    //         const { geoCode } = bomGeoCode
+    //         const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+    //         if (!result[key]) {
+    //             result[key] = {
+    //                 geoCode,
+    //                 styleNumber,
+    //                 description,
+    //                 use,
+    //                 imCode,
+    //                 itemNo,
+    //                 bomQty: 0,
+    //                 destination,
+    //                 itemId,
+    //                 poNumber,
+    //                 gender,
+    //                 season,
+    //                 year,
+    //                 color,
+    //                 itemColor,
+    //                 productCode,
+    //                 bQty,
+    //                 poQty,
+    //                 attribute,
+    //                 attributeValue,
+    //                 sizeWiseQty: [],
+    //                 // colorData: []
+    //             };
+    //         }
+    //         const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+    //         if (sizeIndex >= 0) {
+    //             result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+    //         } else {
+    //             result[key].sizeWiseQty.push({ size, qty: bomQty });
+    //         }
+    //         result[key].bomQty += bomQty;
+    //         return result;
+    //     }, {});
+    //     // console.log(groupedData,'@@@@@@@@@@@@@@@')
+    //     const groupedArray: any[] = Object.values(groupedData);
+    //     return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    // }
+
+
 }
-
-
-
 
 
 
