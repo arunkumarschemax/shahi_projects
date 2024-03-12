@@ -18,7 +18,7 @@ export class M3KnittedFabricAdapter {
         entity.fabricsType = "knitted";
         entity.kniteRemarks = dto.kniteRemarks;
         entity.kniteYarnCount = dto.kniteYarnCount;
-        entity.knittedFabricTypeId = dto.knittedFabricTypeId;
+        entity.fabricType = dto.knittedFabricTypeId;
         if (dto.m3ItemsId) {
             entity.m3ItemsId = dto.m3ItemsId;
             entity.updatedUser = dto.updatedUser
@@ -39,7 +39,7 @@ export class M3KnittedFabricAdapter {
         dto.kniteM3Code = entity.kniteM3Code;
         dto.kniteRemarks = entity.kniteRemarks;
         dto.kniteYarnCount = entity.kniteYarnCount;
-        dto.knittedFabricTypeId = entity.knittedFabricTypeId
+        dto.knittedFabricTypeId = entity.fabricType
         dto.m3ItemsId = entity.m3ItemsId;
         dto.isActive = entity.isActive;
         dto.createdUser = entity.createdUser;

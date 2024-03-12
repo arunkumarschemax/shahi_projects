@@ -1,4 +1,4 @@
-import {  qualitysResponseModel } from "@project-management-system/shared-models";
+import {  CategoryIdRequest, CommonResponseModel, qualitysResponseModel } from "@project-management-system/shared-models";
 import { QualitysDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
 export class QualitysService extends CommonAxiosService{
@@ -24,6 +24,10 @@ export class QualitysService extends CommonAxiosService{
       async getAllActiveMethod(): Promise<qualitysResponseModel> {
         return this.axiosPostCall(this.URL + '/getAllActivePaymentMethod')
       }
+      async getAllQualitiesByCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllQualitiesByCategory", req)
+    }
+    
       // async getPaymentById(): Promise<qualitysResponseModel> {
       //   return this.axiosPostCall(this.URL + '/getPaymentMethodById')
       // }

@@ -816,12 +816,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 </Row>
                 <Row>
                     {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}  scroll={{x:true}} 
+                    pagination={false}
                       size="small"  bordered
-                      pagination={{
-                        onChange(current) {
-                          setPage(current);
-                        }
-                      }}
                     />
                     }
 

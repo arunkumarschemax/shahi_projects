@@ -1,9 +1,12 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import {  CommonResponseModel, M3TrimType, M3trimsDTO } from "@project-management-system/shared-models";
+import {  CommonResponseModel, M3TrimType, M3trimsDTO, UploadResponse } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 import { M3TrimsService } from "./m3-trims.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { join } from "path";
+import { diskStorage } from 'multer';
 
 @ApiTags('m3Trims')
 @Controller('/m3trims')
@@ -188,5 +191,35 @@ async getAllBuyers(@Body() req?:any): Promise<CommonResponseModel> {
   }
 }
 
+
+@Post('/fileUpload')
+@ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file', {
+      limits: { files: 1 },
+      storage: diskStorage({
+        destination : join(__dirname, '../../../../',`upload_files`),
+
+          // destination: './upload_files',
+          filename: (req, file, callback) => {
+              console.log(file.originalname);
+              const name = file.originalname;
+              callback(null, `${name}`);
+          },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+          return callback(new Error('Only png,jpeg,PNG,jpg,gif,tiff,x-tiff,z-png files are allowed!'), false);
+        }
+        callback(null, true);
+      },
+  }))
+  async updateTrimPath(@UploadedFile() file, @Body() uploadData: any): Promise<UploadResponse> {
+      console.log(file,'-------file')
+      try {
+        return await this.Service.updateTrimPath(file.path,file.filename, uploadData.m3TrimId)
+      } catch (error) {
+        return this.applicationExeptionhandler.returnException(UploadResponse, error);
+      }
+    }
 
 }

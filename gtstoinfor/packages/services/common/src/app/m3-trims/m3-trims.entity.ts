@@ -233,6 +233,19 @@ export class M3TrimsEntity {
     name: 'hsn_code',
   })
   hsnCode: string;
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'file_name',
+  })
+  fileName: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'file_path',
+  })
+  filePath: string;
   @ManyToOne(type=>Buyers, m3Trims=>m3Trims.M3TrimCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;

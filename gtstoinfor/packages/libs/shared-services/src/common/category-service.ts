@@ -1,5 +1,5 @@
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
-import { AllColourResponseModel,ColourResponseModel,CommissionResponseModel,ColourDto,ColourRequestDto, CommonResponseModel, CategoryReq, CategoryActivateReq } from "@project-management-system/shared-models";
+import { AllColourResponseModel,ColourResponseModel,CommissionResponseModel,ColourDto,ColourRequestDto, CommonResponseModel, CategoryReq, CategoryActivateReq, CategoryIdRequest } from "@project-management-system/shared-models";
 export class CategoryService extends CommonAxiosService{
 
     URL ="/category";
@@ -33,4 +33,8 @@ export class CategoryService extends CommonAxiosService{
           async getActiveCategory(): Promise<CommonResponseModel> {
             return this.axiosPostCall(this.URL + '/getActiveColour')
           }
+
+        async getAllCategoriesForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+          return this.axiosPostCall(this.URL + '/getAllCategoriesForCategory',req)
+        }
 }

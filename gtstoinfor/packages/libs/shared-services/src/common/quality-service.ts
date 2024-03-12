@@ -1,4 +1,4 @@
-import { CommonResponseModel, RackPositionDTO } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, RackPositionDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class QualityService extends CommonAxiosService {
@@ -20,5 +20,8 @@ export class QualityService extends CommonAxiosService {
     async activateOrDeactivateQuality(payload: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/activateOrDeactivateQuality", payload)
     }
-
+    async getAllQualitiesByCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllQualitiesByCategory", req)
+    }
+ 
 }

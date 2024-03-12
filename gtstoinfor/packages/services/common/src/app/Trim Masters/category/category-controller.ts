@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nes
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from "./category-service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { CategoryDto } from "./dto/category-dto";
 
 @ApiTags('category')
@@ -57,5 +57,15 @@ export class categoryController{
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
+    }
+
+    @Post('/getAllCategoriesForCategory')
+    @ApiBody({type: CategoryIdRequest})
+    async getAllCategoriesForCategory(@Body() req: any): Promise<CommonResponseModel>{
+        try{
+            return await this.CategService.getAllCategoriesForCategory(req)
+        }catch (error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
     }
 }

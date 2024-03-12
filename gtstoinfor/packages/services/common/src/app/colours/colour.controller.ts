@@ -1,4 +1,4 @@
-import { ColourResponseModel } from '@project-management-system/shared-models';
+import { CategoryIdRequest, ColourResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { AllColourResponseModel } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post } from '@nestjs/common';
@@ -80,5 +80,15 @@ export class ColourController{
     }
     
 }
+
+@Post('/getAllColorsForCategory')
+    @ApiBody({type: CategoryIdRequest})
+    async getAllColorsForCategory(@Body() req: any): Promise<CommonResponseModel>{
+        try{
+            return await this.colourService.getAllColorsForCategory(req)
+        }catch (error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
+    }
 }
 

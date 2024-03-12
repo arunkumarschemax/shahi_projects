@@ -1,5 +1,5 @@
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, StockService, UomService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Select, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Select, Space, Switch, Table, Tabs, Tag, Tooltip, message } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -7,14 +7,18 @@ import { ColumnProps, ColumnType } from 'antd/es/table'
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { M3ItemsDTO, M3Itemsfilter, UomCategoryEnum, m3ItemsContentEnum } from '@project-management-system/shared-models';
+import TabPane from 'antd/es/tabs/TabPane';
 const M3ItemsView = () => {
 
     const navigate=useNavigate()
     const service = new M3ItemsService();
     const [itemGroup, setItemGroup] = useState([]);
+    const [knittedItemGroup, setKnittedItemGroup] = useState([]);
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState(''); 
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [tabKey, setTabKey] = useState("1");
+
   const [page, setPage] = useState<number>(1);
 const [buyers, setBuyers] = useState<any[]>([]);
 // const buyerService = new BuyersService();
@@ -51,6 +55,7 @@ const stockService = new StockService();
 
     useEffect(() => {
         getM3ItemsData();
+        getM3KnittedItemsData()
        
     }, []);
    
@@ -58,6 +63,25 @@ const stockService = new StockService();
 
     // console.log(data,"req")
     
+
+    const getM3KnittedItemsData = () => {
+      const req = new M3Itemsfilter()
+      if(form.getFieldValue("buyerId")!== undefined){
+        req.buyerId = form.getFieldValue("buyerId")
+      }
+
+      if(form.getFieldValue("fabricType")!== undefined){
+        req.fabricType = form.getFieldValue("fabricType")
+      }
+        service.getKnittedFabric().then(res => {
+            if (res.status) {
+              setKnittedItemGroup(res.data);
+            } else {
+                setKnittedItemGroup([]);
+                AlertMessages.getErrorMessage(res.internalMessage);
+            }
+        })
+    }
     const getM3ItemsData = () => {
       const req = new M3Itemsfilter()
       if(form.getFieldValue("buyerId")!== undefined){
@@ -255,6 +279,121 @@ const stockService = new StockService();
         clearFilters();
         setSearchText('');
       };
+      const knittedColumns: any = [
+        {
+          title: 'S No',
+          key: 'sno',
+          width: 50,
+          align:"center",
+          responsive: ['sm'],
+          render: (text, object, index) => (page - 1) * 50 + (index + 1),
+          fixed:'left'
+        },
+          {
+              title: "Buyer",
+              dataIndex: "buyerName",
+              ...getColumnSearchProps('buyerName'),
+              render : (text,record) => {
+                return (
+                    <span>
+                        {record.buyerName}
+                    </span>
+                )
+            },
+              sorter: (a, b) => a.buyerName?.length - b.buyerName?.length,
+             sortDirections: ['descend', 'ascend'],
+             fixed:'left'
+          },
+          {
+              title: "Item Code",
+              dataIndex: "itemCode",
+              ...getColumnSearchProps('itemCode'),
+              sorter: (a, b) => a.itemCode?.length - b.itemCode?.length,
+             sortDirections: ['descend', 'ascend'],
+              fixed:'left'
+  
+          },
+          {
+            title: "M3 Code",
+            dataIndex: "m3Code",
+            ...getColumnSearchProps('m3Code'),
+            sorter: (a, b) => a.m3Code?.length - b.m3Code?.length,
+           sortDirections: ['descend', 'ascend'],
+           render: (text) => text || "-",
+  
+        },
+        {
+          title: "HSN Code",
+          dataIndex: "hsn",
+          ...getColumnSearchProps('hsn'),
+          sorter: (a, b) => a.hsn?.length - b.hsn?.length,
+         sortDirections: ['descend', 'ascend'],
+      },
+          // {
+          //     title: "Content",
+          //     dataIndex: "content",
+          //     ...getColumnSearchProps('content'),
+          //     sorter: (a, b) => a.content.length - b.content.length,
+          //    sortDirections: ['descend', 'ascend'],
+          // },
+          {
+              title: "Fabric Type",
+              dataIndex: "fabricType",
+              ...getColumnSearchProps('fabricType'),
+              sorter: (a, b) => a.fabricType?.length - b.fabricType?.length,
+             sortDirections: ['descend', 'ascend'],
+             ...getColumnSearchProps('fabricType')
+          },
+          {
+              title: "Knit Type",
+              dataIndex: "knitType",
+              ...getColumnSearchProps('knitType'),
+              sorter: (a, b) => a.knitType?.length - b.knitType?.length,
+             sortDirections: ['descend', 'ascend'],
+          },
+    
+          {
+            title: "Weight",
+            dataIndex: "weight",
+            sorter: (a, b) => a.weight - b.weight,
+            sortDirections: ['descend', 'ascend'],
+        },
+  
+          {
+            title: "YarnCount",
+            dataIndex: "yarnCount",
+            sorter: (a, b) => a.yarnCount - b.yarnCount,
+            sortDirections: ['descend', 'ascend'],
+  
+        },
+          {
+              title: "Gauze",
+              dataIndex: "gauze",
+              sorter: (a, b) => a.gauze?.length - b.gauze?.length,
+              sortDirections: ['descend', 'ascend'],     
+          },
+          {
+              title: "Remarks",
+              dataIndex: "remarks",
+              ...getColumnSearchProps('remarks'),
+              sorter: (a, b) => a.remarks?.length - b.remarks?.length,
+              sortDirections: ['descend', 'ascend'],
+          },
+          {
+              title: "Description",
+              dataIndex: "description",
+              sorter: (a, b) => a.description?.length - b.description?.length,
+              sortDirections: ['descend', 'ascend'],
+              // width:'250px',
+              render: text => (
+                <Tooltip title={text}>
+                  <span style={{ display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {text.length > 35 ? `${text.substring(0, 35)}...` : text}
+                  </span>
+                </Tooltip>
+              ),
+          },
+      ]
     const Columns: any = [
       {
         title: 'S No',
@@ -336,20 +475,20 @@ const stockService = new StockService();
           sortDirections: ['descend', 'ascend'],
       },
 
-        {
-          title: "Width",
-          dataIndex: "width",
-          render : (text,record) => {
-              return (
-                  <span>
-                      {record.width ? `${record.width}${record.widthUom}`: '-'}
-                  </span>
-              )
-          },
-          sorter: (a, b) => a.width - b.width,
-          sortDirections: ['descend', 'ascend'],
+      //   {
+      //     title: "Width",
+      //     dataIndex: "width",
+      //     render : (text,record) => {
+      //         return (
+      //             <span>
+      //                 {record.width ? `${record.width}${record.widthUom}`: '-'}
+      //             </span>
+      //         )
+      //     },
+      //     sorter: (a, b) => a.width - b.width,
+      //     sortDirections: ['descend', 'ascend'],
 
-      },
+      // },
         {
             title: "Construction",
             dataIndex: "construction",
@@ -418,6 +557,10 @@ const stockService = new StockService();
         getM3ItemsData()
        
     }
+    const handleTab = (val) => {
+      console.log(val);
+      setTabKey(`${val}`)
+    }
     
 
   return (
@@ -430,7 +573,7 @@ const stockService = new StockService();
         >Create</Button>
         }>
           
-          <Form layout="vertical" form={form} onFinish={getM3ItemsData}>
+      <Form layout="vertical" form={form} onFinish={getM3ItemsData}>
        <Row gutter={24}>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
@@ -498,174 +641,83 @@ const stockService = new StockService();
                 rules={[{ required: false, message: "Field is required" }]}
               >
                 <Select placeholder=" Select Fabric Type" allowClear>
-                  {fabricType.map((option) => (
+                {/* {(fabricType.filter((f) => f.type === "Woven")).map((option) => (
                     <option
                       key={option.fabricTypeId}
                       value={option.fabricTypeId}
                     >
                       {option.fabricType}
                     </option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Weave"
-                name="weave"
-                rules={[{ required: false, message: "Field is required" }]}
-                
-              >
-                <Select placeholder=" Select Weave"  allowClear  showSearch optionFilterProp="children"
-                >
-                  {weave.map((option) => (
-                    <Option
-                      key={option.weave}
-                      value={option.weave}
+                  ))} */}
+                {tabKey === "1" ? (fabricType.filter((f) => f.type === "Woven")).map((option) => (
+                    <option
+                      key={option.fabricTypeId}
+                      value={option.fabricTypeId}
                     >
-                      {option.fabricWeave}
-                    </Option>
-                  ))}
+                      {option.fabricType}
+                    </option>
+                  ))
+                  : tabKey === "2" ? (fabricType.filter((f) => f.type === "Knitted")).map((option) => (
+                    <option
+                      key={option.fabricTypeId}
+                      value={option.fabricTypeId}
+                    >
+                      {option.fabricType}
+                    </option>
+                  )):""
+                }
                 </Select>
               </Form.Item>
             </Col>
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            {
+              tabKey === "1" ?
+              <><Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
-               <Form.Item
-                label="Weight"
-                name="weight"
-                rules={[{ required: false, message: "Field is required" }]}
-                // style={{marginTop:25}}
-              >
-                <Space.Compact>
-             <Input placeholder="Enter Weight" allowClear onChange={(e) => setWeightValue(e.target.value)}/>
+                  <Form.Item
+                    label=" Weave"
+                    name="weave"
+                    rules={[{ required: false, message: "Field is required" }]}
 
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWeightUnitValue(value)}>
-              {weightData.map((e) => {
+                  >
+                    <Select placeholder=" Select Weave" allowClear showSearch optionFilterProp="children"
+                    >
+                      {weave.map((option) => (
+                        <Option
+                          key={option.weave}
+                          value={option.weave}
+                        >
+                          {option.fabricWeave}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col><Col
+                  xs={{ span: 12 }}
+                  sm={{ span: 12 }}
+                  md={{ span: 4 }}
+                  lg={{ span: 8 }}
+                  xl={{ span: 4 }}
+                >
+                    <Form.Item
+                      label=" Finish"
+                      name="finish"
+                      rules={[
+                        { required: false, message: 'Field is required' },
+                      ]}
+                    >
+                      <Select allowClear placeholder="Select Finish" showSearch optionFilterProp="children">
+                        {finishData.map((e) => {
                           return (
-                            <option key={e.uomId} value={e.uomId}>
-                              {e.uom}
-                            </option>
+                            <Option key={e.finish} value={e.finish}>
+                              {e.fabricFinish}
+                            </Option>
                           );
                         })}
-         </Select>
-          </Space.Compact>
-               </Form.Item> 
-
-         
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
-
-              <Form.Item name="weightUnit" 
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  placeholder="Unit"
-                >
-                  {weightData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label="Width"
-                name="width"
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-              <Space.Compact>
-             <Input placeholder="Enter Width" allowClear onChange={(e) => setWidthValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWidthUnitValue(value)}>
-              {widthData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-
-              </Form.Item>
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Construction"
-                name="construction"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Input placeholder=" Enter  Construction" allowClear/>
-              </Form.Item>
-            </Col> */}
-            {/* <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Yarn Count"
-                name="yarnCount"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Space.Compact>
-             <Input placeholder="EnterYarn Count" allowClear onChange={(e) => setCountValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setCountUnitValue(value)}>
-              {yarnData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-              </Form.Item>
-            </Col> */}
-
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Finish"
-                name="finish"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Select allowClear placeholder="Select Finish"  showSearch optionFilterProp="children"  >
-              {finishData.map((e) => {
-                    return (
-                      <Option key={e.finish} value={e.finish}>
-                        {e.fabricFinish}
-                      </Option>
-                    );
-                  })}
-         </Select>
-              </Form.Item>
-            </Col>
+                      </Select>
+                    </Form.Item>
+                  </Col></>
+              :""
+          }
             {/* <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}
@@ -705,7 +757,8 @@ const stockService = new StockService();
              
           </Row>
     </Form>
-          {/* <Card> */}
+    <Tabs type={'card'} tabPosition={'top'} defaultActiveKey={tabKey} onChange={handleTab}>
+        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Woven`}</b></span>}>
           <Table columns={Columns}
           dataSource={itemGroup}
           scroll={{x:'max-content'}}
@@ -716,7 +769,20 @@ const stockService = new StockService();
             }
           }} bordered
           />
-          {/* </Card> */}
+        </TabPane>
+        <TabPane key="2" tab={<span style={{ fontSize: '15px' }}><b>{`Knitted`}</b></span>}>
+          <Table columns={knittedColumns}
+          dataSource={knittedItemGroup}
+          scroll={{x:'max-content'}}
+           pagination={{
+            pageSize:50,
+            onChange(current) {
+              setPage(current);
+            }
+          }} bordered
+          />
+        </TabPane>
+        </Tabs>
     </Card>
     </div>
   )

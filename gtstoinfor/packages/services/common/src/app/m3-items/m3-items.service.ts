@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { M3ItemsAdapter } from "./m3-items.adaptor";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter, m3FabricFiltersReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter, UploadResponse, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
@@ -34,7 +34,7 @@ export class M3ItemsService {
         return new CommonResponseModel(false, 0, "Item already exist. ")
       }
       else{
-        const existingItemCount: number = await this.repository.count();
+        const existingItemCount: number = await this.repository.count({where:{fabricsType:"woven"}});
 
         const nextItemCode: string = createDto.buyerCode + "/" + `FAB${(existingItemCount + 1).toString().padStart(5, '0')}`;
         const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
@@ -49,7 +49,9 @@ export class M3ItemsService {
   }
 
   async getKnittedFabric(): Promise<CommonResponseModel> {
-    const data = await this.repository.find({relations:["buyerInfo"],where:{fabricsType:"knitted"}, order:{buyerId:"ASC"}})
+    let query = `SELECT b.buyer_name AS buyerName,m3i.item_code AS itemCode,m3i.knit_m3_code AS m3Code,m3i.knit_hsn AS hsn,ft.fabric_type_name AS fabricType,m3i.knit_type AS knitType,m3i.knit_weight AS weight,m3i.knit_yarn_count AS yarnCount,m3i.knit_gauze AS gauze,m3i.knite_remarks AS remarks,m3i.description FROM m3_items m3i left join buyers b on b.buyer_id = m3i.buyer_id LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type where m3i.fabrics_type='knitted' order by b.buyer_name`
+    const data = await this.datasource.query(query)
+
     if(data)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", data)
     else
@@ -266,13 +268,13 @@ export class M3ItemsService {
 
 async getFabricTypes(): Promise<CommonResponseModel>{
   try{
-    let query = `
-    SELECT m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType
+    let query = `SELECT ft.type,m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType
     FROM m3_items m3i
     LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type
     GROUP BY ft.fabric_type_id
     ORDER BY ft.fabric_type_name`
     const data = await this.datasource.query(query)
+    console.log(data)
     if(data.length > 0){
       return new CommonResponseModel(true,1,'Data retrieved successfully',data)
     }else{
@@ -329,7 +331,7 @@ async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel>
       return new CommonResponseModel(false, 0, "Item already exist. ")
     }
     else{
-      const existingItemCount: number = await this.repository.count();
+      const existingItemCount: number = await this.repository.count({where:{fabricsType:'knitted'}});
 
       const nextItemCode: string = req.knitBuyerCode + "/" + `FAB${(existingItemCount + 1).toString().padStart(5, '0')}`;
       const entity: M3ItemsEntity = this.knittedAdapter.convertDtoToEntity(req);
@@ -341,8 +343,28 @@ async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel>
   } catch (error) {
     return new CommonResponseModel(false, 0, error)
   }
+
+
 }
 
-
+async updateFabricPath(filePath: string, filename: string, m3ItemId: number): Promise<UploadResponse> {
+        console.log('upload service id---------------', m3ItemId)
+        try {
+            let filePathUpdate;   
+                filePathUpdate = await this.repository.update(
+                    { m3ItemsId: m3ItemId },
+                    { filePath: filePath, fileName: filename },
+                )
+            if (filePathUpdate.affected > 0) {
+                return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+            }
+            else {
+                return new UploadResponse(false, 11, 'uploaded failed', filePath);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
 
 }

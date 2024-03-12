@@ -2,17 +2,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { ContentRepo } from './dto/content-repo';
 import { ContentEntity } from './dto/content-entity';
 import { ContentDto } from './dto/content-dto';
+import { M3TrimsCategoryMappingRepo } from '../../m3-trims/m3-trims-category-mapping.repo';
 @Injectable()
 
 export class ContentService{
     @InjectDataSource()
     private datasource: DataSource
     constructor(
-        private contentRepo:ContentRepo
+        private contentRepo:ContentRepo,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
+
     ){}
 
     async createContent(req: ContentDto, isUpdate: boolean): Promise<CommonResponseModel> {
@@ -138,6 +141,19 @@ async getFabricContentData():Promise<CommonResponseModel>{
     }catch(err){
       throw(err)
     }
+  }
+
+  async getAllContentForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    try{
+        let data = await this.m3TrimsCategoryMappingRepo.getAllContentByCategory(req.categoryId)
+        if(data.status){
+          return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+        }else{
+          return new CommonResponseModel(false, 1, 'No data found',[])
+        }
+      }catch(err){
+        throw(err)
+      }
   }
 
   

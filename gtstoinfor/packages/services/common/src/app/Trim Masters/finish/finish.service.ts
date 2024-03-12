@@ -2,10 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { FinishEntity } from "./finish.entity";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { retry } from "rxjs";
 import { FinishDTO } from "./dto/finish.dto";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class FinishService {
@@ -13,6 +14,7 @@ export class FinishService {
       
         @InjectRepository(FinishEntity)
         private finishRepo: Repository<FinishEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo,
         @InjectDataSource()
     private datasource: DataSource
     ){}
@@ -139,6 +141,17 @@ export class FinishService {
           throw(err)
         }
       }
-      
+      async getAllActiveForCategoryFinish(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        try {
+            const data = await this.m3TrimsCategoryMappingRepo.getAllFinishByCategory(req.categoryId)
+            if(data.status){
+                return new CommonResponseModel(true, 1, 'Finish data retrieved successfully',data.data)
+            }else{
+                return new CommonResponseModel(false, 0, 'No data found',[])
+            }
+        } catch (err) {
+          return err;
+        }
+      }
 
 }

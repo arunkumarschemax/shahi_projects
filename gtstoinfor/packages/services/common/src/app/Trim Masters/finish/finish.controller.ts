@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from '@nes
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { FinishService } from './finish.service';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { FinishDTO } from './dto/finish.dto';
 
 @ApiTags('finish')
@@ -77,6 +77,16 @@ export class FinishController {
       async getFabricFinishData(): Promise<CommonResponseModel>{
           try{
               return await this.finishService.getFabricFinishData()
+          }catch (error){
+              return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
+      @Post('/getAllActiveForCategoryFinish')
+      @ApiBody({type: CategoryIdRequest})
+      async getAllActiveForCategoryFinish(@Body() req:any): Promise<CommonResponseModel>{
+          try{
+              return await this.finishService.getAllActiveForCategoryFinish(req)
           }catch (error){
               return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
           }

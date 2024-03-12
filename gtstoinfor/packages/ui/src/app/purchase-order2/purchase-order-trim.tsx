@@ -847,11 +847,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 scroll={{x:'max-content'}}
                 columns={tableColumns} 
                 dataSource={trimTableData}
-                 pagination={{
-                    onChange(current) {
-                      setPage(current);
-                    }
-                  }}
+                 pagination={false}
                      />
                 :<></>}
                 </Row>

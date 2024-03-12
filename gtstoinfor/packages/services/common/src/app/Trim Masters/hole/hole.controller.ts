@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from '@nes
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { HoleService } from './hole.service';
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { HoleDTO } from './dto/hole.dto';
 
 @ApiTags('hole')
@@ -73,6 +73,16 @@ export class HoleController {
           }
       }
 
+
+      @Post('/getAllHolesForCategory')
+      @ApiBody({type: CategoryIdRequest})
+      async getAllHolesForCategory(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.holeService.getAllHolesForCategory(req)
+          }catch (error){
+              return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+          }
+      }
 
 }
 

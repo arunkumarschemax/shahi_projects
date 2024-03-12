@@ -2,14 +2,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Structure } from "./structure.entity";
 import { StructureRepository } from "./structure.repo";
 import { Injectable } from "@nestjs/common";
-import { StructureReq, StructureResponseModel, StructureModel, StructureActivateReq, CommonResponseModel } from "@project-management-system/shared-models";
+import { StructureReq, StructureResponseModel, StructureModel, StructureActivateReq, CommonResponseModel, CategoryIdRequest } from "@project-management-system/shared-models";
+import { M3TrimsCategoryMappingRepo } from "../m3-trims/m3-trims-category-mapping.repo";
 
 
 
 @Injectable()
 export class StructureService {
     constructor(
-        private repo : StructureRepository
+        private repo : StructureRepository,
+        private m3TrimsCategoryMappingRepo : M3TrimsCategoryMappingRepo
+
     ) { }
 
     async createStructure(req: StructureReq,isUpdate:boolean) : Promise<StructureResponseModel>{
@@ -140,4 +143,19 @@ export class StructureService {
             throw err
         }
    }
+
+   async getAllActiveStructureForCategory(req:CategoryIdRequest):Promise<StructureResponseModel>{
+    try{
+        const data = await this.m3TrimsCategoryMappingRepo.getAllStructureByCategory(req.categoryId)
+        let info = []
+        if(data.status){
+            return new StructureResponseModel(true,1,'Data retrieved',data.data)
+        } else{
+            return new StructureResponseModel(false,0,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
 }

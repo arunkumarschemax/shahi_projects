@@ -38,6 +38,8 @@ export class M3FabricsDTO {
     widthUOM?:string
     finishType?:string
     content?:string
+    fabricUpload?:any
+
 
     constructor(
         m3ItemsId: number,
@@ -72,6 +74,7 @@ export class M3FabricsDTO {
         widthUOM?:string,
         finishType?:string,
         content?:string,
+        fabricUpload?:any
     ){
         this.m3ItemsId = m3ItemsId
         this.buyerId = buyerId
@@ -105,6 +108,8 @@ export class M3FabricsDTO {
         this.widthUOM = widthUOM
         this.finishType = finishType
         this.content = content
+        this.fabricUpload = fabricUpload
+
     }
 }
 

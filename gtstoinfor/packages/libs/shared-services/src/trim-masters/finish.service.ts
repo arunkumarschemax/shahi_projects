@@ -1,4 +1,4 @@
-import { CommonResponseModel, FinishDTO } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, FinishDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class FinishService extends CommonAxiosService{
@@ -32,4 +32,8 @@ export class FinishService extends CommonAxiosService{
     async  getFabricFinishData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getFabricFinishData')
     }
+    async  getAllActiveForCategoryFinish(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getAllActiveForCategoryFinish',req)
+    }
+
 }

@@ -797,13 +797,25 @@ export const SampleDevNewView = () => {
 
   const handleTrimDownload = (record) => {
     console.log(record);
-    const imageUrl = record.filePath;
+    const imageUrl = record.fileName;
     
+    fetch(config.file_upload_path + `${imageUrl}`)
+        .then((response) => {
+          response.blob().then((blob) => {
+            var FileSaver = require('file-saver');
+
+            // Set the appropriate MIME type for your image file
+            var mimeType = response.headers.get('content-type') || 'image/png';
+
+            var newBlob = new Blob([blob], { type: mimeType });
+            FileSaver.saveAs(newBlob, `${imageUrl}`);
+          });
+        });
     // Create a temporary anchor element
-    const anchor = document.createElement('a');
-    anchor.href = imageUrl;
-    anchor.download = 'Trim.jpg';
-    anchor.click();
+    // const anchor = document.createElement('a');
+    // anchor.href = imageUrl;
+    // anchor.download = 'Trim.jpg';
+    // anchor.click();
     // const req = new SampleItemIdRequest(record.trim_info_id);
     // service.getTrimPaths(req).then(res => {
     //   if (res.status) {
@@ -822,16 +834,29 @@ export const SampleDevNewView = () => {
     // })
   }
 
+  
+
   const handleFabDownload = (record) => {
     console.log(record);
     console.log(record);
-    const imageUrl = record.filePath;
-    
+    const imageUrl = record.fileName;
+    fetch(config.file_upload_path + `${imageUrl}`)
+        .then((response) => {
+          response.blob().then((blob) => {
+            var FileSaver = require('file-saver');
+
+            // Set the appropriate MIME type for your image file
+            var mimeType = response.headers.get('content-type') || 'image/png';
+
+            var newBlob = new Blob([blob], { type: mimeType });
+            FileSaver.saveAs(newBlob, `${imageUrl}`);
+          });
+        });
     // Create a temporary anchor element
-    const anchor = document.createElement('a');
-    anchor.href = imageUrl;
-    anchor.download = 'Fabric.jpg';
-    anchor.click();
+    // const anchor = document.createElement('a');
+    // anchor.href = imageUrl;
+    // anchor.download = 'Fabric.jpg';
+    // anchor.click();
     // const req = new SampleItemIdRequest(record.fabric_info_id);
     // service.getFabricPaths(req).then(res => {
     //   if (res.status) {
