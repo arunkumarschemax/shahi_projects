@@ -92,7 +92,7 @@ export function Button3Print(props: Button3PrintProps) {
      };
     return (
         <div id='print'>
-                <Card  title="Button" extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+                <Card  title="BUTTON" extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
             {groupedData.map((group, groupIndex) => (
                     <table key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
                         <thead>
