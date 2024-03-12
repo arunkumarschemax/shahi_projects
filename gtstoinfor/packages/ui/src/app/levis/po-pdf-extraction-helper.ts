@@ -597,14 +597,14 @@ export const extractDataFromPoPdf = async (pdf) => {
         if (rec.str.match(ITEM_NO_EXP1)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT1) && isFirstBomSummary) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
-            if (isFirstBomSummary) {
-                isFirstBomSummary = false;
-            }
-            else if (isSecondBomSummary) {
-                isSecondBomSummary = true;
-            }
+            // if (isFirstBomSummary) {
+            //     isFirstBomSummary = false;
+            // }
+            // else if (isSecondBomSummary) {
+            //     isSecondBomSummary = true;
+            // }
 
         }
         if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
