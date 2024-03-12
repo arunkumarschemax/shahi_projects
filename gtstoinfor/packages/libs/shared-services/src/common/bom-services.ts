@@ -87,24 +87,24 @@ export class BomService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/generateProposalForNeckTape", req)
     }
     async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
-        console.log(req)
         return this.axiosPostCall(this.URL + "/generateProposalForTrims", req)
     }
     async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/generateProposalForElasticTrim", req)
     }
     async generatePropsalForHtLabel(req: BomProposalReq): Promise<CommonResponseModel> {
-        console.log(req)
         return this.axiosPostCall(this.URL + "/generatePropsalForHtLabel", req)
     }
     async getSizeHtLabelData(req: BomProposalReq): Promise<CommonResponseModel> {
-        console.log(req)
         return this.axiosPostCall(this.URL + "/getSizeHtLabelData", req)
     }
     
     
     async generateProposalForTissuePaper(req: BomProposalReq): Promise<CommonResponseModel> {
-        console.log(req)
-        return this.axiosPostCall(this.URL + "/generateProposalForTissuePaper", req)
+       return this.axiosPostCall(this.URL + "/generateProposalForTissuePaper", req)
+    }
+    
+    async getMainWovenLableData(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getMainWovenLableData", req)
     }
 }

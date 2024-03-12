@@ -1,29 +1,21 @@
-import { Button, Card, Table } from 'antd';
-import React, { useEffect, useState } from 'react';
 
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Card } from 'antd';
 
-export const getCssFromComponent = (fromDoc, toDoc) => {
+const MainWovenLabel = (props) => {
+  const [bomInfo, setBomInfo] = useState([]);
 
-  Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
-      if (styleSheet.cssRules) {
-          const newStyleElement = toDoc.createElement("style");
-          Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
-              newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
-          });
-          toDoc.head.appendChild(newStyleElement);
-      }
-  });
-};
-export interface DrawcordProps {
-    bomInfo: any
-}
-export const  Drawcord = (props: DrawcordProps) => {
-// console.log(props.bomInfo)
- const data=props.bomInfo
- const [drawcord, setDrawcord] = useState<any>([])
+  const tableCellStyle = {
+     padding: '8px',
+  };
 
+  useEffect(() => {
+    if (props.bomInfo) {
+      setBomInfo(props.bomInfo);
+    }
+  }, [props.bomInfo]);
 
- const handlePrint = () => {
+  const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
     if (invoiceContent) {
       const devContent = invoiceContent.innerHTML;
@@ -79,18 +71,8 @@ export const  Drawcord = (props: DrawcordProps) => {
     }
   };
   
- const [bomInfo, setBomInfo] = useState([]);
 
-
- useEffect(() => {
-    // console.log(props.bomInfo);
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
-
-  
- const groupDataByItemNo = () => {
+  const groupDataByItemNo = () => {
     if (bomInfo && bomInfo.length > 0) {
       const groupedData = {};
       bomInfo.forEach((item) => {
@@ -122,17 +104,14 @@ export const  Drawcord = (props: DrawcordProps) => {
                 <th style={tableCellStyle}>ITEM</th>
                 <th style={tableCellStyle}>STYLE</th>
                 <th style={tableCellStyle}>SEASON</th>
-                <th style={tableCellStyle}>IM#</th>
-                <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-                <th style={tableCellStyle}>GARMENT COLOR CODE</th>
-                <th style={tableCellStyle}>TAPE COLOR</th>
-                <th style={tableCellStyle}>QTY IN YARDS</th>
+                <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+                <th style={tableCellStyle}>TOTAL</th>
               </tr>
             </thead>
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
             <tfoot>
               <tr>
-              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
+              <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
@@ -153,15 +132,12 @@ export const  Drawcord = (props: DrawcordProps) => {
     }, 0);
   };
 
-  const tableCellStyle = {
-    padding: '8px',
- };
-
+  
   const generateRows = (data) => {
     const groupedData = {};
   
     data.forEach((item) => {
-      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}`;
       if (!groupedData[key]) {
         groupedData[key] = [];
       }
@@ -187,14 +163,9 @@ export const  Drawcord = (props: DrawcordProps) => {
                 <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.imCode}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
-                  {item.description}
-                </td>
+               
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
       </React.Fragment>
@@ -202,56 +173,20 @@ export const  Drawcord = (props: DrawcordProps) => {
   };
   
   return (
+    <Card title={'Main Woven Label'} extra={<Button onClick={handlePrint}>Print</Button>}>
 
     <div id="print">
-    {bomInfo && bomInfo.length > 0 ? (
-      <Card title={'DrawCord'} extra={<Button onClick={handlePrint}>Print</Button>}>
-        {generateTables()}
-      </Card>
-    ) : (
-      <div>No data available</div>
-    )}
-  </div>
 
-    // <Card title={'DrawCord'}
-    //             extra={<Button onClick={handlePrint}>Print</Button>}>
-    //  <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-    //             <tr>
-    //                 <th style={{ width: '3%' }}>ITEM</th>
-    //                 <th style={{ width: '3%' }}>STYLE</th>
-    //                 <th style={{ width: '3%' }}>SEASON</th>
-    //                 <th style={{ width: '3%' }}>IM#</th>
-    //                 <th style={{ width: '3%' }}>MATERIAL DESCRIPTION</th>
-    //                 <th style={{ width: '3%' }}>GARMENT COLOUR + CODE</th>
-    //                 <th style={{ width: '3%' }}>TAPE COLOUR</th>
-    //                 <th style={{ width: '3%' }}>QTY IN YDS</th>
-                  
-    //                 </tr>
-    //                 {data.map((rec,index) =>{
-    //                     return(
-    //                         <tr>
-    //                         <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
-    //                         <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
-    //                      </tr>
-    //                     )
-                      
-    //                 })}
-               
-    //         </table>
+      {/* {bomInfo && bomInfo.length > 0 ? ( */}
+        <>
+          {generateTables()}
+          </>
+       {/* ) : (     <div>No data available</div>)} */}
+    </div>
+    </Card>
 
-      
-    // </Card>
   );
 };
 
+export default MainWovenLabel;
 
-
- 
-
-export default Drawcord;
