@@ -300,7 +300,7 @@ export class DpomService {
         const save = await this.coLineRepository.save(entities);
         if (save) {
             for (const saved of save) {
-                await this.updateCOLineStatus({ poNumber: saved.buyerPo, poLineItemNumber: req.lineItemNo, status: 'Open' })
+                await this.updateCOLineStatus({ poNumber: saved.buyerPo, poLineItemNumber: req.lineItemNo, coLineStatus: 'Open' })
             }
             return new CommonResponseModel(true, 1, 'CO-Line request created successfully')
         } else {
