@@ -59,6 +59,12 @@ export function Button3Print(props: Button3PrintProps) {
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
+    const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
+        const itemNo = rec.itemNo || 'undefined';
+        acc[itemNo] = acc[itemNo] || [];
+        acc[itemNo].push(rec);
+        return acc;
+    }, {}));
 
     const countColumnOccurrences = (columnKey) => {
         const counts = {};
@@ -74,40 +80,75 @@ export function Button3Print(props: Button3PrintProps) {
         const counts = countColumnOccurrences(columnKey);
         return counts[value] > 1;
       };
+
+      const calculateTotalBomQty = (data) => {
+        return data.reduce((total, item) => {
+          const bomQty = Number(item?.bomQty) || 0;
+          return total + bomQty;
+        }, 0);
+      };
+      const tableCellStyle = {
+        padding: '8px',
+     };
     return (
         <div id='print'>
-            <Card title={'BUTTON'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
-                    <tr>
-                        <th style={{ width: '3%' }}>ITEM#</th>
-                        <th style={{ width: '5%' }}>STYLE#</th>
-                        <th style={{ width: '3%' }}>SEASON</th>
-                        <th style={{ width: '5%' }}>IM#</th>
-                        <th style={{ width: '44%' }}>MATERIAL DESCRIPTION</th>
-                        <th style={{ width: '5%' }}>BUTTON SIZE</th>
-                        <th style={{ width: '5%' }}>GARMENT COLOR CODE</th>
-                        <th style={{ width: '5%' }}>BUTTON COLOR</th>
-                        <th style={{ width: '5%' }}>QTY IN PCS</th>
-                    </tr>
-                    {data.map((rec, index) => {
-                        return (
+                <Card  title="Button" extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+            {groupedData.map((group, groupIndex) => (
+                    <table key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
+                        <thead>
                             <tr>
-                                <td style={{ textAlign: 'center', width: '3%' }} >{rec.itemNo !== null ? rec.itemNo : ''}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
-                                <td style={{ textAlign: 'center', width: '3%' }} >{rec.season !== null ? rec.season : ''}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.imCode !== null ? rec.imCode : ''}</td>
-                                <td style={{ textAlign: 'center', width: '44%' }} >{rec.description !== null ? rec.description : ''}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{'18L'}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.color !== null ? rec.color : ''}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.itemColor !== null ? rec.itemColor : ''}</td>
-                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.bomQty !== null ? rec.bomQty : ''}</td>
+                                <th style={{ width: '3%' }}>ITEM#</th>
+                                <th style={{ width: '5%' }}>STYLE#</th>
+                                <th style={{ width: '3%' }}>SEASON</th>
+                                <th style={{ width: '5%' }}>IM#</th>
+                                <th style={{ width: '44%' }}>MATERIAL DESCRIPTION</th>
+                                <th style={{ width: '5%' }}>BUTTON SIZE</th>
+                                <th style={{ width: '5%' }}>GARMENT COLOR CODE</th>
+                                <th style={{ width: '5%' }}>BUTTON COLOR</th>
+                                <th style={{ width: '5%' }}>QTY IN PCS</th>
                             </tr>
-                        )
+                        </thead>
+                        <tbody>
+                            {group.map((rec, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {rowIndex === 0 && (
+                                        <>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.itemNo !== null ? rec.itemNo : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.styleNumber !== null ? rec.styleNumber : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.season !== null ? rec.season : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.imCode !== null ? rec.imCode : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.description !== null ? rec.description : ''}
+                                            </td>
+                                        </>
+                                    )}
+                                    <td style={{ textAlign: 'center', width: '5%' }} >{'18L'}</td>
+                                    <td style={{ textAlign: 'center', width: '5%' }} >{rec.color !== null ? rec.color : ''}</td>
+                                    <td style={{ textAlign: 'center', width: '5%' }} >{rec.itemColor !== null ? rec.itemColor : ''}</td>
+                                    <td style={{ textAlign: 'center', width: '5%' }} >{rec.bomQty !== null ? rec.bomQty : ''}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan={8} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+                                <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+                                    {calculateTotalBomQty(group)}
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+            ))}
 
-                    })}
-
-                </table>
-            </Card>
+                </Card>
         </div>
 
     )

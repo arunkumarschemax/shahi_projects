@@ -70,11 +70,18 @@ export const  Twilltape = (props: TwilltapeProps) => {
     }, 0);
   };
 
+  const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
+    const itemNo = rec.itemNo || 'undefined';
+    acc[itemNo] = acc[itemNo] || [];
+    acc[itemNo].push(rec);
+    return acc;
+}, {}));
 
   
   return (
     
     <Card title={'Twill Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
+    {groupedData.map((group, groupIndex) => (
     <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%'}} border={1} cellSpacing="0" cellPadding='0'>
       <thead>
         <tr>
@@ -89,19 +96,33 @@ export const  Twilltape = (props: TwilltapeProps) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((rec, index) => (
-          <tr key={index}>
-            <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.season !== null ? rec.season : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.imCode !== null ? rec.imCode : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.description !== null ? rec.description : ''}</td>
+      {group.map((rec, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {rowIndex === 0 && (
+                                        <>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.itemNo !== null ? rec.itemNo : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.styleNumber !== null ? rec.styleNumber : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.season !== null ? rec.season : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.imCode !== null ? rec.imCode : ''}
+                                            </td>
+                                            <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
+                                                {rec.description !== null ? rec.description : ''}
+                                            </td>
+                                        </>
+                                    )}
             <td style={{ textAlign: 'center' }}>GMT CODE - {rec.itemColor !== null ? rec.itemColor : ''}</td>
             <td style={{ textAlign: 'center' }}>{rec.color !== null ? rec.color : ''}</td>
             <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
-          </tr>
-        ))}
-      </tbody>
+            </tr>
+                            ))}
+                        </tbody>
       <tfoot>
         <tr>
           <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
@@ -110,7 +131,8 @@ export const  Twilltape = (props: TwilltapeProps) => {
           </td>
         </tr>
       </tfoot>
-    </table>
+      </table>
+            ))}
   </Card>
   );
 };
