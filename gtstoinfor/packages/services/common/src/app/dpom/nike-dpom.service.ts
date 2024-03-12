@@ -298,9 +298,10 @@ export class DpomService {
             entities.push(entity)
         }
         const save = await this.coLineRepository.save(entities);
-        if (save) {
+        if (save.length) {
             for (const saved of save) {
-                await this.updateCOLineStatus({ poNumber: saved.buyerPo, poLineItemNumber: req.lineItemNo, coLineStatus: 'Open' })
+                console.log(saved.buyerPo)
+                await this.updateCOLineStatus({ poNumber: saved.buyerPo, poLineItemNumber: req.lineItemNo, status: 'Open' })
             }
             return new CommonResponseModel(true, 1, 'CO-Line request created successfully')
         } else {
@@ -603,8 +604,8 @@ export class DpomService {
                                 console.log(inputId)
                                 const input = await driver.wait(until.elementLocated(By.id(inputId)))
                                 if (!input) {
-                                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size/Color found' });
-                                    return new CommonResponseModel(false, 0, 'NO matching Size/Color found')
+                                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                                    return new CommonResponseModel(false, 0, 'NO matching Size found')
                                 }
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
@@ -838,7 +839,7 @@ export class DpomService {
                             dpomDiffObj.odVersion = dtoData.odVersion;
                             dpomDiffObj.fileId = save.id;
 
-                            if (dpomDiffObj.oldValue != dpomDiffObj.newValue) {
+                            if (dpomDiffObj.oldValue != dpomDiffObj.newValue && dpomDiffObj.newValue != null) {
                                 dpomDiffObjects.push(dpomDiffObj);
                             }
                         }
@@ -2867,10 +2868,8 @@ export class DpomService {
 
 
     async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
-        console.log(req, "reqq");
         try {
             const deletedItem = await this.coLineRepository.delete({ id: Number(req.id) });
-
             if (deletedItem && deletedItem.affected) {
                 return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
             } else {
