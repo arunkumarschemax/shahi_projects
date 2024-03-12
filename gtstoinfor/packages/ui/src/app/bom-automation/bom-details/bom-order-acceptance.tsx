@@ -1,10 +1,12 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import { BomItemReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, message } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, message } from "antd"
+import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
+const { RangePicker } = DatePicker
 
 const BomOrderAcceptance = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -22,7 +24,7 @@ const BomOrderAcceptance = () => {
     const [pageSize, setPageSize] = useState(1);
     const { Option } = Select;
     const [showModal, setShowModal] = useState<boolean>(false)
-
+    const createdAtValues = form.getFieldValue('createdAt');
     useEffect(() => {
 
         getOrderAcceptanceData()
@@ -77,6 +79,10 @@ const BomOrderAcceptance = () => {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
+        if (createdAtValues && createdAtValues.length >= 2) {
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD');
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD');
+        } 
         nikeService.getdpomDataForBom(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -153,7 +159,10 @@ const BomOrderAcceptance = () => {
         clearFilters();
         setSearchText('');
     };
+    const createdDateHandler = (val) => {
 
+
+    }
 
     const isActionButtonEnabled = (record) => {
         return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
@@ -305,7 +314,11 @@ const BomOrderAcceptance = () => {
                 form={form}
                 layout='vertical'>
                 <Row gutter={24}>
-
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                        <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
+                            <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
+                        </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
@@ -369,7 +382,7 @@ const BomOrderAcceptance = () => {
                 </Row>
             </Form>
 
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
                 <Table
                     columns={columns}
                     rowKey={record => record}
