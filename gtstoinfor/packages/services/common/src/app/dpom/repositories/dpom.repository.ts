@@ -793,6 +793,9 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.planningSeasonYear !== undefined) {
             query.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
         }
+        if (req.fromDate !== undefined) {
+            query.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+        }
         query.groupBy(`po_number , po_line_item_number`)
         return await query.getRawMany();
     }
