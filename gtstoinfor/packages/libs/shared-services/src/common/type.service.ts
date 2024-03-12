@@ -1,4 +1,4 @@
-import { TypeActivateReq, TypeReq, TypeResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, TypeActivateReq, TypeReq, TypeResponseModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class TypeService extends CommonAxiosService{
@@ -23,4 +23,8 @@ export class TypeService extends CommonAxiosService{
     async getAllActiveTypeInfo(): Promise<TypeResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllActiveTypeInfo")
     }
+
+   async getAllActiveTypeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllActiveTypeForCategory",req)
+  }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { TypeActivateReq, TypeReq, TypeResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, TypeActivateReq, TypeReq, TypeResponseModel } from "@project-management-system/shared-models";
 import { TypeService } from "./type.service";
 
 @ApiTags('Type')
@@ -59,6 +59,16 @@ export class TypeController {
             return await this.typeService.getAllActiveTypeInfo();
         } catch (error) {
             return this.applicationExceptionhandler.returnException(TypeResponseModel, error)
+        }
+    }
+
+    @Post('/getAllActiveTypeForCategory')
+    @ApiBody({type:CategoryIdRequest})
+    async getAllActiveTypeForCategory(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.typeService.getAllActiveTypeForCategory(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
 

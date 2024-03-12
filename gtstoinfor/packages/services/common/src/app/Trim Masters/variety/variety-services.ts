@@ -5,8 +5,9 @@ import { Console } from 'console';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { variety } from './variety-entity';
 import { VarietyAdapter } from './dto/variety-adapter';
-import { AllVarietysResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { AllVarietysResponseModel, CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { VarietyDTO } from './dto/variety-dto';
+import { M3TrimsCategoryMappingRepo } from '../../m3-trims/m3-trims-category-mapping.repo';
 
 @Injectable()
 export class varietyService{
@@ -15,6 +16,7 @@ export class varietyService{
 
         private varRepository: Repository<variety>,
         private varAdapter: VarietyAdapter,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
       ){}
 
       async getVarietyWithoutRelations(variety: string): Promise<variety>{
@@ -192,7 +194,19 @@ export class varietyService{
   }
 
 
+  async getAllActiveVarietyForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    try{
+        const data = await this.m3TrimsCategoryMappingRepo.getAllVarietyByCategory(req.categoryId)
+        if(data.status){
+            return new CommonResponseModel(true,1,'Data retrieved',data.data)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
 
+    } catch(err){
+        throw err
+    }
+}
 
 
     

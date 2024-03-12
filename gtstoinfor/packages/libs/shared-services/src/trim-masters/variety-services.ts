@@ -1,6 +1,7 @@
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
 import {
   AllVarietysResponseModel,
+  CategoryIdRequest,
   CommonResponseModel,
   VarietyDtos,
 } from "@project-management-system/shared-models";
@@ -30,5 +31,9 @@ export class VarietyService extends CommonAxiosService {
 
   async getActiveVarietyById(req:VarietyDtos): Promise<AllVarietysResponseModel> {
     return this.axiosPostCall(this.URL + "/getActiveVarietyById",req);
+  }
+
+  async getAllActiveVarietyForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    return this.axiosPostCall(this.URL + "/getAllActiveVarietyForCategory",req);
   }
 }

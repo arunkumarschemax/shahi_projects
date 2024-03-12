@@ -4,9 +4,10 @@ import { UomRequest } from './dto/uom.request';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { UomEntity } from './uom-entity';
 import { UomCategoryRequest } from './dto/uom-category-request';
-import { CommonResponseModel, UomIdRequest, UomInfoModel, UomResponse } from '@project-management-system/shared-models';
+import { CategoryIdRequest, CommonResponseModel, UomIdRequest, UomInfoModel, UomResponse } from '@project-management-system/shared-models';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { M3TrimsCategoryMappingRepo } from '../m3-trims/m3-trims-category-mapping.repo';
 
 
 @Injectable()
@@ -14,7 +15,8 @@ export class UomService {
     @InjectDataSource()
     private datasource: DataSource
     constructor(
-        private uomRepo : UomRepository
+        private uomRepo : UomRepository,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {
 
     }
@@ -150,6 +152,20 @@ export class UomService {
         }
       }
     
+      async getAllActiveUomForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            const data = await this.m3TrimsCategoryMappingRepo.getAllUomByCategory(req.categoryId)
+            let info = []
+            if(data.status){
+                return new CommonResponseModel(true,1,'Data retrieved',data.data)
+            } else{
+                return new CommonResponseModel(false,0,'No data found')
+            }
+    
+        } catch(err){
+            throw err
+        }
+    }
 
 
 

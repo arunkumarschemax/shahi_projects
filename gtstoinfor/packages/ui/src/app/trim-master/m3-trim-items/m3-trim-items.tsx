@@ -130,7 +130,7 @@ export function M3TrimItemsForm({props}) {
       getContents(mapData[0].trimId);
     }
     if (mapData[0]?.type === true) {
-      getTypes();
+      getTypes(mapData[0].trimId);
     }
     if (mapData[0]?.finish === true) {
       getFinishes(mapData[0].trimId);
@@ -145,10 +145,10 @@ export function M3TrimItemsForm({props}) {
       getThicks(mapData[0].trimId);
     }
     if (mapData[0]?.variety === true) {
-      getVarieties();
+      getVarieties(mapData[0].trimId);
     }
     if (mapData[0]?.uom === true) {
-      getUom();
+      getUom(mapData[0].trimId);
     }
     if (mapData[0]?.color === true) {
       getColors(mapData[0].trimId);
@@ -205,8 +205,8 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getTypes = () => {
-    typeService.getAllTypeInfo().then((res) => {
+  const getTypes = (val) => {
+    typeService.getAllActiveTypeForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setTypeData(res.data);
       }
@@ -245,8 +245,8 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getVarieties = () => {
-    varietyService.getAllVariety().then((res) => {
+  const getVarieties = (val) => {
+    varietyService.getAllActiveVarietyForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setVarietyData(res.data);
       }
@@ -261,8 +261,8 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getUom = () => {
-    uomService.getAllUoms().then((res) => {
+  const getUom = (val) => {
+    uomService.getAllActiveUomForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setUomData(res.data);
       }

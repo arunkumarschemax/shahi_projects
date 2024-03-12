@@ -2,7 +2,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { varietyService } from './variety-services';
-import { AllVarietysResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { AllVarietysResponseModel, CategoryIdRequest, CommonResponseModel } from '@project-management-system/shared-models';
 import { VarietyDTO } from './dto/variety-dto';
 
 @ApiTags('variety')
@@ -74,6 +74,15 @@ export class VarietyController {
         
     }
   
+    @Post('/getAllActiveVarietyForCategory')
+    @ApiBody({type:CategoryIdRequest})
+    async getAllActiveVarietyForCategory(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.varietyservice.getAllActiveVarietyForCategory(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
    
 
     

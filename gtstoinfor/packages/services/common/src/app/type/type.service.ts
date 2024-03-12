@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 
 import { TypeRepository } from "./type.repo";
-import { TypeReq, TypeResponseModel, TypeModel, TypeActivateReq } from "@project-management-system/shared-models";
+import { TypeReq, TypeResponseModel, TypeModel, TypeActivateReq, CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { Type } from "./type.entity";
+import { M3TrimsCategoryMappingRepo } from "../m3-trims/m3-trims-category-mapping.repo";
 
 
 
 @Injectable()
 export class TypeService {
     constructor(
-        private repo : TypeRepository
+        private repo : TypeRepository,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) { }
 
     async createType(req: TypeReq,isUpdate:boolean) : Promise<TypeResponseModel>{
@@ -163,4 +165,18 @@ async getTypeById(typeId: number): Promise<Type> {
             throw err
         }
    }
+   async getAllActiveTypeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+    try{
+        const data = await this.m3TrimsCategoryMappingRepo.getAllTypeByCategory(req.categoryId)
+        let info = []
+        if(data.status){
+            return new CommonResponseModel(true,1,'Data retrieved',data.data)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
+
+    } catch(err){
+        throw err
+    }
+}
 }

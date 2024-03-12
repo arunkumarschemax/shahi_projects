@@ -183,4 +183,67 @@ export class M3TrimsCategoryMappingRepo extends Repository<CategoryMappingEntity
           }
     }
 
+    async getAllTypeByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.type_id AS typeId, f.type AS type from category_mapping cm left join type f on f.type_id = cm.type_id where trim_category =`+req+` and cm.type_id IS NOT NULL order by f.type ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllUomByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.uom_id AS uomId, f.uom AS uom from category_mapping cm left join uom f on f.id = cm.uom_id where trim_category =`+req+` and cm.uom_id IS NOT NULL order by f.uom ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllVarietyByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.variety_id AS uomId, f.variety AS variety from category_mapping cm left join variety f on f.variety_id = cm.variety_id where trim_category =`+req+` and cm.variety_id IS NOT NULL order by f.variety ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
 }
