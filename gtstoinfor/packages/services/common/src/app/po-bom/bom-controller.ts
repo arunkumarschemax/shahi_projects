@@ -311,4 +311,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
         }
     }
+
+    @Post('/getSizeStrip')
+    async getSizeStrip(@Body() req:any): Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getSizeStrip(req)
+        }
+        catch(error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
+    }
 }
