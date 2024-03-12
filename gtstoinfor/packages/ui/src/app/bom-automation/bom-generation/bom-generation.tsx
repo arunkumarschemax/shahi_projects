@@ -38,7 +38,8 @@ export default function BomGeneration(props: Props) {
     const [updatedData, setUpdatedData] = useState<any>([])
     const [selectedData, setSelectedData] = useState<any[]>()
     const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
-
+    const [planSesCode, setPlanSesCode] = useState<any>([]);
+    const [planSesYear, setPlanSesYear] = useState<any>([]);
     const bomService = new BomService()
     useEffect(() => {
         // getData();
@@ -62,6 +63,12 @@ export default function BomGeneration(props: Props) {
         }
         if (form.getFieldValue('geoCode') !== undefined) {
             req.geoCode = form.getFieldValue('geoCode');
+        }
+        if (form.getFieldValue('planningSeasonCode') !== undefined) {
+            req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+        }
+        if (form.getFieldValue('planningSeasonYear') !== undefined) {
+            req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
         req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
         req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
@@ -101,6 +108,17 @@ export default function BomGeneration(props: Props) {
         })
     }
 
+    const getSesonYear = () => {
+        service.getPpmPlanningSeasonYearFactory().then(res => {
+            setPlanSesYear(res.data)
+        })
+    }
+
+    const getSesonCode = () => {
+        service.getPpmPlanningSeasonCodeFactory().then(res => {
+            setPlanSesCode(res.data)
+        })
+    }
     const getGeoCode = () => {
         service.getPpmdesGeoCodeFactory().then(res => {
             setGeoCode(res.data)
@@ -243,7 +261,6 @@ export default function BomGeneration(props: Props) {
         return undefined
     }
 
-  
 
     function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
@@ -264,7 +281,7 @@ export default function BomGeneration(props: Props) {
         if(isItemNoNull){
             notification.info({message : `Please update ItemNo for all the selected PO's`,placement:'topRight'})
             return
-        }
+        } 
         setSelectedRowKeys(newSelectedRowKeys);
         setSelectedData(selectedRows)
         props.sendSelectedData(selectedRows)
@@ -374,9 +391,43 @@ export default function BomGeneration(props: Props) {
                                 placeholder="Select Geo Code"
                                 optionFilterProp="children"
                                 allowClear
-                            >
+                        >
                                 {geoCode?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                            <Select
+                                showSearch
+                                onDropdownVisibleChange={getSesonCode}
+
+                                placeholder="Select Planning Season Code"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesCode?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                            <Select
+                                showSearch
+                               onDropdownVisibleChange={ getSesonYear}
+
+                                placeholder="Select Planning Season Year"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesYear?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
                                 })
                                 }
                             </Select>

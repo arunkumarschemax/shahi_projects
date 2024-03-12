@@ -1067,6 +1067,12 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.poLine !== undefined) {
             distinctSizesQuery.andWhere(`dpom.po_and_line IN (:...poLine)`, { poLine: req.poLine })
         }
+        if (req.planningSeasonCode !== undefined) {
+            distinctSizesQuery.andWhere(`planning_season_code ='${req.planningSeasonCode}'`)
+        }
+        if (req.planningSeasonYear !== undefined) {
+            distinctSizesQuery.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
+        }
 
         const distinctSizes = await distinctSizesQuery.getRawMany();
 
