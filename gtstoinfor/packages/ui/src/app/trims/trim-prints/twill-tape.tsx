@@ -79,7 +79,7 @@ export const  Twilltape = (props: TwilltapeProps) => {
 
   
   return (
-    
+    <div id='print'>
     <Card title={'TWILL TAPE'} extra={<Button onClick={handlePrint}>Print</Button>}>
     {groupedData.map((group, groupIndex) => (
     <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%'}} border={1} cellSpacing="0" cellPadding='0'>
@@ -134,6 +134,7 @@ export const  Twilltape = (props: TwilltapeProps) => {
       </table>
             ))}
   </Card>
+  </div>
   );
 };
 

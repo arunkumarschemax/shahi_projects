@@ -75,7 +75,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
         <div  id='print'>
  <Card title={'BACKING PAPER'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                <tr>
+               <thead>                <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
                     <th style={{ width: '3%' }}>STYLE#</th>
                     <th style={{ width: '3%' }}>TRIM</th>
@@ -86,21 +86,23 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                     <th style={{ width: '3%' }}>INTERLINING CLR</th>
                     <th style={{ width: '3%' }}>REQ</th>
                     </tr>
+                  </thead>
+
                     <tbody>
                         {data?.map((rec,index) =>{
                       console.log(data,"LLLLLLLLLLLLLL");
                       
                         return(
                             <tr>
-                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.trim !== null ? rec.trim:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.use !== null ? rec.use:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.trim !== null ? rec.trim:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.imCode !== null ? rec.imCode:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.description !== null ? rec.description:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.use !== null ? rec.use:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
                          </tr>
                         )
                       
