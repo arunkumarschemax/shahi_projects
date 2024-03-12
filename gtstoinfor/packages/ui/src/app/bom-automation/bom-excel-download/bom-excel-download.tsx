@@ -1,7 +1,7 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { BomCreationFiltersReq, BomExcelreq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Alert, Button, Card, Form, Row, Select, Table } from 'antd';
+import { Alert, Badge, Button, Card, Form, Row, Select, Table } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,9 +17,9 @@ export const BomExcelDownload = () => {
     const [excelData, setExcelData] = useState<any[]>([]);
     const Service = new BomService();
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
-    const [style, setStyle] = useState<any[]>([]); 
-    const [geoCode, setGeoCode] = useState<any[]>([]); 
-    
+    const [style, setStyle] = useState<any[]>([]);
+    const [geoCode, setGeoCode] = useState<any[]>([]);
+
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -42,10 +42,10 @@ export const BomExcelDownload = () => {
         Service.getbomExcel(req).then(res => {
             if (res.status) {
                 setData(res.data);
-             
+
             } else {
                 setData([]);
-                
+
 
             }
         }).catch(err => console.log(err.message));
@@ -69,7 +69,7 @@ export const BomExcelDownload = () => {
         })
     }
 
-    
+
     // const getBom = (selectedRowKeys)=>{
     //     const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
     //         const updateRequests = selectedRecords.map((record) => {
@@ -168,9 +168,9 @@ export const BomExcelDownload = () => {
 
     const excelColumns = [
         { title: 'S No', dataIndex: 'sNo', render: (text: any, object: any, index: any) => index + 1 },
-        { title: 'Bom Id', dataIndex: 'bom_id',  },
-        { title: 'Bom Qty', dataIndex: 'bom_qty',  },
-        { title: 'Item Code', dataIndex: 'im_code',   },
+        { title: 'Bom Id', dataIndex: 'bom_id', },
+        { title: 'Bom Qty', dataIndex: 'bom_qty', },
+        { title: 'Item Code', dataIndex: 'im_code', },
     ];
 
     const exportExcel = (data: any) => {
@@ -187,19 +187,20 @@ export const BomExcelDownload = () => {
 
 
     return (
-        <Card title='Style BOM ' extra={
-            <Button type="default"
-            style={{ color: "green" }}
-            onClick={() => getBom()}
-            icon={<FileExcelFilled />}
-        >
-            Download Excel
-        </Button>
-        }>
-            <Form onFinish={getBomExcel} form={form} layout='vertical'>
+        <Badge.Ribbon text="Under development">
+            <Card   title='Style BOM ' extra={
+                <Button type="default"
+                    style={{ color: "green" }}
+                    onClick={() => getBom()}
+                    icon={<FileExcelFilled />}
+                >
+                    Download Excel
+                </Button>
+            }>
+                <Form disabled onFinish={getBomExcel} form={form} layout='vertical'>
                     <Row gutter={24}>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
                             <Form.Item name='style' label='Style Number' >
                                 <Select
                                     showSearch
@@ -214,34 +215,34 @@ export const BomExcelDownload = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
                             <Form.Item name='geo_code' label='Geo Code'>
-                            <Select
-                                showSearch
-                                placeholder="Select Geo Code"
-                                allowClear
-                            >
-                                {
-                                    geoCode?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
-                                    })
+                                <Select
+                                    showSearch
+                                    placeholder="Select Geo Code"
+                                    allowClear
+                                >
+                                    {
+                                        geoCode?.map((inc: any) => {
+                                            return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
+                                        })
                                     }
                                 </Select>
                             </Form.Item>
                         </Col>
-                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                         <Col>
-                            <Button type='primary' htmlType="submit" style={{ marginTop: '22px',backgroundColor:"green" }} icon={<SearchOutlined/>}>Search</Button>
+                            <Button type='primary' htmlType="submit" style={{ marginTop: '22px', backgroundColor: "green" }} icon={<SearchOutlined />}>Search</Button>
                         </Col>
-                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;
                         <Col >
-                            <Button onClick={onReset} type='primary' icon={<UndoOutlined />} style={{ marginTop: '22px',backgroundColor:"red" }}>Reset</Button>
+                            <Button onClick={onReset} type='primary' icon={<UndoOutlined />} style={{ marginTop: '22px', backgroundColor: "red" }}>Reset</Button>
                         </Col>
                     </Row>
                 </Form>
-            
-            {/* <Row justify={'end'}>
+
+                {/* <Row justify={'end'}>
                 <Button type="default"
                     style={{ color: "green" }}
                     onClick={() => getBom()}
@@ -250,21 +251,22 @@ export const BomExcelDownload = () => {
                     Download Excel
                 </Button>
             </Row> */}
-            <Table className="custom-table-wrapper"
-                // rowKey={(rowData) => rowData.dpom_id}
-                rowSelection={rowSelection}
-                rowKey={record => record.dpom_id}
-                columns={columns} dataSource={data} size='small'
-                bordered
-                pagination={{
-                    pageSize: 10,
-                    onChange(current, pageSize) {
-                        setPage(current);
-                        setPageSize(pageSize);
-                    }
-                }}
-            />
-        </Card>
+                <Table  className="custom-table-wrapper"
+                    // rowKey={(rowData) => rowData.dpom_id}
+                    rowSelection={rowSelection}
+                    rowKey={record => record.dpom_id}
+                    columns={columns} dataSource={data} size='small'
+                    bordered
+                    pagination={{
+                        pageSize: 10,
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        }
+                    }}
+                />
+            </Card>
+        </Badge.Ribbon>
     )
 }
 

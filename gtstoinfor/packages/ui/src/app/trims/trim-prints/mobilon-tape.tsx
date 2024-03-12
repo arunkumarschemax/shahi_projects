@@ -100,14 +100,14 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
             </tr>
           ))}
         </tbody>
-        {/* <tfoot>
+        <tfoot>
           <tr>
             <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
             <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
               {calculateTotalBomQty(data)}
             </td>
           </tr>
-        </tfoot> */}
+        </tfoot>
       </table>
     </Card>
     );

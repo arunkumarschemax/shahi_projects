@@ -303,7 +303,6 @@ export default function BomGeneration(props: Props) {
     ]
 
     function onReset() {
-        console.log('reset called')
         setFilterData([])
         setSelectedData([])
         setChangedSizes([])

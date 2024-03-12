@@ -71,6 +71,7 @@ import Drawcord from "./trims/trim-prints/drawcord"
 import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
 import Elastic from "./trims/trim-prints/elastic-print"
 import Mobilontape from "./trims/trim-prints/mobilon-tape"
+import Twilltape from "./trims/trim-prints/twill-tape"
 import CountryStickerPrint from "./trims/trim-prints/country-sticker"
 
 
@@ -212,6 +213,7 @@ export const AppRoutes = () => {
                     <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} />
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
                     <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
+                    <Route path='twilltape' element={<Twilltape bomInfo={[]} />} />
 
                     
                 </Route>
