@@ -60,7 +60,17 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                 printWindow.close();
             }, 1000); // Add a delay to ensure all content is loaded
         }
-   }
+   };
+   const tableCellStyle = {
+    padding: '8px',
+ };
+     
+   const calculateTotalBomQty = (data) => {
+    return data.reduce((total, item) => {
+      const bomQty = Number(item?.bomQty) || 0;
+      return total + bomQty;
+    }, 0);
+  };
     return (
         <div  id='print'>
  <Card title={'BACKING PAPER'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
@@ -76,7 +86,8 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                     <th style={{ width: '3%' }}>INTERLINING CLR</th>
                     <th style={{ width: '3%' }}>REQ</th>
                     </tr>
-                    {data?.map((rec,index) =>{
+                    <tbody>
+                        {data?.map((rec,index) =>{
                       console.log(data,"LLLLLLLLLLLLLL");
                       
                         return(
@@ -94,7 +105,16 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                         )
                       
                     })}
-               
+                    </tbody>
+
+               <tfoot>
+          <tr>
+            <td colSpan={8} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+              {calculateTotalBomQty(data)}
+            </td>
+          </tr>
+        </tfoot>
             </table>
         </Card>
         </div>
