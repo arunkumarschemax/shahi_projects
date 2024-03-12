@@ -94,7 +94,7 @@ const NeckType = (props) => {
       
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px'}}>
-          <h3>Item No: {itemNo}</h3>
+          {/* <h3>Item No: {itemNo}</h3> */}
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}
