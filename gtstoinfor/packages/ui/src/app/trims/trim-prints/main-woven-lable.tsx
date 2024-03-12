@@ -135,27 +135,35 @@ const MainWovenLabel = (props) => {
         <>
           {/* SizeWiseQty */}
           {groupedData.sizeWiseQty.length > 0 && (
-            <div style={{ marginBottom: '20px' }}>
-              <table
-                style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-                border={1}
-                cellSpacing="0"
-                cellPadding="0"
-              >
-                <thead>
-                  <tr>
-                    <th style={tableCellStyle}>ITEM</th>
-                    <th style={tableCellStyle}>STYLE</th>
-                    <th style={tableCellStyle}>SEASON</th>
-                    <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-                    {generateSizeHeaders(getUniqueSizes(groupedData.sizeWiseQty))}
-                  </tr>
-                </thead>
-                <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
-              </table>
-            </div>
-          )}
-  
+  <div style={{ marginBottom: '20px' }}>
+    <table
+      style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+      border={1}
+      cellSpacing="0"
+      cellPadding="0"
+    >
+      <thead>
+        <tr>
+          <th style={tableCellStyle}>ITEM</th>
+          <th style={tableCellStyle}>STYLE</th>
+          <th style={tableCellStyle}>SEASON</th>
+          <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+          {getUniqueSizes(groupedData.sizeWiseQty).map((size: string) => {
+            console.log("Size:", size); 
+            return (
+              <th key={size} style={tableCellStyle}>
+                {size}
+              </th>
+            );
+          })}
+          <th style={tableCellStyle}>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
+    </table>
+  </div>
+)}
+
           {/* TsizeWiseqty */}
           {groupedData.TsizeWiseqty.length > 0 && (
             <div style={{ marginBottom: '20px' }}>
@@ -213,8 +221,7 @@ const MainWovenLabel = (props) => {
   
     return null;
   };
-  
-const generateRows = (bomInfo) => {
+  const generateRows = (bomInfo) => {
     if (!bomInfo || bomInfo.length === 0) {
       return null;
     }
@@ -223,25 +230,62 @@ const generateRows = (bomInfo) => {
       new Set(data.flatMap((item) => item.sizeWiseQty.map((sizeItem) => sizeItem.size)))
     );
   
-    return data.map((item, index) => (
-      <tr key={item.itemNo || index}>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-        {allSizes.map((size) => {
-          const sizeItem = item.sizeWiseQty.find((s) => s.size === size);
-          console.log(sizeItem,"sizeItem++++++++++++++++++++++++++")
-          return (
-            <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
-              {sizeItem ? sizeItem.qty : 0}
-            </td>
-          );
-        })}
-      </tr>
-    ));
-
+    return data.map((item, index) => {
+      let rowTotal = 0; // Initialize row total
+  
+      const row = (
+        <tr key={item.itemNo || index}>
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+          {allSizes.map((size) => {
+            const sizeItem = item.sizeWiseQty.find((s) => s.size === size);
+            const qty = sizeItem ? sizeItem.qty : 0;
+            rowTotal += qty; // Accumulate row total
+            return (
+              <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
+                {qty}
+              </td>
+            );
+          })}
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{rowTotal}</td> {/* Display row total */}
+        </tr>
+      );
+  
+      return row;
+    });
   };
+  
+  
+// const generateRows = (bomInfo) => {
+//     if (!bomInfo || bomInfo.length === 0) {
+//       return null;
+//     }
+  
+//     const allSizes = Array.from(
+//       new Set(data.flatMap((item) => item.sizeWiseQty.map((sizeItem) => sizeItem.size)))
+//     );
+  
+//     return data.map((item, index) => (
+//       <tr key={item.itemNo || index}>
+//         <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
+//         <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+//         <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
+//         <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+//         {allSizes.map((size) => {
+//           const sizeItem = item.sizeWiseQty.find((s) => s.size === size);
+//           console.log(sizeItem,"sizeItem++++++++++++++++++++++++++")
+//           return (
+//             <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
+//               {sizeItem ? sizeItem.qty : 0}
+//             </td>
+//           );
+//         })}
+//       </tr>
+//     ));
+
+//   };
   
 
   return (
