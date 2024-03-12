@@ -220,7 +220,7 @@ export const CkAddressView = () => {
           .saveAs('ck_Address.xlsx');
       }
     return(
-        <Card title='Ck Address' extra={<Link to='/pvh/masters/ck-address/ck-address-excel-upload' >
+        <Card title='CK Address' extra={<Link to='/pvh/masters/ck-address/ck-address-excel-upload' >
         <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
         </Link>}>
             <Row justify={'end'}>

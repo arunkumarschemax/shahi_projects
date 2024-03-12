@@ -113,7 +113,7 @@ export const CkAddressUpload = () => {
           }
       }
     return(
-        <Card title='Ck Address' extra={<Link to='/pvh/masters/ck-address/ck-address-view' >
+        <Card title='CK Address' extra={<Link to='/pvh/masters/ck-address/ck-address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>

@@ -220,7 +220,7 @@ export const GapAddressView = () => {
           .saveAs('Gap_Address.xlsx');
       }
     return(
-        <Card title='Gap Address' extra={<Link to='/pvh/masters/gap-address/gap-address-excel-upload' >
+        <Card title='GAP Address' extra={<Link to='/pvh/masters/gap-address/gap-address-excel-upload' >
         <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
         </Link>}>
             <Row justify={'end'}>
