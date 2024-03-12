@@ -138,7 +138,7 @@ export const GapAddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/pvh/masters/gap-address/gap-address-view' >
+        <Card title='Gap Address' extra={<Link to='/pvh/masters/gap-address/gap-address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>
