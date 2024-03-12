@@ -83,7 +83,8 @@ export default function GenerateProposal(props: Props) {
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
-    
+    "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
+
   }
 
 
