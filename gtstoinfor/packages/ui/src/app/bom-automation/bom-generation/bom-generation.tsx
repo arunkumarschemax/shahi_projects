@@ -351,59 +351,36 @@ export default function BomGeneration(props: Props) {
           
             {
                 title: 'PO + Line',
-                dataIndex: 'po_and_line',
-                width: 80,
-                ...getColumnSearchProps('po_and_line')
+                dataIndex: 'poLine',
+               
             },
             {
                 title: 'Bom Item',
-                dataIndex: 'bom_item', width: 80,
+                dataIndex: 'item',
             },
             {
                 title: 'Style',
-                dataIndex: 'style_number', width: 80,
+                dataIndex: 'styleNumber',
             },
            
             {
-                title: 'Product Code',
-                dataIndex: 'product_code', width: 80,
+                title: 'Geo Code',
+                dataIndex: 'geoCode',
             },
-            {
-                title: 'Color Description',
-                dataIndex: 'color_desc', width: 80,
-            },
-            {
-                title: 'Destination Country Code',
-                dataIndex: 'destination_country_code', width: 75,
-            },
-            {
+          {
                 title: 'Destination Country',
-                dataIndex: 'destination_country', width: 75,
+                dataIndex: 'destinationCountry'
             },
          
             {
                 title: ' Season Code',
-                dataIndex: 'planning_season_code',
-                align: 'center', width: 70,
+                dataIndex: 'planningSeasonCode',
+               
             },
             {
                 title: ' Season Year',
-                dataIndex: 'planning_season_year', width: 70,
-                align: 'center',
+                dataIndex: 'planningSeasonYear'
             },
-            {
-                title: 'Category',
-                dataIndex: 'category_desc',
-                width: 80,
-            },
-            {
-                title: 'Total Item Qty',
-                dataIndex: 'total_item_qty', width: 70,
-                align: 'right',
-                render: (text) => <strong>{text}</strong>
-            },
-            
-    
         ]
     
     
@@ -412,7 +389,7 @@ export default function BomGeneration(props: Props) {
         excel.addRow();
         excel.addColumns(exportingColumns);
         excel.addDataSource(filterData);
-        excel.saveAs(`Order-acceptance-${currentDate}.xlsx`);
+        excel.saveAs(`Generate-proposal-${currentDate}.xlsx`);
       }
 
 
