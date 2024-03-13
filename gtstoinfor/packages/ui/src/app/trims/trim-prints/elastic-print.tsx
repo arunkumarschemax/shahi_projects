@@ -75,6 +75,7 @@ export const Elastic = (props: Elasticprops) => {
         }
         return null;
       };
+
       const calculateTotalBomQty = (data) => {
         return data.reduce((total, item) => {
           const bomQtys = item?.colors.map(color => Number(color?.reqqty)) || [];
@@ -113,23 +114,25 @@ export const Elastic = (props: Elasticprops) => {
                     <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                       {item.imCode}
                     </td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                BSS/ K.R./126-NIKE-48mm knitted elastic
-                </td>
+                    
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                    BSS/ K.R./126-NIKE-48mm knitted elastic
+                    </td>
+
                     <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                       {item.description}
                     </td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.consumption}
-                </td>
+
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.consumption}
+                    </td>
                   </>
                 )}
+                
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>
-            { item.colors[0]?.reqqty} 
-          </td>  
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{ item.colors[0]?.reqqty} </td>  
               </tr>
             ))}
           </React.Fragment>
@@ -176,7 +179,7 @@ export const Elastic = (props: Elasticprops) => {
     return (
         <div id='print'>
                   {bomInfo && bomInfo.length > 0 ? (
-            <Card title={'Elastic'}
+            <Card title={'ELASTIC'}
                 extra={<Button onClick={handlePrint}>Print</Button>} >
                     {generateTables()}
             </Card>
