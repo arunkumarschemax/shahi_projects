@@ -148,4 +148,5 @@ export class UpdateBomITemNoFilters{
     poLine : string []
     planningSeasonCode:string;
     planningSeasonYear:string
+    itemStatus:string
 }

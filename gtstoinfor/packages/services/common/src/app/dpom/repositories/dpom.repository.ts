@@ -783,7 +783,7 @@ export class DpomRepository extends Repository<DpomEntity> {
          ship_to_address_dia,
          actual_unit,allocated_quantity
         ,size_description,size_qty,trading_co_po_no,hanger,legal_po_qty,geo_code, co_line_status`)
-            .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' AND bom_item IS NULL `)
+            .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled'`)
         if (req.styleNo !== undefined) {
             query.andWhere(`style_number IN (:...styleNo)`, { styleNo: req.styleNo })
         }
@@ -796,6 +796,14 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.fromDate !== undefined) {
             query.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
         }
+        if (req.itemStatus !== undefined) {
+            if (req.itemStatus === "null") {
+                query.andWhere(`bom_item IS NULL`);
+            } 
+            if (req.itemStatus === "Updated") {
+                query.andWhere(`bom_item IS NOT NULL`);
+             }
+           }
         query.groupBy(`po_number , po_line_item_number`)
         return await query.getRawMany();
     }
