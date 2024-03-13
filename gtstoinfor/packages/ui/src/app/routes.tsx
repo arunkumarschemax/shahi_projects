@@ -95,6 +95,7 @@ import GapAddressUpload from "./masters/gap-address/gap-address-excel-upload"
 import GapAddressView from "./masters/gap-address/gap-address-view"
 import CkAddressUpload from "./masters/ck-address/ck-address-excel-upload"
 import CkAddressView from "./masters/ck-address/ck-address-view"
+import PvhPdfUpload from "./pvh/pdf-upload"
 
 
 export const AppRoutes = () => {
@@ -334,6 +335,8 @@ export const AppRoutes = () => {
                     <Route path='masters/gap-address/gap-address-view' key='/address/address-view' element={<GapAddressView />} />
                     <Route path='masters/ck-address/ck-address-excel-upload' key='/address/address-excel-upload' element={<CkAddressUpload />} />
                     <Route path='masters/ck-address/ck-address-view' key='/address/address-view' element={<CkAddressView />} />
+                    <Route path='pvh-pdf-upload' element={<PvhPdfUpload />} />
+
 
 
                 </Route>
