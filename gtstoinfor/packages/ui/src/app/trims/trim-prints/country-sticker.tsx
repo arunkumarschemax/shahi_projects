@@ -264,7 +264,7 @@ const CountryStickerPrint = (props:countryProps) => {
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'right' }}>{item.bomQty}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.bomQty}</td>
           </>
         )}
         {index !== 0 && (
@@ -272,7 +272,7 @@ const CountryStickerPrint = (props:countryProps) => {
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'right' }}>{item.bomQty}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.bomQty}</td>
           </>
         )}
       </tr>

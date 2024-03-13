@@ -251,6 +251,10 @@ export default function BomGeneration(props: Props) {
             title : "Year",
             dataIndex: 'planningSeasonYear'
         },
+        {
+            title : "Product Code",
+            dataIndex: 'productCode'
+        },
         
     ]
 
@@ -393,6 +397,10 @@ export default function BomGeneration(props: Props) {
             {
                 title: ' Season Year',
                 dataIndex: 'planningSeasonYear'
+            },
+            {
+                title : "Product Code",
+                dataIndex: 'productCode'
             },
         ]
     

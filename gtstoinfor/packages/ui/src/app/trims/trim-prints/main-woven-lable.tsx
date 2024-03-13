@@ -109,8 +109,16 @@ const MainWovenLabel = (props) => {
   
   // Usage
   const uniqueData = removeDuplicateItems(data);
-  
 
+  const calculateTotalBomQty = (data) => {
+    return data.reduce((total, item) => {
+      const bomQty = Number(item?.bomQty) || 0;
+      return total + bomQty;
+    }, 0);
+  };
+
+
+  
   const generateTables = () => {
     const groupedData = groupDataBySize();
   
@@ -131,6 +139,19 @@ const MainWovenLabel = (props) => {
     
     
     if (groupedData) {
+      
+      const allSizes = Array.from(
+        new Set(data.flatMap((item) => item.sizeWiseQty.map((sizeItem) => sizeItem.size)))
+      ); 
+
+      const calculateTotalQtyForSize = (size) => {
+        return groupedData.sizeWiseQty.reduce((total, sizeItem) => {
+          if (sizeItem.size === size) {
+            return total + sizeItem.qty;
+          }
+          return total;
+        }, 0);
+      };
       return (
         <>
           {/* SizeWiseQty */}
@@ -148,18 +169,29 @@ const MainWovenLabel = (props) => {
           <th style={tableCellStyle}>STYLE</th>
           <th style={tableCellStyle}>SEASON</th>
           <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-          {getUniqueSizes(groupedData.sizeWiseQty).map((size: string) => {
-            console.log("Size:", size); 
-            return (
-              <th key={size} style={tableCellStyle}>
-                {size}
-              </th>
-            );
-          })}
+          {allSizes.map((size, index) => (
+            <th key={index} style={{ ...tableCellStyle, textAlign: 'center' }}>
+              {size}
+            </th>
+          ))}
+       
           <th style={tableCellStyle}>TOTAL</th>
         </tr>
       </thead>
       <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
+      <tfoot>
+      <tr>
+                <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+                {allSizes.map((size, index) => (
+                  <td key={index} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+                    {calculateTotalQtyForSize(size)}
+                  </td>
+                ))}
+          <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+            {calculateTotalBomQty(data)}
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 )}
@@ -284,6 +316,8 @@ const generateRows = (bomInfo) => {
             </td>
           );
         })}
+        <td style={{ ...tableCellStyle, textAlign: 'center',fontWeight:"bold" }}>{item.bomQty}</td>
+
       </tr>
     ));
 
