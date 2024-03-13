@@ -22,6 +22,8 @@ import { BomEntity } from './po-bom/entittes/bom-entity';
 import { StyleComboEntity } from './po-bom/entittes/style-combo-entity';
 import { ItemEntity } from './po-bom/entittes/item-entity';
 import { PoBomEntity } from './po-bom/entittes/po-bom.entity';
+import { ThreadQtyModule } from './thread-qty/thread-qty.module';
+import { ThreadSupplierModule } from './thread-supplier/thread-supplier.module';
 
 
 @Module({
@@ -47,7 +49,7 @@ import { PoBomEntity } from './po-bom/entittes/po-bom.entity';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule,ThreadQtyModule,ThreadSupplierModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
