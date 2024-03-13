@@ -1097,7 +1097,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
         const query = this.createQueryBuilder('d')
             .select(`po_number as poNumber , po_line_item_number as poLineItemNumber ,po_and_line as poLine,LEFT(bom_item, 4) as item, style_number as styleNumber , planning_season_code as planningSeasonCode , planning_season_year as planningSeasonYear, geo_code as geoCode , destination_country_code as destinationCountryCode, gender_age_desc as genderAgeDesc,
-            destination_country as destinationCountry,plant,${columnsQuery}`)
+            destination_country as destinationCountry,plant,product_code as productCode,${columnsQuery}`)
             .where(`d.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
         if (req?.style !== undefined) {
             query.andWhere(`d.style_number IN (:...style)`, { style: req.style })
