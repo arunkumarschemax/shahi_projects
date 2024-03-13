@@ -281,6 +281,17 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
+  function handleBackingPaper(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setButtonData(v.data)
+      }
+    })
+  }
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -535,6 +546,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Size Strip'){
       handleSizeStrip(val.itemId)
     } 
+    if(val.item === 'Backing Paper'){
+      handleBackingPaper(val.itemId)
+    }
   }
 
 

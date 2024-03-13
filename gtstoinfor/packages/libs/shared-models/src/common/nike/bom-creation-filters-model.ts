@@ -1,31 +1,31 @@
-export class BomCreationFiltersReq{
-    style : string[]
-    item : string[]
-    geoCode: string []
-    fromDate : any
-    toDate : any
-    planningSeasonCode:string
-    planningSeasonYear:string
-    poLine : string []
-    productCode:string
+export class BomCreationFiltersReq {
+    style: string[]
+    item: string[]
+    geoCode: string[]
+    fromDate: any
+    toDate: any
+    planningSeasonCode: string
+    planningSeasonYear: string
+    poLine: string[]
+    productCode: string
 }
 
 export class UpdatedSizes {
-    poLine : string;
-    size : string;
-    qty : number;
+    poLine: string;
+    size: string;
+    qty: number;
 }
 
-export class UpdatedConsumptions{
-    itemId : number;
-    wastage : number;
-    moq : number;
-    consumption : number
+export class UpdatedConsumptions {
+    itemId: number;
+    wastage: number;
+    moq: number;
+    consumption: number
 }
 
 export class BomGenerationReq {
-    poLine : string[]
-    updatedSizes : UpdatedSizes[]
+    poLine: string[]
+    updatedSizes: UpdatedSizes[]
     updatedConsumptions: UpdatedConsumptions[]
 
 }
@@ -33,7 +33,7 @@ export class BomGenerationReq {
 export class BomProposalReq {
     poLine: string[]
     itemId: number[]
-    trimName?:string
+    trimName?: string
 }
 
 
@@ -51,7 +51,7 @@ export class PoDataForBomGenerationModel {
     year: string;
     qty: number;
     size: string;
-    gender : string
+    gender: string
 }
 
 export class BomDataForStyleAndSeasonModel {
@@ -89,41 +89,42 @@ export class BomProposalDataModel {
     season: string; // Add season property
     year: number; // Add year property
     size: string; // Add size property
-    itemNo : string
-    itemId : number
-    gender : string
-    poNumber : string
-    ogacDate : string
-    shipToNumber : string
-    combination?:string
-    primaryColor?:string
-    secondaryColor?:string
-    itemColor?:string
-    productCode?:string;
-    bomId ?: number;
-    styleCombo?:number;
-    totalGarmentQty ?:number;
-    attribute?:string
-    attributeValue?:string
-    bQty?:number
-    fabricContent?:string
-    fabricCode?:string
-    fabricCombination?:string
-    fit?:string
+    itemNo: string
+    itemId: number
+    gender: string
+    poNumber: string
+    ogacDate: string
+    shipToNumber: string
+    combination?: string
+    primaryColor?: string
+    secondaryColor?: string
+    itemColor?: string
+    productCode?: string;
+    bomId?: number;
+    styleCombo?: number;
+    totalGarmentQty?: number;
+    attribute?: string
+    attributeValue?: string
+    bQty?: number
+    fabricContent?: string
+    fabricCode?: string
+    fabricCombination?: string
+    fit?: string
+    sequence?: number
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
 
 }
 
-export class BomProposalModel{
-    imCode : string
-    item : string 
-    description : string
-    totalQty : number;
-    destination : string;
-    poNumber : string;
-    style : string
+export class BomProposalModel {
+    imCode: string
+    item: string
+    description: string
+    totalQty: number;
+    destination: string;
+    poNumber: string;
+    style: string
 }
 
 
@@ -135,8 +136,8 @@ export class BomExcelreq {
     imCode?: string;
     itemType?: string;
     itemId?: number;
-    pbId?:number
-    geoCode: string []
+    pbId?: number
+    geoCode: string[]
 
 }
 
