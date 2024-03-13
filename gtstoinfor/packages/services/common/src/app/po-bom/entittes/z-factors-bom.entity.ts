@@ -43,6 +43,12 @@ export class ZFactorsBomEntity {
     })
     size: string
 
+    @Column('int', {
+        nullable: true,
+        name: 'sequence',
+    })
+    sequence: number
+
     @Column('varchar', {
         nullable: true,
         name: 'style',
@@ -51,7 +57,7 @@ export class ZFactorsBomEntity {
 
     @CreateDateColumn({
         name: 'created_at',
-        nullable:true
+        nullable: true
     })
     createdAt: string;
 
@@ -64,7 +70,7 @@ export class ZFactorsBomEntity {
 
     @UpdateDateColumn({
         name: 'updated_at',
-        nullable:true
+        nullable: true
     })
     updatedAt: string;
 
@@ -89,9 +95,9 @@ export class ZFactorsBomEntity {
     isActive: boolean;
 
 
-    @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
-    poBom:PoBomEntity
-    
+    @OneToMany(type => PoBomEntity, poBom => poBom.bom)
+    poBom: PoBomEntity
+
     @ManyToOne(type => ZFactorsEntity, zfactor => zfactor.zFactorBom)
     @JoinColumn({ name: 'zfactor_id' })
     zFactors: ZFactorsEntity

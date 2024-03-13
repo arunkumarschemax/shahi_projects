@@ -453,9 +453,9 @@ export class BomService {
             // moq logic before insering
 
             for (const rec of poBomEntities) {
-                const isBomRecExist = await this.poBomRepo.checkIfBomGenerated( rec.dpom.id ,rec.bom ? rec.bom.id : null,rec.zFactorBom ? rec.zFactorBom.id : null)
+                const isBomRecExist = await this.poBomRepo.checkIfBomGenerated(rec.dpom.id, rec.bom ? rec.bom.id : null, rec.zFactorBom ? rec.zFactorBom.id : null)
                 console.log(isBomRecExist)
-                if(isBomRecExist) continue
+                if (isBomRecExist) continue
                 await transactionManager.getRepository(PoBomEntity).insert(rec)
 
             }
@@ -661,7 +661,8 @@ export class BomService {
 
         const poBomData = await this.poBomRepo.getProposalsData(req)
         const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        let data = [...poBomData, ...poBomZfactorData]
+        let sortData = [...poBomData, ...poBomZfactorData]
+        let data = sortData.sort((a, b) => a.sequence - b.sequence);
         const groupedData: any = data.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, ogacDate, shipToNumber } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
@@ -831,9 +832,7 @@ export class BomService {
             let key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
             if (req.trimName === 'Twill Tape') {
                 key += `-${season}`;
-                console.log(season,"seasonnnnnn")
             }
-            console.log(key,"keyyyyyy")
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -1279,16 +1278,16 @@ export class BomService {
     }
     async getMainWovenLableData(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-    
+
         const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-    
+
             let key = `${styleNumber}-${imCode}-${itemNo}-${season} `;
-    
+
             if (!result[key]) {
                 result[key] = {
                     styleNumber, imCode, itemNo, bomQty: 0, itemId,
@@ -1320,7 +1319,7 @@ export class BomService {
                     result[key].sizeWiseQty.push({ size, qty: bomQty });
                 }
             }
-    
+
             result[key].bomQty += bomQty;
             return result;
         }, {});
