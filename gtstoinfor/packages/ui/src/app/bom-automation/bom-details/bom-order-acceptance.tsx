@@ -179,7 +179,7 @@ const BomOrderAcceptance = () => {
             fixed: 'left'
         },
         {
-            title: 'PO Number and Line',
+            title: 'PO + Line',
             dataIndex: 'po_and_line',
             key: 'po_and_line',
             fixed: 'left',
@@ -213,11 +213,11 @@ const BomOrderAcceptance = () => {
             dataIndex: 'color_desc', width: 80,
         },
         {
-            title: 'Destination Country Code',
+            title: 'Country Code',
             dataIndex: 'destination_country_code', width: 75,
         },
         {
-            title: 'Destination Country',
+            title: 'Country',
             dataIndex: 'destination_country', width: 75,
         },
         // {
@@ -236,12 +236,12 @@ const BomOrderAcceptance = () => {
         //     },
         // },
         {
-            title: 'Planning Season Code',
+            title: 'Season Code',
             dataIndex: 'planning_season_code',
             align: 'center', width: 70,
         },
         {
-            title: 'Planning Season Year',
+            title: 'Year',
             dataIndex: 'planning_season_year', width: 70,
             align: 'center',
         },
@@ -325,7 +325,7 @@ const BomOrderAcceptance = () => {
         exportingColumns = [
           
             {
-                title: 'PO Number and Line',
+                title: 'PO + Line',
                 dataIndex: 'po_and_line',
                 width: 80,
                 ...getColumnSearchProps('po_and_line')
@@ -357,17 +357,17 @@ const BomOrderAcceptance = () => {
                 dataIndex: 'destination_country_code', width: 75,
             },
             {
-                title: 'Destination Country',
+                title: 'Country',
                 dataIndex: 'destination_country', width: 75,
             },
          
             {
-                title: 'Planning Season Code',
+                title: 'Season Code',
                 dataIndex: 'planning_season_code',
                 align: 'center', width: 70,
             },
             {
-                title: 'Planning Season Year',
+                title: 'Season Year',
                 dataIndex: 'planning_season_year', width: 70,
                 align: 'center',
             },
@@ -406,12 +406,12 @@ const BomOrderAcceptance = () => {
                 form={form}
                 layout='vertical'>
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
                         <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode="multiple"
@@ -427,11 +427,11 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonCode' label='Code' >
                             <Select
                                 showSearch
-                                placeholder="Select Planning Season Code"
+                                placeholder="Select Season Code"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -442,11 +442,11 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonYear' label='Season Year' >
                             <Select
                                 showSearch
-                                placeholder="Select Planning Season Year"
+                                placeholder="Select Season Year"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -457,15 +457,17 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }} >
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
-                            <Button style={{marginLeft:8}} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
-
-                        </Form.Item>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
+                        <Button htmlType="submit"
+                            icon={<SearchOutlined />}
+                            type="primary">Submit</Button>
                     </Col>
-                   
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
+                        <Button htmlType='button' icon={<UndoOutlined />} onClick={() => onReset()}>
+                            RESET
+                        </Button>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 2 }}  style={{ paddingTop: '23px' }}>
                         <Button onClick={openModeal} style={{
                             backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
                             color: selectedRowKeys.length > 0 ? "black" : "black",
