@@ -53,7 +53,7 @@ export function TrimUomForm(props: TrimUomFormProps) {
   };
 
   return (
-    <Card title={<span >Uom</span>} 
+    <Card title={<span >UOM</span>} 
     style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/trim-master/trim-uom/trim-uom-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}>   
       <Form.Item name="uomId" style={{display:"none"}} >
@@ -66,7 +66,7 @@ export function TrimUomForm(props: TrimUomFormProps) {
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
               <Form.Item
                   name="uom"
-                  label="Uom"
+                  label="UOM"
                   rules={[
                     {
                       required: true,
@@ -77,7 +77,7 @@ export function TrimUomForm(props: TrimUomFormProps) {
                       message: `Should contain only alphabets and numbers.`
                     }
                   ]}>
-                  <Input placeholder='Enter Uom'/>
+                  <Input placeholder='Enter UOM'/>
                 </Form.Item>
         </Col>
       </Row>

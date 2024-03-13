@@ -170,7 +170,7 @@ export function TrimUomGrid(props: TrimUomProps) {
       render: (text, object, index) => (page-1) * 10 +(index+1)
     },
     {
-      title: 'Uom',
+      title: 'UOM',
       dataIndex: 'uom',
       // responsive: ['lg'],
       sorter: (a, b) => a.uom.localeCompare(b.uom),
@@ -261,7 +261,7 @@ export function TrimUomGrid(props: TrimUomProps) {
     console.log('params', pagination, filters, sorter, extra);
   }
   return (
-    <Card title={<span >Uom</span>}
+    <Card title={<span >UOM</span>}
     style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
     extra={<Link to='/trim-master/trim-uom/trim-uom-form' >
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
@@ -270,7 +270,7 @@ export function TrimUomGrid(props: TrimUomProps) {
         <Row gutter={24}>
           <Col span={4}></Col>
           <Col span={5}>
-            <Alert type='success' message={'Total Uoms: ' + data.length} style={{fontSize:'15px'}} />
+            <Alert type='success' message={'Total UOM: ' + data.length} style={{fontSize:'15px'}} />
           </Col>
           <Col span={5}>
             <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
