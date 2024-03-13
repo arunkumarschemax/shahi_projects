@@ -1,8 +1,10 @@
-import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout'
 import { BomCreationFiltersReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdatedSizes, bomGenerationColumnsMapping } from '@project-management-system/shared-models';
 import { BomService, NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Table, message, notification } from 'antd'
+import { Excel } from 'antd-table-saveas-excel';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
@@ -228,6 +230,14 @@ export default function BomGeneration(props: Props) {
             title : "Plant",
             dataIndex: 'plant'
         },
+        {
+            title : "Season Code",
+            dataIndex: 'planningSeasonCode'
+        },
+        {
+            title : "Year",
+            dataIndex: 'planningSeasonYear'
+        },
         
     ]
 
@@ -326,10 +336,92 @@ export default function BomGeneration(props: Props) {
         setSelectedRowKeys([])
         form.resetFields()
     }
+    const handleExport = (e: any) => {
+        e.preventDefault();
+    
+    
+        const currentDate = new Date()
+          .toISOString()
+          .slice(0, 10)
+          .split("-")
+          .join("/");
+    
+        let exportingColumns: IExcelColumn[] = []
+        exportingColumns = [
+          
+            {
+                title: 'PO + Line',
+                dataIndex: 'po_and_line',
+                width: 80,
+                ...getColumnSearchProps('po_and_line')
+            },
+            {
+                title: 'Bom Item',
+                dataIndex: 'bom_item', width: 80,
+            },
+            {
+                title: 'Style',
+                dataIndex: 'style_number', width: 80,
+            },
+           
+            {
+                title: 'Product Code',
+                dataIndex: 'product_code', width: 80,
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'color_desc', width: 80,
+            },
+            {
+                title: 'Destination Country Code',
+                dataIndex: 'destination_country_code', width: 75,
+            },
+            {
+                title: 'Destination Country',
+                dataIndex: 'destination_country', width: 75,
+            },
+         
+            {
+                title: ' Season Code',
+                dataIndex: 'planning_season_code',
+                align: 'center', width: 70,
+            },
+            {
+                title: ' Season Year',
+                dataIndex: 'planning_season_year', width: 70,
+                align: 'center',
+            },
+            {
+                title: 'Category',
+                dataIndex: 'category_desc',
+                width: 80,
+            },
+            {
+                title: 'Total Item Qty',
+                dataIndex: 'total_item_qty', width: 70,
+                align: 'right',
+                render: (text) => <strong>{text}</strong>
+            },
+            
+    
+        ]
+    
+    
+        const excel = new Excel();
+        excel.addSheet("Sheet1");
+        excel.addRow();
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(filterData);
+        excel.saveAs(`Order-acceptance-${currentDate}.xlsx`);
+      }
 
 
     return (
-        <>
+        <> <Card headStyle={{ fontWeight: 'bold' }} extra={filterData.length > 0 ? <Button
+            type="default"
+            style={{ color: 'green' }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}>Download Excel</Button> : null}>
             <Form onFinish={getData}
                 form={form}
                 layout='vertical'
@@ -400,12 +492,12 @@ export default function BomGeneration(props: Props) {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                        <Form.Item name='planningSeasonCode' label=' Season' >
                             <Select
                                 showSearch
                                 onDropdownVisibleChange={getSesonCode}
 
-                                placeholder="Select Planning Season Code"
+                                placeholder=" Season Code"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -417,12 +509,12 @@ export default function BomGeneration(props: Props) {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                        <Form.Item name='planningSeasonYear' label='Year' >
                             <Select
                                 showSearch
                                onDropdownVisibleChange={ getSesonYear}
 
-                                placeholder="Select Planning Season Year"
+                                placeholder=" Year"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -479,6 +571,7 @@ export default function BomGeneration(props: Props) {
                 </Col> */}
             </Row>
             <br />
+            </Card>
 
         </>
     )

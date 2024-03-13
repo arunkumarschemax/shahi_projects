@@ -776,14 +776,14 @@ export class DpomRepository extends Repository<DpomEntity> {
         customer_order,plan_no,category_code,category_desc,
         vendor_code,gcc_focus_code,gcc_focus_desc,gender_age_code,gender_age_desc,destination_country_code,
         destination_country,plant,plant_name,direct_ship_so_item_no,
-        customer_po,planning_season_code,planning_season_year ,
+        customer_po,planning_season_code,planning_season_year ,bom_item,
          pcd, mrgac,ogac,truck_out_date,
          total_item_qty,actual_shipped_qty,
          legal_po_price,co_price,pcd,ship_to_address_legal_po,
          ship_to_address_dia,
          actual_unit,allocated_quantity
         ,size_description,size_qty,trading_co_po_no,hanger,legal_po_qty,geo_code, co_line_status`)
-            .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' and bom_item IS NULL`)
+            .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' AND bom_item IS NULL `)
         if (req.styleNo !== undefined) {
             query.andWhere(`style_number IN (:...styleNo)`, { styleNo: req.styleNo })
         }
