@@ -102,7 +102,7 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+            <td colSpan={6} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
             <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
               {calculateTotalBomQty(data)}
             </td>
