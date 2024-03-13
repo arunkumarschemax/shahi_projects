@@ -91,96 +91,129 @@ const MainWovenLabel = (props) => {
     return null;
   };
 
+  const removeDuplicateItems = (data) => {
+    const uniqueItems = [];
+    const uniqueItemSet = new Set();
+  
+    data.forEach((item) => {
+      const itemKey = `${item.styleNumber}-${item.imCode}-${item.itemNo}`;
+  
+      if (!uniqueItemSet.has(itemKey)) {
+        uniqueItemSet.add(itemKey);
+        uniqueItems.push(item);
+      }
+    });
+  
+    return uniqueItems;
+  };
+  
+  // Usage
+  const uniqueData = removeDuplicateItems(data);
+  
+
   const generateTables = () => {
     const groupedData = groupDataBySize();
-
+  
+    const getUniqueSizes = (data) => {
+      if (data && data.length > 0) {
+        return Array.from(new Set(data.flatMap((item) => (item.sizeWiseQty || []).map((sizeItem) => sizeItem.size))));
+      }
+      return [];
+    };
+ 
+    const generateSizeHeaders = (sizes) => (
+      sizes.map((size) => (
+        <th key={size} style={tableCellStyle}>
+          {size}
+        </th>
+      ))
+    );
+    
+    
     if (groupedData) {
       return (
         <>
           {/* SizeWiseQty */}
-          
           {groupedData.sizeWiseQty.length > 0 && (
-          <div style={{ marginBottom: '20px' }}>
-            <table
-              style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-              border={1}
-              cellSpacing="0"
-              cellPadding="0"
-            >
-              <thead>
-                <tr>
-                  <th style={tableCellStyle}>ITEM</th>
-                  <th style={tableCellStyle}>STYLE</th>
-                  <th style={tableCellStyle}>SEASON</th>
-                  <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-                  {groupedData.sizeWiseQty.map((sizeItem) => (
-                    <th key={sizeItem.size} style={tableCellStyle}>{sizeItem.size}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
-            </table>
-          </div>
-        )}
-          
-                    {groupedData.TsizeWiseqty.length > 0 && (
-  <div style={{ marginBottom: '20px' }}>
-    <h3>TsizeWiseqty</h3>
-    <table
-      style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-      border={1}
-      cellSpacing="0"
-      cellPadding="0"
-    >
-      <thead>
-        <tr>
-          <th style={tableCellStyle}>ITEM</th>
-          <th style={tableCellStyle}>STYLE</th>
-          <th style={tableCellStyle}>SEASON</th>
-          <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-          <th style={tableCellStyle}>Size</th>
-          <th style={tableCellStyle}>Qty</th>
-          <th style={tableCellStyle}>TOTAL</th>
-        </tr>
-      </thead>
-      {/* Table body */}
-      <tbody>{generateRows(groupedData.TsizeWiseqty)}</tbody>
-    </table>
-  </div>
-)}
-
+            <div style={{ marginBottom: '20px' }}>
+              <table
+                style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+                border={1}
+                cellSpacing="0"
+                cellPadding="0"
+              >
+                <thead>
+                  <tr>
+                    <th style={tableCellStyle}>ITEM</th>
+                    <th style={tableCellStyle}>STYLE</th>
+                    <th style={tableCellStyle}>SEASON</th>
+                    <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+                    {generateSizeHeaders(getUniqueSizes(groupedData.sizeWiseQty))}
+                  </tr>
+                </thead>
+                <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
+              </table>
+            </div>
+          )}
+  
+          {/* TsizeWiseqty */}
+          {groupedData.TsizeWiseqty.length > 0 && (
+            <div style={{ marginBottom: '20px' }}>
+              <h3>TsizeWiseqty</h3>
+              <table
+                style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+                border={1}
+                cellSpacing="0"
+                cellPadding="0"
+              >
+                <thead>
+                  <tr>
+                    <th style={tableCellStyle}>ITEM</th>
+                    <th style={tableCellStyle}>STYLE</th>
+                    <th style={tableCellStyle}>SEASON</th>
+                    <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+                    {generateSizeHeaders(getUniqueSizes(groupedData.TsizeWiseqty))}
+                    <th style={tableCellStyle}>Qty</th>
+                    <th style={tableCellStyle}>TOTAL</th>
+                  </tr>
+                </thead>
+                {/* Table body */}
+                <tbody>{generateRows(groupedData.TsizeWiseqty)}</tbody>
+              </table>
+            </div>
+          )}
+  
+          {/* SsizeWiseqty */}
           {groupedData.SsizeWiseqty.length > 0 && (
-  <div style={{ marginBottom: '20px' }}>
-    <table
-      style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-      border={1}
-      cellSpacing="0"
-      cellPadding="0"
-    >
-      <thead>
-        <tr>
-          <th style={tableCellStyle}>ITEM</th>
-          <th style={tableCellStyle}>STYLE</th>
-          <th style={tableCellStyle}>SEASON</th>
-          <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-          <th style={tableCellStyle}>Size</th>
-          <th style={tableCellStyle}>Qty</th>
-          <th style={tableCellStyle}>TOTAL</th>
-        </tr>
-      </thead>
-      <tbody>{generateRows(groupedData.SsizeWiseqty)}</tbody>
-    </table>
-  </div>
-)}
-
+            <div style={{ marginBottom: '20px' }}>
+              <table
+                style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+                border={1}
+                cellSpacing="0"
+                cellPadding="0"
+              >
+                <thead>
+                  <tr>
+                    <th style={tableCellStyle}>ITEM</th>
+                    <th style={tableCellStyle}>STYLE</th>
+                    <th style={tableCellStyle}>SEASON</th>
+                    <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
+                    {generateSizeHeaders(getUniqueSizes(groupedData.SsizeWiseqty))}
+                    <th style={tableCellStyle}>Qty</th>
+                    <th style={tableCellStyle}>TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>{generateRows(groupedData.SsizeWiseqty)}</tbody>
+              </table>
+            </div>
+          )}
         </>
       );
     }
-
+  
     return null;
   };
-
-
+  
 const generateRows = (bomInfo) => {
     if (!bomInfo || bomInfo.length === 0) {
       return null;
@@ -198,6 +231,7 @@ const generateRows = (bomInfo) => {
         <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
         {allSizes.map((size) => {
           const sizeItem = item.sizeWiseQty.find((s) => s.size === size);
+          console.log(sizeItem,"sizeItem++++++++++++++++++++++++++")
           return (
             <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
               {sizeItem ? sizeItem.qty : 0}
@@ -207,50 +241,6 @@ const generateRows = (bomInfo) => {
       </tr>
     ));
 
-    
-    const allTSizes1 = Array.from(
-        new Set(data.flatMap((item) => item.TsizeWiseqty.map((sizeItem) => sizeItem.size)))
-      );
-    
-
-    return data.map((item, index) => (
-        <tr key={item.itemNo || index}>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-          {allTSizes1.map((size) => {
-            const sizeItem = item.TsizeWiseqty.find((s) => s.size === size);
-            return (
-              <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
-                {sizeItem ? sizeItem.qty : 0}
-              </td>
-            );
-          })}
-        </tr>
-      ));
-
-      const allSSizes2 = Array.from(
-        new Set(data.flatMap((item) => item.SsizeWiseqty.map((sizeItem) => sizeItem.size)))
-      );
-    
-
-    return data.map((item, index) => (
-        <tr key={item.itemNo || index}>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-          {allSSizes2.map((size) => {
-            const sizeItem = item.SsizeWiseqty.find((s) => s.size === size);
-            return (
-              <td key={size || index} style={{ ...tableCellStyle, textAlign: 'center' }}>
-                {sizeItem ? sizeItem.qty : 0}
-              </td>
-            );
-          })}
-        </tr>
-      ));
   };
   
 
