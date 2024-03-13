@@ -7,6 +7,7 @@ export class BomCreationFiltersReq{
     planningSeasonCode:string
     planningSeasonYear:string
     poLine : string []
+    productCode:string
 }
 
 export class UpdatedSizes {

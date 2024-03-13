@@ -42,7 +42,9 @@ export default function BomGeneration(props: Props) {
     const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
     const [planSesCode, setPlanSesCode] = useState<any>([]);
     const [planSesYear, setPlanSesYear] = useState<any>([]);
-    const [itemDisable, setItemDisable] = useState<boolean>(true)
+    const [itemDisable, setItemDisable] = useState<boolean>(true);
+    const [productCode, setProductCode] = useState<any>([]);
+
     const bomService = new BomService()
     useEffect(() => {
         // getData();
@@ -76,6 +78,9 @@ export default function BomGeneration(props: Props) {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
+        if (form.getFieldValue('productCode') !== undefined) {
+            req.productCode = form.getFieldValue('productCode');
+          }
         req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
         req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
         setTableLoading(true)
@@ -130,7 +135,11 @@ export default function BomGeneration(props: Props) {
             setGeoCode(res.data)
         })
     }
-
+    const getProductCode = () => {
+        service.getPpmProductCodeForMarketing().then(res => {
+          setProductCode(res.data)
+        })
+      }
     function formatInput(value) {
         return value.replace(/\D/g, '');
     }
@@ -506,6 +515,22 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Form.Item name='productCode' label='Product Code' >
+                  <Select
+                    showSearch
+                    onDropdownVisibleChange={getProductCode}
+                    placeholder="Select Product Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {productCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
                         <Button htmlType="submit"
                             icon={<SearchOutlined />}
