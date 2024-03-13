@@ -78,7 +78,7 @@ export default function GenerateProposal(props: Props) {
     "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
     "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
+    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
@@ -229,6 +229,7 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
+
   function handleTwilltape(itemId){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
@@ -241,6 +242,7 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
   function handleTissuePaper(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()
@@ -251,8 +253,8 @@ export default function GenerateProposal(props: Props) {
       if(res.status){
         setTissueData(res.data)
       }
-    })
-  } 
+     })
+  }
   function handleMainWovenLable(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()

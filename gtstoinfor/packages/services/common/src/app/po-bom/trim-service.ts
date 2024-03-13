@@ -205,4 +205,18 @@ export class TrimService {
         }
     }
 
+    async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
+        try {
+            const data = await this.itemRepo.find({ where: { isActive: true,consumptionRequired:true },order:{consumptionRequired : "DESC"} })
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', data)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+
+        } catch (err) {
+            throw err
+        }
+    }
+
 }

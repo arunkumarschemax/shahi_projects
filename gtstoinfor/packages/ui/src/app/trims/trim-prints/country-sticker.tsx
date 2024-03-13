@@ -99,8 +99,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
 import Malaysia from './malasia-sticker';
 import Philippines from './philippines';
-
-const CountryStickerPrint = (props) => {
+export interface countryProps {
+  bomInfo: any
+}
+const CountryStickerPrint = (props:countryProps) => {
   const [bomInfo, setBomInfo] = useState([]);
 
   const tableCellStyle = {
@@ -281,13 +283,17 @@ const CountryStickerPrint = (props) => {
     <Card title={'Country Sticker'} extra={<Button className="no-print" onClick={handlePrint}>Print</Button>}>
 
     <div id="print">
-      {bomInfo && bomInfo.length > 0 ? (
+      {/* {bomInfo && bomInfo.length > 0 ? (
         <>
           {generateTables()}
           </>
       ) : (
         <div>No data available</div>
-      )}
+      )} */}
+        <>
+          {generateTables()}
+          </>
+     
     </div>
     </Card>
 
