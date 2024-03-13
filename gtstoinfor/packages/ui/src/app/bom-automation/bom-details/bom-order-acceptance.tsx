@@ -48,6 +48,7 @@ const BomOrderAcceptance = () => {
 
     const onReset = () => {
         form.resetFields()
+        getOrderAcceptanceData()
         setData([])
         setSelectedRowKeys([])
     }
@@ -85,6 +86,9 @@ const BomOrderAcceptance = () => {
             req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD');
             req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD');
         } 
+        if (form.getFieldValue('itemStatus') !== undefined) {
+            req.itemStatus = form.getFieldValue('itemStatus');
+        }
         nikeService.getdpomDataForBom(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -457,6 +461,20 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='itemStatus' label='Item Status' >
+                            <Select
+                                showSearch
+                                placeholder="Select Item Status"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                <Option key="all" value="All">All</Option>
+                                <Option key="Updated" value="Updated">Updated</Option>
+                                <Option key="null" value="null">Null</Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
                         <Button htmlType="submit"
                             icon={<SearchOutlined />}
