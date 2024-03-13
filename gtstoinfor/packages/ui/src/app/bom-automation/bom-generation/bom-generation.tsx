@@ -42,7 +42,9 @@ export default function BomGeneration(props: Props) {
     const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
     const [planSesCode, setPlanSesCode] = useState<any>([]);
     const [planSesYear, setPlanSesYear] = useState<any>([]);
-    const [itemDisable, setItemDisable] = useState<boolean>(true)
+    const [itemDisable, setItemDisable] = useState<boolean>(true);
+    const [productCode, setProductCode] = useState<any>([]);
+
     const bomService = new BomService()
     useEffect(() => {
         // getData();
@@ -76,6 +78,9 @@ export default function BomGeneration(props: Props) {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
+        if (form.getFieldValue('productCode') !== undefined) {
+            req.productCode = form.getFieldValue('productCode');
+          }
         req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
         req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
         setTableLoading(true)
@@ -130,7 +135,11 @@ export default function BomGeneration(props: Props) {
             setGeoCode(res.data)
         })
     }
-
+    const getProductCode = () => {
+        service.getPpmProductCodeForMarketing().then(res => {
+          setProductCode(res.data)
+        })
+      }
     function formatInput(value) {
         return value.replace(/\D/g, '');
     }
@@ -355,59 +364,36 @@ export default function BomGeneration(props: Props) {
           
             {
                 title: 'PO + Line',
-                dataIndex: 'po_and_line',
-                width: 80,
-                ...getColumnSearchProps('po_and_line')
+                dataIndex: 'poLine',
+               
             },
             {
                 title: 'Bom Item',
-                dataIndex: 'bom_item', width: 80,
+                dataIndex: 'item',
             },
             {
                 title: 'Style',
-                dataIndex: 'style_number', width: 80,
+                dataIndex: 'styleNumber',
             },
            
             {
-                title: 'Product Code',
-                dataIndex: 'product_code', width: 80,
+                title: 'Geo Code',
+                dataIndex: 'geoCode',
             },
-            {
-                title: 'Color Description',
-                dataIndex: 'color_desc', width: 80,
-            },
-            {
-                title: 'Destination Country Code',
-                dataIndex: 'destination_country_code', width: 75,
-            },
-            {
+          {
                 title: 'Destination Country',
-                dataIndex: 'destination_country', width: 75,
+                dataIndex: 'destinationCountry'
             },
          
             {
                 title: ' Season Code',
-                dataIndex: 'planning_season_code',
-                align: 'center', width: 70,
+                dataIndex: 'planningSeasonCode',
+               
             },
             {
                 title: ' Season Year',
-                dataIndex: 'planning_season_year', width: 70,
-                align: 'center',
+                dataIndex: 'planningSeasonYear'
             },
-            {
-                title: 'Category',
-                dataIndex: 'category_desc',
-                width: 80,
-            },
-            {
-                title: 'Total Item Qty',
-                dataIndex: 'total_item_qty', width: 70,
-                align: 'right',
-                render: (text) => <strong>{text}</strong>
-            },
-            
-    
         ]
     
     
@@ -416,7 +402,7 @@ export default function BomGeneration(props: Props) {
         excel.addRow();
         excel.addColumns(exportingColumns);
         excel.addDataSource(filterData);
-        excel.saveAs(`Order-acceptance-${currentDate}.xlsx`);
+        excel.saveAs(`Generate-proposal-${currentDate}.xlsx`);
       }
 
 
@@ -447,7 +433,7 @@ export default function BomGeneration(props: Props) {
                             <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='item' label='Item' >
                             <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch disabled={itemDisable} allowClear>
                                 {
@@ -461,7 +447,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}  >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span:3 }}  >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode='multiple'
@@ -478,7 +464,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}  >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }}  >
                         <Form.Item name='geoCode' label='Geo Code' >
                             <Select
                                 mode='multiple'
@@ -495,7 +481,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='planningSeasonCode' label=' Season' >
                             <Select
                                 showSearch
@@ -512,7 +498,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='planningSeasonYear' label='Year' >
                             <Select
                                 showSearch
@@ -529,6 +515,22 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Form.Item name='productCode' label='Product Code' >
+                  <Select
+                    showSearch
+                    onDropdownVisibleChange={getProductCode}
+                    placeholder="Select Product Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {productCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
                         <Button htmlType="submit"
                             icon={<SearchOutlined />}
