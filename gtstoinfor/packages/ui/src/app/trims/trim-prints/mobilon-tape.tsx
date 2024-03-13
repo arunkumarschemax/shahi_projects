@@ -72,8 +72,8 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
     };
     
     return (
-      
-      <Card title={'Mobilon Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
+      <div id='print'>
+      <Card title={'MOBION TAPE'} extra={<Button onClick={handlePrint}>Print</Button>}>
       <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
         <thead>
           <tr>
@@ -100,16 +100,17 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
             </tr>
           ))}
         </tbody>
-        {/* <tfoot>
+        <tfoot>
           <tr>
-            <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+            <td colSpan={6} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
             <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
               {calculateTotalBomQty(data)}
             </td>
           </tr>
-        </tfoot> */}
+        </tfoot>
       </table>
     </Card>
+    </div>
     );
   };
 

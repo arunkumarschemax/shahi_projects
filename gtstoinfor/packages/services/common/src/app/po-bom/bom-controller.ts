@@ -208,7 +208,7 @@ export class BomController {
     }
 
     @Post('/generateProposalForButton')
-    @ApiBody({type:BomProposalReq})
+    @ApiBody({ type: BomProposalReq })
     async generateProposalForButton(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.generateProposalForButton(req)
@@ -235,7 +235,7 @@ export class BomController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
-    }    
+    }
 
     @Post('/getGeoCode')
     async getGeoCode(@Body() req: any): Promise<CommonResponseModel> {
@@ -244,9 +244,9 @@ export class BomController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
-    }   
+    }
     @Post('/generateProposalForNeckTape')
-    @ApiBody({type:BomProposalReq})
+    @ApiBody({ type: BomProposalReq })
     async generateProposalForNeckTape(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.generateProposalForNeckTape(req)
@@ -255,60 +255,60 @@ export class BomController {
         }
     }
     @Post('/generateProposalForTrims')
-    async generateProposalForTrims(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    async generateProposalForTrims(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.generateProposalForTrims(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
     @Post('/generateProposalForElasticTrim')
-    async generateProposalForElasticTrim(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    async generateProposalForElasticTrim(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.generateProposalForElasticTrim(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
     @Post('/generatePropsalForHtLabel')
-    async generatePropsalForHtLabel(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    async generatePropsalForHtLabel(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.generatePropsalForHtLabel(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
     @Post('/getSizeHtLabelData')
-    async getSizeHtLabelData(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    async getSizeHtLabelData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.getSizeHtLabelData(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
-    
+
     @Post('/generateProposalForTissuePaper')
-    @ApiBody({type:BomProposalReq})
-    async generateProposalForTissuePaper(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    @ApiBody({ type: BomProposalReq })
+    async generateProposalForTissuePaper(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.generateProposalForTissuePaper(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
     @Post('/getMainWovenLableData')
-    @ApiBody({type:BomProposalReq})
-    async getMainWovenLableData(@Body() req:any): Promise<CommonResponseModel>{
-        try{
+    @ApiBody({ type: BomProposalReq })
+    async getMainWovenLableData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.getMainWovenLableData(req)
         }
-        catch(error){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
 
@@ -318,6 +318,16 @@ export class BomController {
             return this.trimService.getAllConsumptionRequiredTrims()
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
+    @Post('/getSizeStrip')
+    async getSizeStrip(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getSizeStrip(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
 }

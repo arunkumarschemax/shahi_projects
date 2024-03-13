@@ -110,7 +110,6 @@ export const  Drawcord = (props: DrawcordProps) => {
       
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px'}}>
-          <h3>Item No: {itemNo}</h3>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}
@@ -205,7 +204,7 @@ export const  Drawcord = (props: DrawcordProps) => {
 
     <div id="print">
     {bomInfo && bomInfo.length > 0 ? (
-      <Card title={'DrawCord'} extra={<Button onClick={handlePrint}>Print</Button>}>
+      <Card title={'DRAWCORD'} extra={<Button onClick={handlePrint}>Print</Button>}>
         {generateTables()}
       </Card>
     ) : (

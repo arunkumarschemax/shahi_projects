@@ -1,8 +1,10 @@
-import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout'
 import { BomCreationFiltersReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdatedSizes, bomGenerationColumnsMapping } from '@project-management-system/shared-models';
 import { BomService, NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Table, message, notification } from 'antd'
+import { Excel } from 'antd-table-saveas-excel';
+import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
@@ -38,7 +40,8 @@ export default function BomGeneration(props: Props) {
     const [updatedData, setUpdatedData] = useState<any>([])
     const [selectedData, setSelectedData] = useState<any[]>()
     const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
-
+    const [planSesCode, setPlanSesCode] = useState<any>([]);
+    const [planSesYear, setPlanSesYear] = useState<any>([]);
     const bomService = new BomService()
     useEffect(() => {
         // getData();
@@ -62,6 +65,12 @@ export default function BomGeneration(props: Props) {
         }
         if (form.getFieldValue('geoCode') !== undefined) {
             req.geoCode = form.getFieldValue('geoCode');
+        }
+        if (form.getFieldValue('planningSeasonCode') !== undefined) {
+            req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+        }
+        if (form.getFieldValue('planningSeasonYear') !== undefined) {
+            req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
         req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
         req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
@@ -101,6 +110,17 @@ export default function BomGeneration(props: Props) {
         })
     }
 
+    const getSesonYear = () => {
+        service.getPpmPlanningSeasonYearFactory().then(res => {
+            setPlanSesYear(res.data)
+        })
+    }
+
+    const getSesonCode = () => {
+        service.getPpmPlanningSeasonCodeFactory().then(res => {
+            setPlanSesCode(res.data)
+        })
+    }
     const getGeoCode = () => {
         service.getPpmdesGeoCodeFactory().then(res => {
             setGeoCode(res.data)
@@ -210,6 +230,14 @@ export default function BomGeneration(props: Props) {
             title : "Plant",
             dataIndex: 'plant'
         },
+        {
+            title : "Season Code",
+            dataIndex: 'planningSeasonCode'
+        },
+        {
+            title : "Year",
+            dataIndex: 'planningSeasonYear'
+        },
         
     ]
 
@@ -243,7 +271,6 @@ export default function BomGeneration(props: Props) {
         return undefined
     }
 
-  
 
     function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
@@ -264,7 +291,7 @@ export default function BomGeneration(props: Props) {
         if(isItemNoNull){
             notification.info({message : `Please update ItemNo for all the selected PO's`,placement:'topRight'})
             return
-        }
+        } 
         setSelectedRowKeys(newSelectedRowKeys);
         setSelectedData(selectedRows)
         props.sendSelectedData(selectedRows)
@@ -309,10 +336,92 @@ export default function BomGeneration(props: Props) {
         setSelectedRowKeys([])
         form.resetFields()
     }
+    const handleExport = (e: any) => {
+        e.preventDefault();
+    
+    
+        const currentDate = new Date()
+          .toISOString()
+          .slice(0, 10)
+          .split("-")
+          .join("/");
+    
+        let exportingColumns: IExcelColumn[] = []
+        exportingColumns = [
+          
+            {
+                title: 'PO + Line',
+                dataIndex: 'po_and_line',
+                width: 80,
+                ...getColumnSearchProps('po_and_line')
+            },
+            {
+                title: 'Bom Item',
+                dataIndex: 'bom_item', width: 80,
+            },
+            {
+                title: 'Style',
+                dataIndex: 'style_number', width: 80,
+            },
+           
+            {
+                title: 'Product Code',
+                dataIndex: 'product_code', width: 80,
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'color_desc', width: 80,
+            },
+            {
+                title: 'Destination Country Code',
+                dataIndex: 'destination_country_code', width: 75,
+            },
+            {
+                title: 'Destination Country',
+                dataIndex: 'destination_country', width: 75,
+            },
+         
+            {
+                title: ' Season Code',
+                dataIndex: 'planning_season_code',
+                align: 'center', width: 70,
+            },
+            {
+                title: ' Season Year',
+                dataIndex: 'planning_season_year', width: 70,
+                align: 'center',
+            },
+            {
+                title: 'Category',
+                dataIndex: 'category_desc',
+                width: 80,
+            },
+            {
+                title: 'Total Item Qty',
+                dataIndex: 'total_item_qty', width: 70,
+                align: 'right',
+                render: (text) => <strong>{text}</strong>
+            },
+            
+    
+        ]
+    
+    
+        const excel = new Excel();
+        excel.addSheet("Sheet1");
+        excel.addRow();
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(filterData);
+        excel.saveAs(`Order-acceptance-${currentDate}.xlsx`);
+      }
 
 
     return (
-        <>
+        <> <Card headStyle={{ fontWeight: 'bold' }} extra={filterData.length > 0 ? <Button
+            type="default"
+            style={{ color: 'green' }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}>Download Excel</Button> : null}>
             <Form onFinish={getData}
                 form={form}
                 layout='vertical'
@@ -329,12 +438,12 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}   >
                         <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
                         <Form.Item name='item' label='Item' >
                             <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch >
                                 {
@@ -348,7 +457,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}  >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode='multiple'
@@ -365,7 +474,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}  >
                         <Form.Item name='geoCode' label='Geo Code' >
                             <Select
                                 mode='multiple'
@@ -374,9 +483,43 @@ export default function BomGeneration(props: Props) {
                                 placeholder="Select Geo Code"
                                 optionFilterProp="children"
                                 allowClear
-                            >
+                        >
                                 {geoCode?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                        <Form.Item name='planningSeasonCode' label=' Season' >
+                            <Select
+                                showSearch
+                                onDropdownVisibleChange={getSesonCode}
+
+                                placeholder=" Season Code"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesCode?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                        <Form.Item name='planningSeasonYear' label='Year' >
+                            <Select
+                                showSearch
+                               onDropdownVisibleChange={ getSesonYear}
+
+                                placeholder=" Year"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {planSesYear?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
                                 })
                                 }
                             </Select>
@@ -428,6 +571,7 @@ export default function BomGeneration(props: Props) {
                 </Col> */}
             </Row>
             <br />
+            </Card>
 
         </>
     )

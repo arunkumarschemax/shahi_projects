@@ -111,4 +111,9 @@ export class BomService extends CommonAxiosService {
     async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllConsumptionRequiredTrims")
     }
+    async getSizeStrip(req: BomProposalReq): Promise<CommonResponseModel> {
+        console.log(req)
+        return this.axiosPostCall(this.URL + "/getSizeStrip", req)
+    }
+    
 }

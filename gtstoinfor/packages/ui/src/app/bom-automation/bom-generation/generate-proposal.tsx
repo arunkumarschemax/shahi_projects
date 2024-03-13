@@ -22,6 +22,7 @@ import Twilltape from '../../trims/trim-prints/twill-tape';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
 import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
+import SizeStrip from '../../trims/trim-prints/size-strip';
 type Props = {
   poLine: string[]
 }
@@ -38,6 +39,7 @@ export default function GenerateProposal(props: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
   const [buttonData, setButtonData] = useState<any>([]);
+  const [sizestripData, setSizeStripData] = useState<any>([]);
   const [necktapeData,setNeckTapeData]= useState<any>([]);
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
@@ -76,12 +78,13 @@ export default function GenerateProposal(props: Props) {
     "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
     "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint info={countrySticker}/>,
+    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
-  
+    "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
+
   }
 
 
@@ -126,6 +129,7 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+ 
   function handleNeckTapeTrim(itemId){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
@@ -263,7 +267,20 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
-
+  function handleSizeStrip(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.getSizeStrip(bomProposalReq).then((v) => {
+      if (v.status) {
+        
+        setSizeStripData(v.data)
+        console.log(v.data,"ppppppppppppppppp");
+      }
+    })
+  }
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -515,6 +532,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Main Woven labels'){
       handleMainWovenLable(val.itemId)
     }
+    if(val.item === 'Size Strip'){
+      handleSizeStrip(val.itemId)
+    } 
   }
 
 

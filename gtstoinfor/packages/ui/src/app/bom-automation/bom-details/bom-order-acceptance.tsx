@@ -1,10 +1,14 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import { BomItemReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, message } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, message } from "antd"
+import { Excel } from "antd-table-saveas-excel";
+import { IExcelColumn } from "antd-table-saveas-excel/app";
+import dayjs from "dayjs";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
+const { RangePicker } = DatePicker
 
 const BomOrderAcceptance = () => {
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -22,7 +26,7 @@ const BomOrderAcceptance = () => {
     const [pageSize, setPageSize] = useState(1);
     const { Option } = Select;
     const [showModal, setShowModal] = useState<boolean>(false)
-
+    const createdAtValues = form.getFieldValue('createdAt');
     useEffect(() => {
 
         getOrderAcceptanceData()
@@ -77,6 +81,10 @@ const BomOrderAcceptance = () => {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
+        if (createdAtValues && createdAtValues.length >= 2) {
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD');
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD');
+        } 
         nikeService.getdpomDataForBom(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -153,7 +161,10 @@ const BomOrderAcceptance = () => {
         clearFilters();
         setSearchText('');
     };
+    const createdDateHandler = (val) => {
 
+
+    }
 
     const isActionButtonEnabled = (record) => {
         return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
@@ -179,10 +190,10 @@ const BomOrderAcceptance = () => {
             title: 'Style Number',
             dataIndex: 'style_number', width: 80,
         },
-        // {
-        //     title: 'Item',
-        //     dataIndex: 'item', width: 80,
-        // },
+        {
+            title: 'Bom Item',
+            dataIndex: 'bom_item', width: 80,
+        },
         // {
         //     title: 'PO Line Item No',
         //     dataIndex: 'po_line_item_number', width: 80,
@@ -296,17 +307,111 @@ const BomOrderAcceptance = () => {
                 message.error(res.internalMessage);
             }
         });
+     getOrderAcceptanceData()
+
     };
 
+    const handleExport = (e: any) => {
+        e.preventDefault();
+    
+    
+        const currentDate = new Date()
+          .toISOString()
+          .slice(0, 10)
+          .split("-")
+          .join("/");
+    
+        let exportingColumns: IExcelColumn[] = []
+        exportingColumns = [
+          
+            {
+                title: 'PO Number and Line',
+                dataIndex: 'po_and_line',
+                width: 80,
+                ...getColumnSearchProps('po_and_line')
+            },
+            {
+                title: 'Style Number',
+                dataIndex: 'style_number', width: 80,
+            },
+            {
+                title: 'Bom Item',
+                dataIndex: 'bom_item', width: 80,
+            },
+         
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate', width: 80,
+                render: (text) => moment(text).format('MM/DD/YYYY'),
+            },
+            {
+                title: 'Product Code',
+                dataIndex: 'product_code', width: 80,
+            },
+            {
+                title: 'Color Description',
+                dataIndex: 'color_desc', width: 80,
+            },
+            {
+                title: 'Destination Country Code',
+                dataIndex: 'destination_country_code', width: 75,
+            },
+            {
+                title: 'Destination Country',
+                dataIndex: 'destination_country', width: 75,
+            },
+         
+            {
+                title: 'Planning Season Code',
+                dataIndex: 'planning_season_code',
+                align: 'center', width: 70,
+            },
+            {
+                title: 'Planning Season Year',
+                dataIndex: 'planning_season_year', width: 70,
+                align: 'center',
+            },
+            {
+                title: 'Category',
+                dataIndex: 'category_desc',
+                width: 80,
+            },
+            {
+                title: 'Total Item Qty',
+                dataIndex: 'total_item_qty', width: 70,
+                align: 'right',
+                render: (text) => <strong>{text}</strong>
+            },
+            
+    
+        ]
+    
+    
+        const excel = new Excel();
+        excel.addSheet("Sheet1");
+        excel.addRow();
+        excel.addColumns(exportingColumns);
+        excel.addDataSource(data);
+        excel.saveAs(`Order-acceptance-${currentDate}.xlsx`);
+      }
+
     return (
-        <Card title="Bom Item Register - Item missing Orders" headStyle={{ fontWeight: 'bold' }}>
+        <Card title="Bom Item Register - Item missing Orders" headStyle={{ fontWeight: 'bold' }} extra={data.length > 0 ? <Button
+            type="default"
+            style={{ color: 'green' }}
+            onClick={handleExport}
+            icon={<FileExcelFilled />}>Download Excel</Button> : null}>
             <Form
                 onFinish={getOrderAcceptanceData}
                 form={form}
                 layout='vertical'>
                 <Row gutter={24}>
-
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                        <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
+                            <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} onChange={createdDateHandler} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode="multiple"
@@ -322,7 +427,7 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
                         <Form.Item name='planningSeasonCode' label='Planning Season Code' >
                             <Select
                                 showSearch
@@ -337,7 +442,7 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
                         <Form.Item name='planningSeasonYear' label='Planning Season Year' >
                             <Select
                                 showSearch
@@ -352,13 +457,15 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }} >
                         <Form.Item>
                             <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
-                            <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+                            <Button style={{marginLeft:8}} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                   
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
                         <Button onClick={openModeal} style={{
                             backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
                             color: selectedRowKeys.length > 0 ? "black" : "black",
@@ -369,7 +476,7 @@ const BomOrderAcceptance = () => {
                 </Row>
             </Form>
 
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
                 <Table
                     columns={columns}
                     rowKey={record => record}

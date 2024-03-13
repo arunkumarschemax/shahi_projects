@@ -4,6 +4,8 @@ export class BomCreationFiltersReq{
     geoCode: string []
     fromDate : any
     toDate : any
+    planningSeasonCode:string
+    planningSeasonYear:string
     poLine : string []
 }
 
