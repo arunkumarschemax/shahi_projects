@@ -44,14 +44,20 @@ export class RLOrdersService {
     const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
+      let version = 1;
       await transactionManager.startTransaction()
+      const orderData = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber} })
+      const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
+      if(orderData){
+      const deleteData = await transactionManager.getRepository(RLOrdersEntity).delete({ poNumber: req.poNumber})
+      }
+      if(order)
+      version = Number(order.poVersion) + 1
       for (const item of req.poItemDetails) {
         const match = item.poItem.match(/\d+/);
         // Check if a match is found and convert it to an integer
         const poItem = match ? parseInt(match[0], 10) : null;
         for (const variant of item.poItemVariantDetails) {
-          const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
-          const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
 
           const entity = new RLOrdersEntity()
           entity.agent = req.agent
@@ -75,41 +81,7 @@ export class RLOrdersService {
           entity.size = variant.size
           entity.status = req.revisionNo == 1 ? 'New' : 'Revised'
           entity.upcEan = variant.upc
-          if (orderData) {
-            const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
-
-            let po = parseInt(order?.poVersion) + 1
-
-            const entitys = new RLOrderschildEntity()
-            entitys.agent = req.agent
-            entitys.amount = variant.amount
-            entitys.boardCode = item.board
-            entitys.buyer = 'RL'
-            entitys.color = item.colorDescription
-            entitys.currency = variant.currency
-            entitys.materialNo = item.materialNo
-            entitys.poItem = poItem
-            entitys.poNumber = req.poNumber
-            entitys.poUploadDate = req.poIssue
-            entitys.price = variant.unitPrice
-            entitys.purchaseGroup = req.purchaseGroup
-            entitys.quantity = variant.quantity
-            entitys.revisionNo = req.revisionNo
-            entitys.seasonCode = item.season
-            entitys.handoverDate = item.handoverDate
-            entitys.shipToAddress = req.shipToAddress
-            entitys.billToAddress = req.buyerAddress
-            entitys.size = variant.size
-            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
-            entitys.upcEan = variant.upc
-            entitys.poVersion = po.toString()
-            entitys.orderId = orderData.id
-
-            const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-            if (!update.affected) {
-              throw new Error('Update failed');
-            }
-          } else {
+         
             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
 
             const entitys = new RLOrderschildEntity()
@@ -134,13 +106,13 @@ export class RLOrdersService {
             entitys.size = variant.size
             entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
+            entitys.poVersion = version.toString()
             entitys.orderId = saved.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
             if (!saved) {
               throw new Error('Save failed')
             }
-          }
         }
       }
       await transactionManager.completeTransaction()
