@@ -64,7 +64,7 @@ export const Elastic = (props: Elasticprops) => {
                 <tfoot>
                   <tr>
                   <td colSpan={10} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>
+                    <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                       {calculateTotalBomQty(groupedData[itemNo])}
                     </td>
                   </tr>
