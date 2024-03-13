@@ -232,6 +232,8 @@ import ReceiveSampleOrders from "./sample-development/receive-sample-orders"
 import M3KnittedView from "./masters/m3-items/m3-knitted-view"
 import TrimUomForm from "./trim-master/trim-uom/trim-uom"
 import TrimUomGrid from "./trim-master/trim-uom/trim-uom-view"
+import FunctionForm from "./trim-master/function/function-form"
+import FunctionGrid from "./trim-master/function/function-view"
 
 
 
@@ -757,6 +759,14 @@ export const AppRoutes = () => {
                         updateTrimUom={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='trim-uom/trim-uom-view' element={<TrimUomGrid />}/>
+
+                    <Route path='function/function-form' element={<FunctionForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateFunction={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='function/function-view' element={<FunctionGrid />}/>
+
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
                         closeForm={() => { }}
