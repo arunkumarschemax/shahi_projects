@@ -230,6 +230,8 @@ import PatternView from "./masters/pattern/pattern-view"
 import StockReceivedApproval from "./sample-development/stock-received-approval"
 import ReceiveSampleOrders from "./sample-development/receive-sample-orders"
 import M3KnittedView from "./masters/m3-items/m3-knitted-view"
+import TrimUomForm from "./trim-master/trim-uom/trim-uom"
+import TrimUomGrid from "./trim-master/trim-uom/trim-uom-view"
 
 
 
@@ -749,6 +751,12 @@ export const AppRoutes = () => {
                         updateHole={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='hole/hole-view' element={<HoleGrid />}/>
+                    <Route path='trim-uom/trim-uom-form' element={<TrimUomForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateTrimUom={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='trim-uom/trim-uom-view' element={<TrimUomGrid />}/>
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
                         closeForm={() => { }}
