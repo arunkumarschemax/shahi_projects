@@ -42,6 +42,7 @@ export default function BomGeneration(props: Props) {
     const [itemDropdownData, setItemDropdownData] = useState<any[]>([])
     const [planSesCode, setPlanSesCode] = useState<any>([]);
     const [planSesYear, setPlanSesYear] = useState<any>([]);
+    const [itemDisable, setItemDisable] = useState<boolean>(true)
     const bomService = new BomService()
     useEffect(() => {
         // getData();
@@ -51,7 +52,10 @@ export default function BomGeneration(props: Props) {
     }, [])
 
     const createdDateHandler = (val) => {
-
+        console.log(val)
+        if(val){
+            setItemDisable(false)
+        }
 
     }
 
@@ -422,7 +426,7 @@ export default function BomGeneration(props: Props) {
                     </Col>
                     <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='item' label='Item' >
-                            <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch >
+                            <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch disabled={itemDisable} allowClear>
                                 {
                                     itemDropdownData.map(e => {
                                         return (
