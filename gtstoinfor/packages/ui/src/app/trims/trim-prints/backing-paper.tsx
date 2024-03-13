@@ -77,7 +77,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                     <th style={{ width: '3%' }}>REQ</th>
                     </tr>
                     {data?.map((rec,index) =>{
-                      console.log(data,"LLLLLLLLLLLLLL");
+                    //   console.log(data,"LLLLLLLLLLLLLL");
                       
                         return(
                             <tr>
