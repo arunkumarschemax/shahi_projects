@@ -131,6 +131,10 @@ const MainWovenLabel = (props) => {
     
     
     if (groupedData) {
+      
+      const allSizes = Array.from(
+        new Set(data.flatMap((item) => item.sizeWiseQty.map((sizeItem) => sizeItem.size)))
+      ); 
       return (
         <>
           {/* SizeWiseQty */}
@@ -148,15 +152,20 @@ const MainWovenLabel = (props) => {
           <th style={tableCellStyle}>STYLE</th>
           <th style={tableCellStyle}>SEASON</th>
           <th style={tableCellStyle}>IM#/SIZE MATRIX</th>
-          {getUniqueSizes(groupedData.sizeWiseQty).map((size: string) => {
+          {allSizes.map((size, index) => (
+            <th key={index} style={{ ...tableCellStyle, textAlign: 'center' }}>
+              {size}
+            </th>
+          ))}
+          {/* {getUniqueSizes(groupedData.sizeWiseQty).map((size: string) => {
             console.log("Size:", size); 
             return (
               <th key={size} style={tableCellStyle}>
                 {size}
               </th>
             );
-          })}
-          <th style={tableCellStyle}>TOTAL</th>
+          })} */}
+          {/* <th style={tableCellStyle}>TOTAL</th> */}
         </tr>
       </thead>
       <tbody>{generateRows(groupedData.sizeWiseQty)}</tbody>
