@@ -1,11 +1,13 @@
 import { UOMEnum, UpdatedConsumptions } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Col, Drawer, InputNumber, Modal, Row, Select, Table, Typography } from 'antd';
+import { Col, Drawer, InputNumber, Modal, Row, Select, Table, Tabs, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
 import UOMConversion from './uom-convserion-form';
+import ConsumptionForms from './consumption-forms';
 
 type Props = {
     setTrims: (value: any) => void
+    seletedStyles: string[]
 }
 
 export default function ConsumptionUpdate(props: Props) {
@@ -25,7 +27,7 @@ export default function ConsumptionUpdate(props: Props) {
 
 
     const getAllTrims = () => {
-        service.getAllTrimInfo().then(res => {
+        service.getAllConsumptionRequiredTrims().then(res => {
             if (res.status) {
                 setTrims(res.data);
             }
@@ -67,7 +69,7 @@ export default function ConsumptionUpdate(props: Props) {
         },
         {
             title: 'Wastage %',
-            render: (v, r) => <InputNumber  onChange={value => handleFieldChange(value, 'wastage', r)} defaultValue={r.wastage} key={r.id} />
+            render: (v, r) => <InputNumber onChange={value => handleFieldChange(value, 'wastage', r)} defaultValue={r.wastage} key={r.id} />
         },
         // {
         //     title: 'MOQ',
@@ -76,40 +78,52 @@ export default function ConsumptionUpdate(props: Props) {
 
     ]
 
-    function UOMDropdown(record){
-        return <Select key={record.id}  onChange={value => handleFieldChange(value, 'consumptionUOM', record)} style={{width:'100px'}} placeholder='Select UOM' >
-        {
-            Object.values(UOMEnum).map((v) => {
-                return <Select.Option key={v} value={v}>{v}</Select.Option>
-            })
-        }
-    </Select>
+    function UOMDropdown(record) {
+        return <Select key={record.id} onChange={value => handleFieldChange(value, 'consumptionUOM', record)} style={{ width: '100px' }} placeholder='Select UOM' >
+            {
+                Object.values(UOMEnum).map((v) => {
+                    return <Select.Option key={v} value={v}>{v}</Select.Option>
+                })
+            }
+        </Select>
     }
 
     function openConversionModal() {
         setViewModal(true)
     }
-    function closeConversionModal(){
+    function closeConversionModal() {
         setViewModal(false)
     }
     return (
         <>
-            <Row gutter={24} justify={'end'}>
+            {/* <Row gutter={24} justify={'end'}>
                 <Col span={5}>
-                    <Typography.Link onClick={openConversionModal}>{"Convert you values here >>"}</Typography.Link>
+                    <Typography.Link onClick={openConversionModal}>{"Conversion tool >>"}</Typography.Link>
                 </Col>
-            </Row>
-            <Row >
-                <Table className="custom-table-wrapper"
+            </Row> */}
+            {/* <Table className="custom-table-wrapper"
                     size='small'
                     //  pagination={false}
                     pagination={false}
                     scroll={{ x: 'max-content', y: 450 }}
                     bordered
                     columns={columns}
-                    dataSource={trims} />
-            </Row>
-            <Modal  style={{ top: 20,right:20 }} width={'50%'} open={viewModal} closable onCancel={closeConversionModal} footer={false} >
+                    dataSource={trims} /> */}
+            <Tabs
+                defaultActiveKey="1"
+                tabPosition={'left'}
+                style={{ height: 420, left: 0 }}
+                items={trims.map((v, i) => {
+                    const id = String(i);
+                    return {
+                        label: v.item,
+                        key: id,
+                        disabled: i === 28,
+                        children: <ConsumptionForms itemId={v.itemId} selectedStyles={props.seletedStyles} key={id} />,
+                    };
+                })}
+            />
+            <Modal style={{ top: 20, right: 20 }} width={'50%'} open={viewModal} closable onCancel={closeConversionModal} footer={false} >
                 <UOMConversion />
             </Modal>
         </>

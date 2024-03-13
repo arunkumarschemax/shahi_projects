@@ -311,4 +311,13 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
         }
     }
+
+    @Post('/getAllConsumptionRequiredTrims')
+    async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getAllConsumptionRequiredTrims()
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }

@@ -16,6 +16,7 @@ export default function BomGenerationSteps() {
     const [selectedData, setSelectedData] = useState<any>([])
     const [updatedData, setUpdatedData] = useState<UpdatedSizes[]>([])
     const [trimsConsumptions, setTrimsConsumptions] = useState<UpdatedConsumptions[]>([])
+    const [distinctStyles,setDistinctstyles] = useState<any[]>()
     const contentStyle: React.CSSProperties = {
         // lineHeight: '260px',
         textAlign: 'center',
@@ -42,7 +43,7 @@ export default function BomGenerationSteps() {
             }
         })
     }
-
+    console.log(distinctStyles)
     const steps = [
         {
             title: 'Update Quantites',
@@ -50,11 +51,11 @@ export default function BomGenerationSteps() {
         },
         {
             title: 'Verfiy Quantities',
-            content: <VerifyQuantities selectedData={selectedData} updatedData={updatedData} />,
+            content: <VerifyQuantities setDistinctStyles={setDistinctstyles} selectedData={selectedData} updatedData={updatedData} />,
         },
         {
             title: 'Update Consumption',
-            content: <ConsumptionUpdate setTrims={setTrimsConsumptions} />,
+            content: <ConsumptionUpdate setTrims={setTrimsConsumptions} seletedStyles={distinctStyles} />,
         },
         {
             title: 'Generate proposal',
@@ -64,7 +65,6 @@ export default function BomGenerationSteps() {
 
 
     const next = () => {
-        console.log(current)
         if (current == 2) {
             generateBom()
         } else {

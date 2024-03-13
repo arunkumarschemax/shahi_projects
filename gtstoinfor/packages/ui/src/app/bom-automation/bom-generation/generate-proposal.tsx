@@ -81,7 +81,7 @@ export default function GenerateProposal(props: Props) {
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
-    
+  
   }
 
 
@@ -225,6 +225,7 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
+
   function handleTwilltape(itemId){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
@@ -237,6 +238,7 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
   function handleTissuePaper(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()
@@ -247,8 +249,8 @@ export default function GenerateProposal(props: Props) {
       if(res.status){
         setTissueData(res.data)
       }
-    })
-  } 
+     })
+  }
   function handleMainWovenLable(itemId){
     // val.itemId
     const bomProposalReq = new BomProposalReq()
