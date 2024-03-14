@@ -218,5 +218,46 @@ export class TrimService {
             throw err
         }
     }
-
+    async getProductCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        try {
+            // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
+            const query = `select id ,product_code from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and product_code is not null group by product_code `
+            const data = await this.dataSource.query(query)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retreived', data)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+    async getSeasonCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        try {
+            // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
+            const query = `select id ,planning_season_code from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_code is not null group by planning_season_code `
+            const data = await this.dataSource.query(query)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retreived', data)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            throw err
+        }
+    }
+    async getSeasonYearDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        try {
+            // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
+            const query = `select id ,planning_season_year from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_year is not null group by planning_season_year `
+            const data = await this.dataSource.query(query)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retreived', data)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            throw err
+        }
+    }
 }

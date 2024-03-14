@@ -120,13 +120,19 @@ export default function BomGeneration(props: Props) {
     }
 
     const getSesonYear = () => {
-        service.getPpmPlanningSeasonYearFactory().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
             setPlanSesYear(res.data)
         })
     }
 
     const getSesonCode = () => {
-        service.getPpmPlanningSeasonCodeFactory().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
             setPlanSesCode(res.data)
         })
     }
@@ -136,7 +142,10 @@ export default function BomGeneration(props: Props) {
         })
     }
     const getProductCode = () => {
-        service.getPpmProductCodeForMarketing().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getProductCodeDropdownByCreatedAt(req).then(res => {
           setProductCode(res.data)
         })
       }
