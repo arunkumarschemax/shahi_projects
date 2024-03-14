@@ -236,6 +236,8 @@ import FunctionForm from "./trim-master/function/function-form"
 import FunctionGrid from "./trim-master/function/function-view"
 import InnerDiaForm from "./trim-master/innerdia/innerdia-form"
 import InnerDiaGrid from "./trim-master/innerdia/innerdia-view"
+import TrimBuyerForm from "./trim-master/trim-buyers/trim-buyer-form"
+import TrimBuyerGrid from "./trim-master/trim-buyers/trim-buyer-view"
 
 
 
@@ -822,7 +824,12 @@ export const AppRoutes = () => {
                     <Route path='Type/Type-view' element={<TypeView />} />                    
                     <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm props={undefined}/>} />
                     <Route path='m3-trim-items/m3-trim-items-view' element={<M3TrimsView />} />
-
+                    <Route path='buyer/buyer-form' element={<TrimBuyerForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='buyer/buyer-view' element={<TrimBuyerGrid />} />
                     
                 </Route>
 

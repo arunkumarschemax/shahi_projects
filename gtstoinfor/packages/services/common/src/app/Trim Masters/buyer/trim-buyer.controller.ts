@@ -50,4 +50,14 @@ export class TrimBuyerController{
                 return this.applicationHandler.returnException(CommonResponseModel,err)
             }
         }
+
+        @Post('/activateOrDeactivateBuyer')
+        @ApiBody({type:TrimBuyerDto})
+        async activateOrDeactivateBuyer(@Body() req:any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.activateOrDeactivateBuyer(req)
+            }catch(err){
+                return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
 }
