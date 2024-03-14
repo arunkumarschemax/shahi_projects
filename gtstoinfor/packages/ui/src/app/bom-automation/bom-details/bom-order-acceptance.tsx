@@ -56,32 +56,54 @@ const BomOrderAcceptance = () => {
     }
 
     const getSesonYear = () => {
-        const req = new ItemInfoFilterReq()
-        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
-        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
-        bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
-            setPlanSesYear(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
+                setPlanSesYear(res.data)
+            }).catch(error => {
+                console.error("Error fetching season year dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
-
+    
     const getSesonCode = () => {
-        const req = new ItemInfoFilterReq()
-        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
-        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
-        bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
-            setPlanSesCode(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
+                setPlanSesCode(res.data)
+            }).catch(error => {
+                console.error("Error fetching season code dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
+    
 
     const getStyleNumber = () => {
-        const req = new ItemInfoFilterReq()
-        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
-        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
-        bomService.getPpmStyleNumberByCreatedAt(req).then(res => {
-            setStyleNumber(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getPpmStyleNumberByCreatedAt(req).then(res => {
+                setStyleNumber(res.data)
+            }).catch(error => {
+                console.error("Error fetching style numbers:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
-
+    
     const getOrderAcceptanceData = () => {
         const req = new UpdateBomITemNoFilters();
 
@@ -436,7 +458,7 @@ req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
                                 optionFilterProp="children"
                                 allowClear
                             >
-                                {styleNumber?.map((inc: any) => {
+                                {styleNumber && styleNumber?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
                                 })
                                 }
