@@ -260,4 +260,18 @@ export class TrimService {
             throw err
         }
     }
+    
+    async getPpmStyleNumberByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        try {
+            const query = `select id ,style_number from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and style_number is not null group by style_number `
+            const data = await this.dataSource.query(query)
+            if (data) {
+                return new CommonResponseModel(true, 1, 'Data retreived', data)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            throw err
+        }
+    }
 }

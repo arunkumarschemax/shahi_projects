@@ -98,7 +98,10 @@ export default function BomGeneration(props: Props) {
     };
 
     const getStyleNumber = () => {
-        service.getPpmStyleNumberFactory().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getPpmStyleNumberByCreatedAt(req).then(res => {
             setStyleNumber(res.data)
         })
     }

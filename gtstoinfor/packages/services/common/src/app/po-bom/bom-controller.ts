@@ -373,4 +373,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getPpmStyleNumberByCreatedAt')
+    async getPpmStyleNumberByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getPpmStyleNumberByCreatedAt(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }
