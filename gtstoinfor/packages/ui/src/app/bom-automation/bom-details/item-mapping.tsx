@@ -74,7 +74,7 @@ useEffect(() => {
       };
       return (
         <div>
-          <Card title="Item Mapping">
+          <Card title={<span style={{fontWeight: "bold"}}>Item Mapping</span>}>
             <Form form={form} layout='vertical' onFinish={handleUpdateButtonClick}>
               <Row gutter={24}>
                 <Col    xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
