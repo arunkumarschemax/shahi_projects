@@ -1,17 +1,17 @@
 import { ProSkeleton } from '@ant-design/pro-components';
-import { SupplierCreateDto } from '@project-management-system/shared-models';
+import { SupplierCreateDto, ThreadsDto } from '@project-management-system/shared-models';
 import { Button, Card, Col, Form, Input, Row, Select } from 'antd';
 import { offset } from 'highcharts';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { BomService, ThreadSupplierService } from '@project-management-system/shared-services';
+import { BomService, ThreadService, ThreadSupplierService } from '@project-management-system/shared-services';
 
 
 export interface ThreadFormprops {
-    Data: SupplierCreateDto;
-    updateItem: (Data:SupplierCreateDto ) => void;
+    Data: ThreadsDto;
+    updateItem: (Data:ThreadsDto ) => void;
     isUpdate: boolean;
     closeForm: () => void;
 }
@@ -19,22 +19,24 @@ export interface ThreadFormprops {
 export function ThreadForm(props:ThreadFormprops) {
     const navigate = useNavigate();
 
-    useEffect(() => {
-
-       getStyleNumber();
-       getThreadSupplier();
-        
-    }, [])
 
     const service = new SupplierService();
     const bomServices = new BomService();
     const threadsupplierService = new ThreadSupplierService()
+
+    const services = new ThreadService
     const [form] = Form.useForm();
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [threadSupplier, setThreadSupplier] = useState<any>([]);
 
     const [disable,setDisable] = useState<boolean>(false)
     const { Option } = Select;
+
+
+    useEffect(() => {
+        getStyleNumber()
+        getThreadSupplier()
+     }, [])
 
 
     const getStyleNumber = () => {
@@ -50,9 +52,10 @@ export function ThreadForm(props:ThreadFormprops) {
         })
     }
 
-    const create = (data: SupplierCreateDto) =>{
+    const create = (data: ThreadsDto) =>{
         setDisable(true)
-        service.createSupplier(data).then(res => {
+        
+        services.createThread(data).then(res => {
           setDisable(false)
           if(res.status){
             AlertMessages.getSuccessMessage("Created Successfully")
@@ -67,7 +70,7 @@ export function ThreadForm(props:ThreadFormprops) {
           AlertMessages.getErrorMessage(err.message);
         })
       }
-      const saveData = (values: SupplierCreateDto) => {
+      const saveData = (values: ThreadsDto) => {
         setDisable(false)
         if(props.isUpdate){
           props.updateItem(values);
@@ -77,7 +80,7 @@ export function ThreadForm(props:ThreadFormprops) {
         }
       };
 
-     const onFinish = (values : SupplierCreateDto ) =>{
+     const onFinish = (values : ThreadsDto ) =>{
         setDisable(false)
 
         if(props.isUpdate){
@@ -113,7 +116,7 @@ export function ThreadForm(props:ThreadFormprops) {
                         <Input />
                     </Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
-                        <Form.Item name="style" label="Style"
+                        <Form.Item name="styleId" label="Style"
                         rules={[{ required: true },]}
                         >
                             <Select placeholder="Select Style" style={{ width: 150 }}>
@@ -185,23 +188,18 @@ export function ThreadForm(props:ThreadFormprops) {
                 </Row>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ paddingBottom: '12px' }}>
-                        <Form.Item name="supplier" label="Thread Supplier"
+                        <Form.Item name="supplierId" label="Thread Supplier"
                         rules={[{ required: true },]}
                         >
                             <Select placeholder="Select Thread Supplier" style={{ width: 150 }}>
                             {threadSupplier?.map((inc: any) => {
-                                    return <Option key={inc.id} value={inc.supplierName}>{inc.supplierName}</Option>
+                                    return <Option key={inc.threadSupplierId} value={inc.threadSupplierId}>{inc.supplierName}</Option>
                                 })
                                 }
                             </Select>
                         </Form.Item>
 
-                    </Col>
-                  
-                  
-               
-                    
-                    
+                    </Col> 
                 </Row>
                
                

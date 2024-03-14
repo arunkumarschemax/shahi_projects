@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
+import { SupplierActivateDeactivateDto, SupplierCreateDto, ThreadsDto } from '@project-management-system/shared-models';
 import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useRef, useState } from 'react'
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TableActions from '../../common/table-actions/table-actions';
 import ThreadForm from './thread-form';
+import { ThreadService } from '@project-management-system/shared-services';
 
 const ThreadView = () => {
   const [supplier, setSupllier] = useState([]);
@@ -18,14 +19,15 @@ const ThreadView = () => {
   const service = new SupplierService();
   const [data, setData] = useState<any>(undefined);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const services = new ThreadService
 
 
   useEffect(() => {
-    getSupplierData()
+    getAllThread()
   }, []);
 
-  const getSupplierData = () => {
-    service.getAllSuppliers().then((res) => {
+  const getAllThread = () => {
+    services.getAllThread().then((res) => {
       if (res.status) {
         setSupllier(res.data);
       } else {
@@ -52,7 +54,7 @@ const ThreadView = () => {
       console.log(res, "ressssssssssss");
       if (res.status) {
         AlertMessages.getSuccessMessage('Upadted Succesfully');
-        getSupplierData()
+        getAllThread()
         setDrawerVisible(false);
 
       }
@@ -69,7 +71,7 @@ const ThreadView = () => {
     service.ActivateOrDeactivate(req).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
-        getSupplierData();
+        getAllThread();
       }
     })
   }
@@ -183,61 +185,61 @@ const ThreadView = () => {
     },
     {
       title: "Supplier",
-      dataIndex: 'supplier',
+      dataIndex: 'supplierName',
       align: 'center'
     },
    
-    {
-      title: "Status",
-      dataIndex: "isActive",
-      render: (isActive, rowData) => (
-        <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
-        </>
-      ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, recod) => {
-        return recod.isActive === value;
-      }
+    // {
+    //   title: "Status",
+    //   dataIndex: "isActive",
+    //   render: (isActive, rowData) => (
+    //     <>
+    //       {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+    //     </>
+    //   ),
+    //   filters: [
+    //     {
+    //       text: 'Active',
+    //       value: true,
+    //     },
+    //     {
+    //       text: 'InActive',
+    //       value: false,
+    //     },
+    //   ],
+    //   filterMultiple: false,
+    //   onFilter: (value, recod) => {
+    //     return recod.isActive === value;
+    //   }
 
 
-    },
-    {
-      title: "Actions",
-      width: 50,
-      render: (text, rowData, index: number) => {
-        return <>
-          <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
+    // },
+    // {
+    //   title: "Actions",
+    //   width: 50,
+    //   render: (text, rowData, index: number) => {
+    //     return <>
+    //       <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
-          <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
-            title={
-              rowData.isActive
-                ? 'Are you sure to deactivated ?'
-                : 'Are you sure to activated ?'
-            }
-          >
-            <Switch size="default"
-              className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-              checkedChildren={<RightSquareOutlined type="check" />}
-              unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={rowData.isActive}
-            />
-          </Popconfirm>
-        </>
+    //       <Divider type="vertical" />
+    //       <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
+    //         title={
+    //           rowData.isActive
+    //             ? 'Are you sure to deactivated ?'
+    //             : 'Are you sure to activated ?'
+    //         }
+    //       >
+    //         <Switch size="default"
+    //           className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+    //           checkedChildren={<RightSquareOutlined type="check" />}
+    //           unCheckedChildren={<RightSquareOutlined type="close" />}
+    //           checked={rowData.isActive}
+    //         />
+    //       </Popconfirm>
+    //     </>
 
-      }
-    },
+    //   }
+    // },
   ]
   return (
     <>
@@ -258,8 +260,11 @@ const ThreadView = () => {
         <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
           onClose={closeDrawer} visible={drawerVisible} closable={true}>
           <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
-            <ThreadForm
-              updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
+            <ThreadForm Data={undefined} updateItem={function (Data: ThreadsDto): void {
+              throw new Error('Function not implemented.');
+            } } isUpdate={false} closeForm={function (): void {
+              throw new Error('Function not implemented.');
+            } }               />
           </Card>
         </Drawer>
       </div>
