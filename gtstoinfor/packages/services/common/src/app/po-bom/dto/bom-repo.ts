@@ -57,6 +57,15 @@ export class BomRepo extends Repository<BomEntity> {
         .leftJoin(BomEntity,'b')
 
     }
+
+    async getImcodes():Promise<any[]>{
+        const query = this.createQueryBuilder('b')
+        .select(`im_code as imCode`)
+        .where(`item_id=29 OR item_id=NULL`)
+        .groupBy(`im_code`)
+        const data = await query.getRawMany()
+        return data
+    }
    
     
 

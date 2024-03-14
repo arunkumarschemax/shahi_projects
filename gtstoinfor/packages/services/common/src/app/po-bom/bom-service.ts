@@ -1381,6 +1381,16 @@ export class BomService {
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
+    async getImcodes():Promise<CommonResponseModel>{
+        const data = await this.bomRepo.getImcodes()
+        if(data){
+            return new CommonResponseModel(true,1,'Data Retrived',data)
+        }else{
+            return new CommonResponseModel(false,0,'No Data',[])
+
+        }
+    }
+
 
 }
 

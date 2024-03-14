@@ -21,13 +21,15 @@ export const bomGenerationColumnsMapping= {
     poLineItemNumber : 'PO Line',
     poLine : 'PO + Line',
     styleNumber : 'Style',
-    planningSeasonCode : 'Planning Season Code',
-    planningSeasonYear : 'Planning Season Year',
+    planningSeasonCode : 'Season Code',
+    planningSeasonYear : 'Season Year',
     geoCode : 'Geo code',
     destinationCountryCode : 'Destination Code',
     genderAgeDesc : 'Gender Age Desc',
     destinationCountry : 'Destination',
     item : 'Item',
-    plant : 'Plant'
+    plant : 'Plant',
+    productCode : 'Product Code',
+    colorDesc :'Color Desc'
 
 }

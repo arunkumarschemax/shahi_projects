@@ -1,19 +1,13 @@
-import { BomInfo, ItemInfoFilterReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import React from "react";
 import { useEffect, useRef, useState } from "react"
-// import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import * as XLSX from 'xlsx';
-
 
 export interface Elasticprops {
     bomInfo: any[]
 }
 export const Elastic = (props: Elasticprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
-    const bomService = new BomService()
-    const tableRef = useRef(null);
 
     useEffect(() => {
         if (props.bomInfo) {
@@ -40,17 +34,15 @@ export const Elastic = (props: Elasticprops) => {
         }
         return null;
       };
+
+    
       const generateTables = () => {
         const groupedData = groupDataByItemNo();
         if (groupedData) {
           return Object.keys(groupedData).map((itemNo, index) => (
             <div key={index} style={{ marginBottom: '20px' }}>
-              <h3>Item No: {itemNo}</h3>
               <table
-          style={{
-            borderCollapse: 'collapse',
-            borderBlockColor: 'black',width: '100%',  }}
-          border={1}
+          style={{borderCollapse: 'collapse', borderBlockColor: 'black',width: '100%',  }}border={1}
           cellSpacing="0"cellPadding="0"
         >
                 <thead>
@@ -72,7 +64,7 @@ export const Elastic = (props: Elasticprops) => {
                 <tfoot>
                   <tr>
                   <td colSpan={10} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>
+                    <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                       {calculateTotalBomQty(groupedData[itemNo])}
                     </td>
                   </tr>
@@ -83,6 +75,7 @@ export const Elastic = (props: Elasticprops) => {
         }
         return null;
       };
+
       const calculateTotalBomQty = (data) => {
         return data.reduce((total, item) => {
           const bomQtys = item?.colors.map(color => Number(color?.reqqty)) || [];
@@ -90,69 +83,61 @@ export const Elastic = (props: Elasticprops) => {
           return total + validQtys.reduce((sum, qty) => sum + qty, 0);
         }, 0);
       };
-      
-      
-      
+  
       const generateRows = (data) => {
-        return data.map((item, index) => (
-          <React.Fragment key={index}>
-            {index === 0 && (
-              <tr>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.itemNo}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.styleNumber}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-      {`${item.season}${item.year.slice(2)}`}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.imCode}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.description}
-                </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
-                  {item.consumption}
-                </td>
+        const groupedData = {};
+      
+        data.forEach((item) => {
+          const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push(item);
+        });
+      
+        return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
+          <React.Fragment key={groupIndex}>
+            {group.map((item, index) => (
+              <tr key={`${groupIndex}-${index}`}>
+                {index === 0 && (
+                  <>
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.itemNo}
+                    </td>
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.styleNumber}
+                    </td>
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {`${item.season}${item.year.slice(2)}`}
+                    </td>
+                    
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.imCode}
+                    </td>
+                    
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                    BSS/ K.R./126-NIKE-48mm knitted elastic
+                    </td>
+
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.description}
+                    </td>
+
+                    <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
+                      {item.consumption}
+                    </td>
+                  </>
+                )}
+                
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>
-            { item.colors[0]?.reqqty} 
-          </td>              </tr>
-            )}
-            {item.colors.slice(1).map((color, colorIndex) => (
-              <tr key={`${index}-${colorIndex}`}>
-                {index !== 0 && colorIndex === 0 && (
-                  <>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }} colSpan={7}>
-                      {item.itemNo}
-                    </td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}></td>   
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
-                    <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.consumption}</td>
-
-                  </>
-                  
-                )}
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.reqqty}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{ item.colors[0]?.reqqty} </td>  
               </tr>
             ))}
           </React.Fragment>
         ));
       };
-      
-
 
       const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
@@ -194,7 +179,7 @@ export const Elastic = (props: Elasticprops) => {
     return (
         <div id='print'>
                   {bomInfo && bomInfo.length > 0 ? (
-            <Card title={'Elastic'}
+            <Card title={'ELASTIC'}
                 extra={<Button onClick={handlePrint}>Print</Button>} >
                     {generateTables()}
             </Card>
