@@ -261,7 +261,10 @@ export const WasCarelabel = (props: washCareprops) => {
 
         // Extract the size keys from the object with the maximum size keys
         const sizes = Object.keys(maxSizeObject).filter(key => key !== 'ogacDate');
-
+        const customOrder = ['S', 'M', 'L', 'XL', 'XXL', '2XL'];
+        sizes.sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b))
+        console.log(sizes)
+        
         let total = 0
 
         return (
