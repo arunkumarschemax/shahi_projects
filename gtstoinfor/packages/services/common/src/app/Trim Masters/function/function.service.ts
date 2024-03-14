@@ -20,7 +20,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }
@@ -52,7 +52,7 @@ export class FunctionService {
           }
 
           if (!isUpdate && functionData) {
-            return new CommonResponseModel(false, 1, 'InnerDia already exists');
+            return new CommonResponseModel(false, 1, 'Function already exists');
           }
           const entity = new FunctionEntity();
           entity.function = req.function;
@@ -63,7 +63,7 @@ export class FunctionService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.functionRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'InnerDia updated successfully' : 'InnerDia created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'Function updated successfully' : 'Function created successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -74,7 +74,7 @@ export class FunctionService {
             const FunctionExists = await this.functionRepo.findOne({where:{functionId: req.functionId}});
             if (FunctionExists) {
                 if (!FunctionExists) {
-                    throw new ErrorResponse(10113, 'Someone updated the current InnerDia. Refresh and try again');
+                    throw new ErrorResponse(10113, 'Someone updated the current Function. Refresh and try again');
                 } else {
                     
                         const functionStatus =  await this.functionRepo.update(
@@ -83,17 +83,17 @@ export class FunctionService {
                        
                         if (FunctionExists.isActive) {
                             if (functionStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'InnerDia is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Function is deactivated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'InnerDia is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Function is already deactivated');
                             }
                         } else {
                             if (functionStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'InnerDia is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Function is activated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'InnerDia is already activated');
+                                throw new CommonResponseModel(false,10112, 'Function is already activated');
                             }
                       }
                 }
@@ -110,7 +110,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{isActive: true},order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }
@@ -123,7 +123,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{functionId: req.functionId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }
