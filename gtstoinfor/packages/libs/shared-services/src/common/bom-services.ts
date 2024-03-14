@@ -115,5 +115,8 @@ export class BomService extends CommonAxiosService {
         console.log(req)
         return this.axiosPostCall(this.URL + "/getSizeStrip", req)
     }
+    async getImcodes( ): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getImcodes")
+    }
     
 }
