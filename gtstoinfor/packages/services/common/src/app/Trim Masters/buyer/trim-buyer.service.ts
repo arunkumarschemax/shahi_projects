@@ -4,6 +4,7 @@ import { TrimBuyerEntity } from "./trim-buyer-entity";
 import { Repository } from "typeorm";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { TrimBuyerDto } from "./trim-buyer.dto";
+import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 
 @Injectable()
 export class TrimBuyerService{
@@ -40,12 +41,12 @@ export class TrimBuyerService{
 
     async createTrimBuyer(dto: TrimBuyerDto, isUpdate: boolean): Promise<CommonResponseModel>{
         try{
-            if(!isUpdate) {
-                const existing = await this.repo.findOne({ where: { trimBuyer: dto.trimBuyer }})
-                if(existing) {
-                    throw new Error('Buyer already exists');
-                }
+            const existing = await this.repo.findOne({ where: { trimBuyer: dto.trimBuyer }})
+
+            if (existing && (!isUpdate || (isUpdate && existing.trimBuyerId !== dto.trimBuyerId))) {
+                throw new Error('Buyer with the same name already exists');
             }
+
             const entityData = new TrimBuyerEntity()
             entityData.trimBuyer = dto.trimBuyer
             entityData.isActive = dto.isActive === undefined || dto.isActive === null ? true : dto.isActive;
@@ -62,6 +63,42 @@ export class TrimBuyerService{
             throw(err)
         }
     }
+
+    async activateOrDeactivateBuyer(req: TrimBuyerDto): Promise<CommonResponseModel> {
+        try {
+            const buyerExists = await this.repo.findOne({where:{trimBuyerId: req.trimBuyerId}});
+            if (buyerExists) {
+                if (!buyerExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current Buyer information. Refresh and try again');
+                } else {
+                    
+                        const buyerStatus =  await this.repo.update(
+                            { trimBuyerId: req.trimBuyerId },
+                            { isActive: req.isActive,updatedUser: req.updatedUser });
+                       
+                        if (buyerExists.isActive) {
+                            if (buyerStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Buyer is deactivated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10111, 'Buyer is already deactivated');
+                            }
+                        } else {
+                            if (buyerStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Buyer is activated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10112, 'Buyer is already activated');
+                            }
+                      }
+                }
+            } else {
+                throw new CommonResponseModel(false,99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+      } 
 
 
 }
