@@ -7,7 +7,7 @@ const UserCreationForm = lazy(() => import("./user-management/users/users-form")
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FabricContentdto, FactoryDto, Fobdto } from "@project-management-system/shared-models"
+import { FabricContentdto, FactoryDto, Fobdto, ItemsDto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -73,6 +73,8 @@ import Elastic from "./trims/trim-prints/elastic-print"
 import Mobilontape from "./trims/trim-prints/mobilon-tape"
 import Twilltape from "./trims/trim-prints/twill-tape"
 import CountryStickerPrint from "./trims/trim-prints/country-sticker"
+import ItemsGrid from "./items/items-grid"
+import ItemsForm from "./items/items-form"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -169,7 +171,12 @@ export const AppRoutes = () => {
 
                     <Route path='address-upload' element={<AddressUpload />} />
                     <Route path='address-view' element={<AddressView />} />
-
+                    <Route path='items-view'   element={<ItemsGrid />} />
+                   <Route path='items-form' element={<ItemsForm itemData={undefined} updateItem={function (itemData: ItemsDto): void {
+                       throw new Error("Function not implemented.")
+                   } } isUpdate={false} closeForm={function (): void {
+                       throw new Error("Function not implemented.")
+                   } } />} />
                 </Route>
                 <Route path='/nike'>
                     <Route path='nike-dashboard' element={<NikeDashboard />} />
