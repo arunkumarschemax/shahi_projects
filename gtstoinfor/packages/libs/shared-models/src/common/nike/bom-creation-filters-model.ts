@@ -151,3 +151,9 @@ export class UpdateBomITemNoFilters{
     planningSeasonYear:string
     itemStatus:string
 }
+
+
+export class updateItemId {
+   imCode:string
+   itemId:number
+}

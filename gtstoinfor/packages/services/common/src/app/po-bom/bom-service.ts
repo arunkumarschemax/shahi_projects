@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, updateItemId } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -1388,6 +1388,38 @@ export class BomService {
         }else{
             return new CommonResponseModel(false,0,'No Data',[])
 
+        }
+    }
+
+    async getItemname(): Promise<CommonResponseModel> {
+        const records = await this.bomRepo;
+        const query=`SELECT i.item_id as itemId,i.item AS itemName FROM items i`
+        const result = await this.bomRepo.query(query)
+        if(result){
+            return new CommonResponseModel(true,1,'Data Retrived',result)
+        }else{
+            return new CommonResponseModel(false,0,'No Data',[])
+
+        }
+
+    }
+
+
+    async updateItemid(req:updateItemId): Promise<CommonResponseModel> {
+        try {
+           console.log(req,"reqqqqqq")
+            const query = ` UPDATE bom 
+                SET item_id = '${req.itemId}'
+                WHERE im_code = '${req.imCode}' `;
+                const result = await this.dataSource.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, 'Data Updated', result);
+            } else {
+                return new CommonResponseModel(false, 0, 'No Data Updated', []);
+            }
+        } catch (error) {
+            console.error("Error occurred during update:", error);
+            return new CommonResponseModel(false, 0, 'Error occurred during update', []);
         }
     }
 

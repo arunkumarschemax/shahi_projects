@@ -73,7 +73,7 @@ import Elastic from "./trims/trim-prints/elastic-print"
 import Mobilontape from "./trims/trim-prints/mobilon-tape"
 import Twilltape from "./trims/trim-prints/twill-tape"
 import CountryStickerPrint from "./trims/trim-prints/country-sticker"
-
+import ItemMappingGrid from "./bom-automation/bom-details/item-mapping"
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -214,6 +214,8 @@ export const AppRoutes = () => {
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
                     <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
                     <Route path='twilltape' element={<Twilltape bomInfo={[]} />} />
+                   < Route path='itemMapping' element={<ItemMappingGrid />} />
+
 
                     
                 </Route>
