@@ -1,20 +1,18 @@
-import { Card, Upload, message, Form, Row, Col, Button, Result, Input } from 'antd'
+import { Card, Upload, message, Form, Row, Col, Button, Result, Input } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-import type { UploadProps, UploadFile } from 'antd';
-import React, { useEffect, useState } from 'react'
-
+import React, { useState } from 'react';
 const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService,  LevisService} from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService, LevisService } from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
 import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
 // import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-interface IPdfUploadProps {
 
-}
+
+interface IPdfUploadProps { }
 
 class ResultPropsModel {
     status: any;
@@ -40,20 +38,24 @@ const pdfIndexes = {
 
 
 const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
-
-    const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [fileList, setFileList] = useState([]);
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
     const [poPdfData, setPoPdfData] = useState<any>()
+    const [xmlText, setXmlText] = useState(null);
+
 
 
     const [diaPDfForm] = Form.useForm()
     const levisService = new LevisService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
-    const uploadProps: UploadProps = {
+
+
+
+    const uploadProps = {
         name: 'file',
-        accept: '.pdf',
+        accept: '.xml',
         onRemove: (file) => {
             const index = fileList.indexOf(file);
             const newFileList = fileList.slice();
@@ -61,31 +63,93 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
             setFileList(newFileList);
         },
         beforeUpload: (file) => {
-            setFileList([...fileList, file]);
-            extractTextFromPdf(file)
+            if (file.type === 'text/xml') {
+                setFileList([file]);
+                extractTextFromPdf(file);
+            } else {
+                message.error('Please upload only XML files.');
+            }
             return false;
         },
         fileList,
         showUploadList: false
     };
-
     async function extractPoPdfData(pdf: any, pdfText: any) {
         const poData = await extractDataFromPoPdf(pdf)
         setPoPdfData(poData)
     }
 
-    const extractTextFromPdf = async (pdfFile) => {
-        const pdfData = await pdfFile.arrayBuffer();
-        const pdf = await pdfjs.getDocument({ data: pdfData }).promise;
-        let text = '';
-        const page = await pdf.getPage(1);
-        const textContent = await page.getTextContent();
-        text += textContent.items.map((item: any) => item.str).join(' ');
-        let title = pdfFilesValidationObject.filter((val) => text.match(val.pdfKeyText) != undefined)[0]?.pdfName
-        if (title) {
-            extractPoPdfData(pdf, textContent)
+    const xmlFormat = (xml) => {
+        if (xml.nodeType === Node.TEXT_NODE) {
+            return xml.textContent.trim();
         }
-        updateResultProps(title)
+        let result = '';
+        if (xml.nodeType === Node.ELEMENT_NODE) {
+            result += '<' + xml.tagName;
+
+            for (let i = 0; i < xml.attributes.length; i++) {
+                result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
+            }
+            result += '>';
+            for (let i = 0; i < xml.childNodes.length; i++) {
+                result += xmlFormat(xml.childNodes[i]);
+            }
+            if (xml.childNodes.length > 0) {
+                result += '</' + xml.tagName + '>';
+            } else {
+                result += '/>';
+            }
+        }
+        result += '\n';
+        return result;
+    };
+
+    const extractTextFromPdf = async (file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            let xmlText = e.target.result;
+            console.log(xmlText, "xmlText")
+
+            if (typeof xmlText !== 'string') {
+                const arrayBufferView = new Uint8Array(xmlText);
+                const blob = new Blob([arrayBufferView], { type: 'text/xml' });
+                console.log(blob, "blob")
+
+
+                const reader = new FileReader();
+                console.log(reader, "reader")
+
+                reader.onload = (event) => {
+                    xmlText = event.target.result.toString();
+
+                    const parser = new DOMParser();
+                    console.log(parser, "parser")
+
+                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+                    console.log(xmlDoc, "xmlDoc")
+
+                    const extractedXmlData = xmlFormat(xmlDoc.documentElement);
+                    extractPoPdfData(xmlText, extractedXmlData);
+                    console.log(extractedXmlData, "extractedXmlData");
+                    // console.log(JSON.stringify(extractedXmlData,null));
+                };
+                reader.readAsText(blob);
+            } else {
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+                const extractedXmlData = xmlFormat(xmlDoc.documentElement);
+                extractPoPdfData(xmlText, extractedXmlData);
+                console.log(extractedXmlData, "extractedXmlData");
+                // console.log(JSON.stringify(extractedXmlData,null));
+            }
+        };
+        reader.readAsArrayBuffer(file);
+        if (file) {
+            // Remove this line as it's redundant
+            // extractPoPdfData(xmlText, extractedXmlData);
+        }
+        updateResultProps(file);
     };
 
     const updateResultProps = (title) => {
@@ -102,6 +166,7 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         setResultProps(resultProps)
     }
 
+
     const savePdfFields = () => {
         levisService.saveLevisOrder(poPdfData).then((res) => {
             if (res.status) {
@@ -111,7 +176,7 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
                         formData.append('poNumber', poPdfData?.poNumber);
-                        formData.append('jsonData',JSON.stringify(poPdfData))
+                        formData.append('jsonData', JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
                     levisService.fileUpload(formData).then((res) => {
@@ -156,63 +221,50 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     };
 
 
-
     return (
-        <Card title='Order Upload'>
+        <Card title="Order Upload">
             {resultProps === undefined &&
-                <Row gutter={24} >
-                     <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 5 }}
-                        lg={{ span: 5 }}
-                        xl={{ span: 4 }}
-                    >
-                        <Form.Item>
-                            <Button type='primary' onClick={levisBot}>Auto Upload Bot</Button>
-                        </Form.Item>
-                    </Col> 
-
+                <Row gutter={24}>
                     <Col span={24}>
-                        <Dragger {...uploadProps} >
+                        <Dragger {...uploadProps}>
                             <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
                             </p>
                             <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                            <p className="ant-upload-hint">
-                                Please upload only valid documents .
-                            </p>
-
+                            <p className="ant-upload-hint">Please upload only valid documents.</p>
                         </Dragger>
                     </Col>
-                </Row>}
-            <Row gutter={24} justify={'center'}  >
-                {resultProps !== undefined &&
-                    <>
-                        <Col span={24}>
-                            <Result {...resultProps} />
-                        </Col>
-                        {resultProps.status == 'success' ? <>
+                </Row>
+            }
+            < Row gutter={24} justify={'center'} >
+                {resultProps !== undefined && <>
+                    <Col span={24}>
+                        <Result {...resultProps} />
+                    </Col>
+                    {
+                        resultProps.status == 'success' ? <>
                             <Col span={24}>
                                 {renderPDFOutPut()}
                             </Col>
-                            <Col span={2}>
-                                <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
+                            < Col span={2} >
+                                <Button onClick={savePdfFields} type={'primary'} > Submit </Button>
                             </Col>
-                            <Col span={2}>
-                                <Button onClick={onReset} >Reset</Button>
+                            < Col span={2} >
+                                <Button onClick={onReset} > Reset </Button>
                             </Col>
                         </> : <>
-                            <Col span={2}>
-                                <Button onClick={onReset} >Reset</Button>
+                            < Col span={2} >
+                                <Button onClick={onReset}> Reset </Button>
                             </Col>
                         </>
-                        }
-                    </>
+                    }
+                </>
+
                 }
             </Row>
+
         </Card>
-    )
-}
+    );
+};
 
 export default PvhPdfUpload;
