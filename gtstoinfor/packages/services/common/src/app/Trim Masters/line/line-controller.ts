@@ -50,4 +50,24 @@ export class LineController{
                 return this.applicationHandler.returnException(CommonResponseModel,err)
             }
         }
+
+        @Post('/activateOrDeactivateLine')
+      @ApiBody({type: LineDto})
+      async activateOrDeactivateLine(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.activateOrDeactivateLine(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
+      @Post('/getLineById')
+      @ApiBody({type: LineDto})
+      async getLineById(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.getLineById(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
 }

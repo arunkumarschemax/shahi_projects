@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { LineEntity } from "./line-entity";
 import { LineDto } from "./line-dto";
+import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 
 @Injectable()
 export class LineService{
@@ -62,5 +63,54 @@ export class LineService{
             throw(err)
         }
     }
+
+    async activateOrDeactivateLine(req: LineDto): Promise<CommonResponseModel> {
+        try {
+            const LineExists = await this.repo.findOne({where:{lineId: req.lineId}});
+            if (LineExists) {
+                if (!LineExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current Line. Refresh and try again');
+                } else {
+                    
+                        const lineStatus =  await this.repo.update(
+                            { lineId: req.lineId },
+                            { isActive: req.isActive,updatedUser: req.updatedUser });
+                       
+                        if (LineExists.isActive) {
+                            if (lineStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Line is deactivated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10111, 'Line is already deactivated');
+                            }
+                        } else {
+                            if (lineStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Line is activated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10112, 'Line is already activated');
+                            }
+                      }
+                }
+            } else {
+                throw new CommonResponseModel(false,99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+      }
+
+      async getLineById(req:LineDto): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.find({where:{lineId: req.lineId,isActive: true}})
+            if(data.length > 0){
+                return new CommonResponseModel(true, 1, 'Line data retrieved successfully',data)
+            }else{
+                return new CommonResponseModel(false, 0, 'No data found',[])
+            }
+        } catch (err) {
+          return err;
+        }
+      }
 
 }

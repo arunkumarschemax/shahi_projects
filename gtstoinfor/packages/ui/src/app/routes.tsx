@@ -244,6 +244,8 @@ import LogoForm from "./trim-master/logo/logo-form"
 import LogoGrid from "./trim-master/logo/logo-view"
 import AirHoleForm from "./trim-master/air-hole/air-hole-form"
 import AirHoleGrid from "./trim-master/air-hole/air-hole-view"
+import LineGrid from "./trim-master/line/line-view"
+import LineForm from "./trim-master/line/line-form"
 
 
 
@@ -797,6 +799,13 @@ export const AppRoutes = () => {
                         updateAirHole={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='air-hole/air-hole-view' element={<AirHoleGrid />}/>
+
+                    <Route path='line/line-form' element={<LineForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateLine={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='line/line-view' element={<LineGrid />}/>
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
