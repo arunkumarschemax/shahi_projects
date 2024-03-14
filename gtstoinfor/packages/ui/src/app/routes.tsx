@@ -240,6 +240,8 @@ import GaugeForm from "./trim-master/gauge/gauge-form"
 import GaugeGrid from "./trim-master/gauge/gauge-view"
 import TrimBuyerForm from "./trim-master/trim-buyers/trim-buyer-form"
 import TrimBuyerGrid from "./trim-master/trim-buyers/trim-buyer-view"
+import LogoForm from "./trim-master/logo/logo-form"
+import LogoGrid from "./trim-master/logo/logo-view"
 
 
 
@@ -839,6 +841,12 @@ export const AppRoutes = () => {
                         updateData={(undefined) => { }} 
                         data={undefined} />} />
                     <Route path='buyer/buyer-view' element={<TrimBuyerGrid />} />
+                    <Route path='logo/logo-form' element={<LogoForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='logo/logo-view' element={<LogoGrid />} />
                     
                 </Route>
 
