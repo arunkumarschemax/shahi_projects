@@ -125,4 +125,8 @@ export class BomService extends CommonAxiosService {
     async getSeasonYearDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getSeasonYearDropdownByCreatedAt", req)
     }
+    async getImcodes( ): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getImcodes")
+    }
+    
 }

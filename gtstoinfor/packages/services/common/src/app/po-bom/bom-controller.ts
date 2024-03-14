@@ -353,6 +353,15 @@ export class BomController {
             return this.trimService.getSeasonYearDropdownByCreatedAt(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }}
+        
+    @Post('/getImcodes')
+    async getImcodes():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getImcodes()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
     }
 }
