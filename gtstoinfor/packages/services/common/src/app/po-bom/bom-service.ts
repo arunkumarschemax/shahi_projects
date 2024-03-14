@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonRequestAttrs, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, StyleNumReq } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -30,6 +30,7 @@ import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
 import { ItemEntity } from "./entittes/item-entity";
 import { group } from "console";
 import { itemWiseMOQ } from "./moq-data";
+import { ApiSizeMatrixRepo } from "./repo/apasizematrix-repo";
 
 
 
@@ -47,7 +48,8 @@ export class BomService {
         private zFactorsRepo: ZFactorsRepo,
         private itemsRepo: ItemsRepo,
         private destinationsRepo: DestinationsRepo,
-        private zFactorsBomRepo: ZFactorsBomRepo
+        private zFactorsBomRepo: ZFactorsBomRepo,
+        private apaSizeamtrixRepo:ApiSizeMatrixRepo
 
     ) { }
     async createBom(req: StyleDto): Promise<CommonResponseModel> {
@@ -1388,6 +1390,22 @@ export class BomService {
         }else{
             return new CommonResponseModel(false,0,'No Data',[])
 
+        }
+    }
+
+    async getApaSizeMatrix(req:StyleNumReq):Promise<CommonResponseModel>{
+        try{
+            // const query=`SELECT id,buy_month AS buyMonth,style_number AS styleNumber,style_type AS styleType,usa_size AS usaSize,china_size_matrixtype AS chinaSizeMatrixType,   china_top_size AS chinaTopSize,china_top_bodysize AS chinaTopBodySize,china_bottom_size AS chinaBottomSize,china_bottom_bodysize AS chinabottomBodySize,           korea_size_matrixtype AS koreaSizeMatrixType,korea_top_generic AS koreaTopGeneric,korea_top_chest AS koreaTopChest,            korea_top_height AS koreaTopHeight,korea_bottom_generic AS koreaBottomGeneric,korea_bottom_waist AS koreaBottomWaist,korea_bottom_hip AS koreaBottomWaist FROM apa_size_matrix where style_number in (:...style), { style: req.styleNumber }`
+            // const result = await this.dataSource.query(query)
+            const result = await this.apaSizeamtrixRepo.getApaSizeMatrixData(req)
+            if(result){
+                return new CommonResponseModel(true,1,'Data Retrived',result)
+            }else{
+                return new CommonResponseModel(true,1,'Data Retrived',[])
+            }
+        }
+        catch(err){
+            throw err
         }
     }
 

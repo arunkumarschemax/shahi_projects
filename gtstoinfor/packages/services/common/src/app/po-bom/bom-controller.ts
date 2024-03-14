@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors, } from "@nestjs/common";
 import { ApiBody, ApiTags, ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { BomExcelreq, BomProposalReq, CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomExcelreq, BomProposalReq, CommonResponseModel, PpmDateFilterRequest, StyleNumReq } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -334,6 +334,15 @@ export class BomController {
     async getImcodes():Promise<CommonResponseModel>{
         try{
             return this.bomService.getImcodes()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    @Post('/getApaSizeMatrix')
+    async getApaSizeMatrix(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getApaSizeMatrix(req)
         }
         catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
