@@ -157,5 +157,10 @@ export class StyleNumReq{
     constructor(data?: Partial<StyleNumReq>) {
         Object.assign(this, data);
     }
+}
 
+
+export class updateItemId {
+   imCode:string
+   itemId:number
 }

@@ -60,13 +60,21 @@ export class BomRepo extends Repository<BomEntity> {
 
     async getImcodes():Promise<any[]>{
         const query = this.createQueryBuilder('b')
-        .select(`im_code as imCode`)
+        .select(`im_code as imCode,id`)
         .where(`item_id=29 OR item_id=NULL`)
         .groupBy(`im_code`)
         const data = await query.getRawMany()
         return data
     }
    
-    
+    async getItemname():Promise<any[]>{
+        const query = this.createQueryBuilder('i')
+        .select(`item_id as id,item AS itemName`)
+        .groupBy(`item`)
+        const data = await query.getRawMany()
+        return data
+    }
+   
 
+    
 }
