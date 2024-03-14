@@ -236,6 +236,8 @@ import FunctionForm from "./trim-master/function/function-form"
 import FunctionGrid from "./trim-master/function/function-view"
 import InnerDiaForm from "./trim-master/innerdia/innerdia-form"
 import InnerDiaGrid from "./trim-master/innerdia/innerdia-view"
+import GaugeForm from "./trim-master/gauge/gauge-form"
+import GaugeGrid from "./trim-master/gauge/gauge-view"
 
 
 
@@ -775,6 +777,13 @@ export const AppRoutes = () => {
                         updateInnerDia={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='innerdia/innerdia-view' element={<InnerDiaGrid />}/>
+
+                    <Route path='gauge/gauge-form' element={<GaugeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateGauge={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='gauge/gauge-view' element={<GaugeGrid />}/>
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
