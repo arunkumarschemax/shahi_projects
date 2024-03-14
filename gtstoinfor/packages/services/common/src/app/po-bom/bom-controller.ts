@@ -330,4 +330,38 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+    @Post('/getProductCodeDropdownByCreatedAt')
+    async getProductCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getProductCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
+    @Post('/getSeasonCodeDropdownByCreatedAt')
+    async getSeasonCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    @Post('/getSeasonYearDropdownByCreatedAt')
+    async getSeasonYearDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonYearDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }}
+        
+    @Post('/getImcodes')
+    async getImcodes():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getImcodes()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

@@ -120,13 +120,19 @@ export default function BomGeneration(props: Props) {
     }
 
     const getSesonYear = () => {
-        service.getPpmPlanningSeasonYearFactory().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
             setPlanSesYear(res.data)
         })
     }
 
     const getSesonCode = () => {
-        service.getPpmPlanningSeasonCodeFactory().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
             setPlanSesCode(res.data)
         })
     }
@@ -136,7 +142,10 @@ export default function BomGeneration(props: Props) {
         })
     }
     const getProductCode = () => {
-        service.getPpmProductCodeForMarketing().then(res => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+        bomService.getProductCodeDropdownByCreatedAt(req).then(res => {
           setProductCode(res.data)
         })
       }
@@ -251,15 +260,12 @@ export default function BomGeneration(props: Props) {
             title : "Year",
             dataIndex: 'planningSeasonYear'
         },
-        {
-            title : "Product Code",
-            dataIndex: 'productCode'
-        },
+      
         
     ]
 
     function renderColumns(): any {
-        const unWantedColumns = ['poNumber', 'poLineItemNumber', 'planningSeasonCode', 'planningSeasonYear', 'destinationCountryCode', 'genderAgeDesc']
+        const unWantedColumns = ['poNumber', 'poLineItemNumber','destinationCountryCode', 'genderAgeDesc',]
         if (filterData.length)
             return Object.keys(filterData[0]).filter((k) => !unWantedColumns.includes(k)).map((key) => {
                 return {
@@ -401,6 +407,10 @@ export default function BomGeneration(props: Props) {
             {
                 title : "Product Code",
                 dataIndex: 'productCode'
+            },
+            {
+                title : "Color Desc",
+                dataIndex: 'colorDesc'
             },
         ]
     

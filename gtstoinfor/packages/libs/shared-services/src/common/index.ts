@@ -8,5 +8,6 @@ export * from './fob-service';
 export * from './fabric-content-fe-services';
 export * from './address.services';
 export * from './bom-services';
-export * from './trims.services'
+export * from './trims.services';
+export * from './item-service-master'
 export * from './thread-supplier-service'
