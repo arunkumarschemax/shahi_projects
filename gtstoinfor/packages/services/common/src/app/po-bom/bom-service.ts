@@ -376,9 +376,10 @@ export class BomService {
                     const totalQty = regionDataMap.get(geoCode).totalQty + po.qty
                     regionDataMap.set(geoCode, { poData, totalQty })
                 }
+
                 let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
-                    styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
+                    styleData = await this.bomRepo.getTrimBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year,itemId : req.itemId })
                     styleDataMap.set(po.styleNumber, styleData)
                 } else {
                     styleData = styleDataMap.get(po.styleNumber)
@@ -406,8 +407,8 @@ export class BomService {
                     poBomEntity.consumption = consumption ? consumption : 0
                     poBomEntity.moq = moq ? moq : 0
                     poBomEntity.wastage = wastage ? wastage : 0
-                    poBomEntity.bomQty = bomQty
-                    poBomEntity.poQty = updatedQty
+                    poBomEntity.bomQty =  po.qty
+                    poBomEntity.poQty =  po.qty
                     const dpom = new DpomEntity()
                     dpom.id = po.id
                     poBomEntity.dpom = dpom
@@ -898,6 +899,7 @@ export class BomService {
     //     return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     // }
     async generateProposalForNeckTape(req: BomProposalReq): Promise<CommonResponseModel> {
+        console.log('generateProposalForNeckTape called' )
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
 
         const poBomData = await this.poBomRepo.getProposalsDataForNeckTape(req);

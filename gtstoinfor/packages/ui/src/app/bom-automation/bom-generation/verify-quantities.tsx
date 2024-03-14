@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 type Props = {
     selectedData: any[],
     updatedData: any[],
-    setDistinctStyles : (values : string[]) => void
+    setDistinctValues : (values :{distinctStyles : string[],distinctItems : string[]})  => void
 }
 
 export default function VerifyQuantities(props: Props) {
@@ -48,7 +48,12 @@ export default function VerifyQuantities(props: Props) {
             return result;
         }, {});
         setClubbedData(Object.values(clubbedData))
-        props.setDistinctStyles([...new Set(selectedData.map(item => item.styleNumber))]);
+        const distinctStyles = [...new Set(selectedData.map(item => item.styleNumber))]
+        const distinctItems =  [...new Set(selectedData.map(item => item.item))]
+        props.setDistinctValues({
+            distinctStyles: distinctStyles,
+            distinctItems: distinctItems,
+        });
 
     }
 

@@ -68,7 +68,7 @@ export default function GenerateProposal(props: Props) {
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={interlining}/>,
-    "Drawcords":<Drawcord bomInfo={necktapeData}/>,
+    // "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,

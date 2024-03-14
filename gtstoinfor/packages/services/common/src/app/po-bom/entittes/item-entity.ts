@@ -52,6 +52,12 @@ export class ItemEntity {
     // })
     // itemType: ItemTypeEnum;
 
+    @Column('varchar', {
+        name: 'print_component',
+        length: 50,
+    })
+    printComponent: string
+
 
     @CreateDateColumn({
         name: 'created_at'

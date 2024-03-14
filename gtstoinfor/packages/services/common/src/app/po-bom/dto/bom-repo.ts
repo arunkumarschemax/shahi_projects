@@ -29,12 +29,12 @@ export class BomRepo extends Repository<BomEntity> {
         return await query.getRawMany()
     }
 
-    async getBomDataForStyleAndSeason(req: { style: string, season: string, year: string }): Promise<BomDataForStyleAndSeasonModel[]> {
+    async getTrimBomDataForStyleAndSeason(req: { style: string, season: string, year: string,itemId : number }): Promise<BomDataForStyleAndSeasonModel[]> {
         const concatenatedSeason = req.season + req.year.slice(2);
         const query = this.createQueryBuilder('s')
             .select(`s.style_id as styleId,s.id AS bomId,s.item_name AS itemName,s.description,s.im_code AS imCode,s.item_type AS itemType,s.item_id as itemId`)
             .leftJoin(StyleEntity, `st`, `st.id = s.style_id`)
-            .where(`st.style='${req.style}' and st.season='${req.season}' and st.year = '${req.year}'`)
+            .where(`st.style='${req.style}' and st.season='${req.season}' and st.year = '${req.year}' and s.item_id = ${req.itemId}`)
         const data = await query.getRawMany()
 
         const mappedResult: any[] = data.map(item => ({

@@ -234,6 +234,7 @@ export const WasCarelabel = (props: washCareprops) => {
 
         return (
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '1px solid black' }} border={1} cellSpacing="0" cellPadding='5'>
+                
                 <tr>
                     <th>REGION</th>
                     <th>MANUFACTORYSHIP DATE</th>
