@@ -234,6 +234,8 @@ import TrimUomForm from "./trim-master/trim-uom/trim-uom"
 import TrimUomGrid from "./trim-master/trim-uom/trim-uom-view"
 import FunctionForm from "./trim-master/function/function-form"
 import FunctionGrid from "./trim-master/function/function-view"
+import InnerDiaForm from "./trim-master/innerdia/innerdia-form"
+import InnerDiaGrid from "./trim-master/innerdia/innerdia-view"
 
 
 
@@ -766,6 +768,13 @@ export const AppRoutes = () => {
                         updateFunction={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='function/function-view' element={<FunctionGrid />}/>
+
+                    <Route path='innerdia/innerdia-form' element={<InnerDiaForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateInnerDia={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='innerdia/innerdia-view' element={<InnerDiaGrid />}/>
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
