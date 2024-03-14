@@ -26,16 +26,19 @@ import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
 import { DpomModule } from "../dpom/nike-dpom.module";
 import { ItemAttributesEntity } from "./entittes/item-attributes.entity";
 import { SizehtMatrixEntity } from "./entittes/size-ht-matrix-entity";
+import { ApiSizeMatrixRepo } from "./repo/apasizematrix-repo";
+import { ApiSizeMatrix } from "./entittes/apa-size-matrix-entitys";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([
+
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity,SizehtMatrixEntity
+            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity,SizehtMatrixEntity,ApiSizeMatrix
         ]),
         DpomModule],
     controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo]
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo,ApiSizeMatrixRepo]
 })
 export class bomModule{ }

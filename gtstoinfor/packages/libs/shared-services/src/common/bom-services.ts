@@ -1,4 +1,4 @@
-import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, BomProposalReq, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumberReq } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, BomProposalReq, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumReq, StyleNumberReq, updateItemId } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -128,5 +128,23 @@ export class BomService extends CommonAxiosService {
     async getImcodes( ): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getImcodes")
     }
+    async getApaSizeMatrix(req:StyleNumReq ): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getApaSizeMatrix",req)
+    }
+
+    async getItemname( ): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getItemname")
+    }
+
+    async updateItemid( req:updateItemId): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/updateItemid",req)
+    }
     
+    
+    async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateProposalForPOIDLabel", req)
+    }
+    async getPpmStyleNumberByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPpmStyleNumberByCreatedAt",req)
+    }
 }

@@ -23,6 +23,7 @@ import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
 import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 import SizeStrip from '../../trims/trim-prints/size-strip';
+import POIDLable from '../../trims/trim-prints/poid-trim-print';
 type Props = {
   poLine: string[]
 }
@@ -51,6 +52,7 @@ export default function GenerateProposal(props: Props) {
   const [countrySticker,setCountrySticker]= useState<any>([])
   const [htLabel, setHtlabel] = useState<any>([])
   const [tissueData,setTissueData]= useState<any>([])
+  const [poidData,setPoidData] = useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -84,7 +86,7 @@ export default function GenerateProposal(props: Props) {
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
     "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
-
+    "Poid Label":<POIDLable bomInfo={poidData}/>,
   }
 
 
@@ -234,11 +236,9 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    console.log(bomProposalReq,"rrrrrrrrrr");
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
       setTwilltape(v.data)
-        console.log(v.data,"jjjjjjjjjjjj");
       }
     })
   }
@@ -271,13 +271,11 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    console.log(bomProposalReq,"requesttttttttt");
     
     service.getSizeStrip(bomProposalReq).then((v) => {
       if (v.status) {
         
         setSizeStripData(v.data)
-        console.log(v.data,"ppppppppppppppppp");
       }
     })
   }
@@ -289,6 +287,18 @@ export default function GenerateProposal(props: Props) {
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
         setButtonData(v.data)
+      }
+    })
+  }
+
+  function handlePoidLable(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForPOIDLabel(bomProposalReq).then((res) =>{
+      if(res.status){
+        setPoidData(res.data)
       }
     })
   }
@@ -534,9 +544,6 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Twill Tape'){
       handleTwilltape(val.itemId)
     } 
-
-    
-    
     if(val.item === 'Tissue Paper'){
       handleTissuePaper(val.itemId)
     } 
@@ -548,6 +555,10 @@ export default function GenerateProposal(props: Props) {
     } 
     if(val.item === 'Backing Paper'){
       handleBackingPaper(val.itemId)
+    }
+    
+    if(val.item ===  "Poid Label"){
+      handlePoidLable(val.itemId)
     }
   }
 
