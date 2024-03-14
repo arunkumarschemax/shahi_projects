@@ -787,7 +787,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Report Generate Date',
-            dataIndex: 'created_at', width: 70,
+            dataIndex: 'created_at', width: 80,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -808,7 +808,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'PO Number',
-            dataIndex: 'po_number', width: 70,
+            dataIndex: 'po_number', width: 90,
         },
         {
             title: 'PO Line Item No', width: 70,
@@ -817,25 +817,25 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
-            width: 70,
+            width: 80,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code', width: 70,
+            dataIndex: 'product_code', width: 90,
         },
         {
             title: 'GAC',
-            dataIndex: 'gac', width: 70,
+            dataIndex: 'gac', width: 80,
             render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'CO Number',
-            dataIndex: 'customer_order', width: 70,
+            dataIndex: 'customer_order', width: 90,
         },
         {
             title: 'Size Description',
-            dataIndex: 'size_description', width: 70,
+            dataIndex: 'size_description', width: 80,
         },
         {
             title: 'Change From Gross Price',
