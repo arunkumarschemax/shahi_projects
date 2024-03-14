@@ -242,6 +242,8 @@ import TrimBuyerForm from "./trim-master/trim-buyers/trim-buyer-form"
 import TrimBuyerGrid from "./trim-master/trim-buyers/trim-buyer-view"
 import LogoForm from "./trim-master/logo/logo-form"
 import LogoGrid from "./trim-master/logo/logo-view"
+import AirHoleForm from "./trim-master/air-hole/air-hole-form"
+import AirHoleGrid from "./trim-master/air-hole/air-hole-view"
 
 
 
@@ -788,6 +790,13 @@ export const AppRoutes = () => {
                         updateGauge={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='gauge/gauge-view' element={<GaugeGrid />}/>
+
+                    <Route path='air-hole/air-hole-form' element={<AirHoleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateAirHole={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='air-hole/air-hole-view' element={<AirHoleGrid />}/>
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
