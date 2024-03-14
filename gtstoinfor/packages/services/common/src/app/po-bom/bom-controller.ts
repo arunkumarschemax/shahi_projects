@@ -330,6 +330,31 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+    @Post('/getProductCodeDropdownByCreatedAt')
+    async getProductCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getProductCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
+    @Post('/getSeasonCodeDropdownByCreatedAt')
+    async getSeasonCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    @Post('/getSeasonYearDropdownByCreatedAt')
+    async getSeasonYearDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonYearDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }}
+
     @Post('/getImcodes')
     async getImcodes():Promise<CommonResponseModel>{
         try{
@@ -360,4 +385,23 @@ export class BomController {
         }
     }
 
+    @Post('/generateProposalForPOIDLabel')
+    async generateProposalForPOIDLabel(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForPOIDLabel(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getPpmStyleNumberByCreatedAt')
+    async getPpmStyleNumberByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getPpmStyleNumberByCreatedAt(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
 }

@@ -1050,7 +1050,6 @@ export class DpomRepository extends Repository<DpomEntity> {
     }
 
     async getBomCreationData(req: BomCreationFiltersReq): Promise<any[]> {
-        console.log(req)
         const pageNumber = 0; // Assuming you start from the first page (0-indexed)
         const pageSize = 10;
         const distinctSizesQuery = await this
@@ -1075,13 +1074,13 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.poLine !== undefined) {
             distinctSizesQuery.andWhere(`dpom.po_and_line IN (:...poLine)`, { poLine: req.poLine })
         }
-        if (req.planningSeasonCode !== undefined) {
+        if (req?.planningSeasonCode !== undefined) {
             distinctSizesQuery.andWhere(`planning_season_code ='${req.planningSeasonCode}'`)
         }
-        if (req.planningSeasonYear !== undefined) {
+        if (req?.planningSeasonYear !== undefined) {
             distinctSizesQuery.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
         }
-        if (req.productCode !== undefined) {
+        if (req?.productCode !== undefined) {
             distinctSizesQuery.andWhere(`product_code ='${req.productCode}'`)
         }
 
@@ -1114,6 +1113,15 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req.poLine !== undefined) {
             query.andWhere(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
+        }
+        if (req?.planningSeasonCode !== undefined) {
+            query.andWhere(`planning_season_code ='${req.planningSeasonCode}'`)
+        }
+        if (req?.planningSeasonYear !== undefined) {
+            query.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
+        }
+        if (req?.productCode !== undefined) {
+            query.andWhere(`product_code ='${req.productCode}'`)
         }
         //  .groupBy(`po_and_line`)
         query.groupBy('d.po_number,d.po_line_item_number',)

@@ -115,6 +115,16 @@ export class BomService extends CommonAxiosService {
         console.log(req)
         return this.axiosPostCall(this.URL + "/getSizeStrip", req)
     }
+    async getProductCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getProductCodeDropdownByCreatedAt", req)
+    }
+    async getSeasonCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getSeasonCodeDropdownByCreatedAt", req)
+    } 
+
+    async getSeasonYearDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getSeasonYearDropdownByCreatedAt", req)
+    }
     async getImcodes( ): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getImcodes")
     }
@@ -127,4 +137,10 @@ export class BomService extends CommonAxiosService {
     }
     
     
+    async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateProposalForPOIDLabel", req)
+    }
+    async getPpmStyleNumberByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPpmStyleNumberByCreatedAt",req)
+    }
 }

@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { BomItemReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
-import { NikeService } from "@project-management-system/shared-services";
+import { BomItemReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
+import { BomService, NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
@@ -27,12 +27,14 @@ const BomOrderAcceptance = () => {
     const { Option } = Select;
     const [showModal, setShowModal] = useState<boolean>(false)
     const createdAtValues = form.getFieldValue('createdAt');
+    const bomService = new BomService()
+
     useEffect(() => {
 
-        getOrderAcceptanceData()
-        getStyleNumber();
-        getSesonCode();
-        getSesonYear();
+       // getOrderAcceptanceData()
+       // getStyleNumber();
+        // getSesonCode();
+        // getSesonYear();
     }, [])
 
 
@@ -48,28 +50,60 @@ const BomOrderAcceptance = () => {
 
     const onReset = () => {
         form.resetFields()
-        getOrderAcceptanceData()
+        // getOrderAcceptanceData()
         setData([])
         setSelectedRowKeys([])
     }
 
     const getSesonYear = () => {
-        nikeService.getPpmPlanningSeasonYearFactory().then(res => {
-            setPlanSesYear(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
+                setPlanSesYear(res.data)
+            }).catch(error => {
+                console.error("Error fetching season year dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
-
+    
     const getSesonCode = () => {
-        nikeService.getPpmPlanningSeasonCodeFactory().then(res => {
-            setPlanSesCode(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
+                setPlanSesCode(res.data)
+            }).catch(error => {
+                console.error("Error fetching season code dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
+    
 
     const getStyleNumber = () => {
-        nikeService.getStyleNumberForItemUpdate().then(res => {
-            setStyleNumber(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getPpmStyleNumberByCreatedAt(req).then(res => {
+                setStyleNumber(res.data)
+            }).catch(error => {
+                console.error("Error fetching style numbers:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
+    
     const getOrderAcceptanceData = () => {
         const req = new UpdateBomITemNoFilters();
 
@@ -82,13 +116,12 @@ const BomOrderAcceptance = () => {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
-        if (createdAtValues && createdAtValues.length >= 2) {
-            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD');
-            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD');
-        } 
         if (form.getFieldValue('itemStatus') !== undefined) {
             req.itemStatus = form.getFieldValue('itemStatus');
         }
+req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+
         nikeService.getdpomDataForBom(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -419,12 +452,13 @@ const BomOrderAcceptance = () => {
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode="multiple"
+                                onDropdownVisibleChange={getStyleNumber}
                                 showSearch
                                 placeholder="Select Style Number"
                                 optionFilterProp="children"
                                 allowClear
                             >
-                                {styleNumber?.map((inc: any) => {
+                                {styleNumber && styleNumber?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
                                 })
                                 }
@@ -435,6 +469,7 @@ const BomOrderAcceptance = () => {
                         <Form.Item name='planningSeasonCode' label='Code' >
                             <Select
                                 showSearch
+                                onDropdownVisibleChange={getSesonCode}
                                 placeholder="Select Season Code"
                                 optionFilterProp="children"
                                 allowClear
@@ -450,6 +485,7 @@ const BomOrderAcceptance = () => {
                         <Form.Item name='planningSeasonYear' label='Season Year' >
                             <Select
                                 showSearch
+                                onDropdownVisibleChange={ getSesonYear}
                                 placeholder="Select Season Year"
                                 optionFilterProp="children"
                                 allowClear

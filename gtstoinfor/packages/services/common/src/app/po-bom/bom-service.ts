@@ -28,7 +28,7 @@ import { DestinationsRepo } from "./repo/destination-repo";
 import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
 import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
 import { ItemEntity } from "./entittes/item-entity";
-import { group } from "console";
+import { Console, group } from "console";
 import { itemWiseMOQ } from "./moq-data";
 
 
@@ -1012,6 +1012,9 @@ export class BomService {
             else if (req.trimName === 'Jocktage Label') {
                 key += `-${season}`;
             }
+            else if (req.trimName === 'Poid Label') {
+                key += `${styleNumber}-${itemNo}`;
+            }
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -1030,7 +1033,7 @@ export class BomService {
                 };
             }
             result[key].bomQty += bomQty;
-
+console.log(bomQty,"poQty at 1036")
 
             return result
         }, {})
@@ -1423,6 +1426,43 @@ export class BomService {
         }
     }
 
+    async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        const poBomData = await this.poBomRepo.getProposalsData(req)
+
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            let key = `${styleNumber}-${imCode}-${itemNo}`;
+             if (req.trimName === 'Poid Label') {
+                key += `${styleNumber}-${itemNo}`;
+            }
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    poQty:0,
+                    use, imCode, itemNo, bomQty: 0, destination,
+                    itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
+                    color,
+                    itemColor,
+                    productCode,
+                };
+            }
+            result[key].bomQty += bomQty;
+            result[key].poQty += poQty;
+
+            return result
+        }, {})
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
+    }
 
 }
 
