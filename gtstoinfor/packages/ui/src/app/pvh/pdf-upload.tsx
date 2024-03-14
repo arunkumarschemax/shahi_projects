@@ -28,7 +28,7 @@ const pdfFilesValidationObject = [
     // },
     {
         pdfName: 'PO PDF',
-        pdfKeyText: 'Purchase Order'
+        pdfKeyText: /\<\/\w+\>/
     }
 ]
 
@@ -79,78 +79,178 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         setPoPdfData(poData)
     }
 
-    const xmlFormat = (xml) => {
-        if (xml.nodeType === Node.TEXT_NODE) {
-            return xml.textContent.trim();
-        }
-        let result = '';
-        if (xml.nodeType === Node.ELEMENT_NODE) {
-            result += '<' + xml.tagName;
+    /* xml format ///////////////********************* */
+    // const xmlFormat = (xml) => {
+    //     if (xml.nodeType === Node.TEXT_NODE) {
+    //         return xml.textContent.trim();
+    //     }
+    //     let result = '';
+    //     if (xml.nodeType === Node.ELEMENT_NODE) {
+    //         result += '<' + xml.tagName;
 
-            for (let i = 0; i < xml.attributes.length; i++) {
-                result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
-            }
-            result += '>';
-            for (let i = 0; i < xml.childNodes.length; i++) {
-                result += xmlFormat(xml.childNodes[i]);
-            }
-            if (xml.childNodes.length > 0) {
-                result += '</' + xml.tagName + '>';
-            } else {
-                result += '/>';
-            }
-        }
-        result += '\n';
-        return result;
-    };
+    //         for (let i = 0; i < xml.attributes.length; i++) {
+    //             result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
+    //         }
+    //         result += '>';
+    //         for (let i = 0; i < xml.childNodes.length; i++) {
+    //             result += xmlFormat(xml.childNodes[i]);
+    //         }
+    //         if (xml.childNodes.length > 0) {
+    //             result += '</' + xml.tagName + '>';
+    //         } else {
+    //             result += '/>';
+    //         }
+    //     }
+    //     result += '\n';
+    //     return result;
+    // };
+
+  
+    /* extraction of xml */////////////////////////**************** */
+    // const extractTextFromPdf = async (file) => {
+    //     const reader = new FileReader();
+    //     console.log(reader, "reader")
+    //     reader.onload = async (e) => {
+    //         let xmlText = e.target.result;
+
+    //         if (typeof xmlText !== 'string') {
+    //             const arrayBufferView = new Uint8Array(xmlText);
+    //             const blob = new Blob([arrayBufferView], { type: 'text/xml' });
+
+    //             const reader = new FileReader();
+
+    //             reader.onload = (event) => {
+    //                 xmlText = event.target.result.toString();
+    //                 const parser = new DOMParser();
+    //                 console.log(parser, "parser")
+
+    //                 const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    //                 console.log(xmlDoc, "xmlDoc")
+
+    //                 const textContent :any= (xmlDoc.documentElement);
+    //                 console.log(textContent, "textContent");
+
+    //                 // const formattedXmlText = textContent;
+    //                 // console.log(JSON.stringify(formattedXmlText),null, "formattedXmlText");
+    //                 extractDataFromPoPdf(textContent);
+
+    //                 const title = pdfFilesValidationObject.find((val) => textContent.match(val.pdfKeyText))?.pdfName;
+    //                 if (title) {
+    //                     extractPoPdfData(xmlText, textContent);
+    //                 }
+    //                 updateResultProps(title);
+    //             };
+    //             reader.readAsText(blob);
+    //         } else {
+    //             const parser = new DOMParser();
+    //             const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    //             const textContent:any = (xmlDoc.documentElement);
+    //             console.log(textContent, "textContent");
+
+    //             // const formattedXmlText = xmlFormat(textContent);
+    //             // console.log(formattedXmlText, "formattedXmlText");
+    //             extractDataFromPoPdf(textContent);
+
+    //             const title = pdfFilesValidationObject.find((val) => textContent.match(val.pdfKeyText))?.pdfName;
+    //             if (title) {
+    //                 extractPoPdfData(xmlText, textContent);
+    //             }
+    //             updateResultProps(title);
+    //         }
+    //     };
+    //     reader.readAsArrayBuffer(file);
+    // };
 
     const extractTextFromPdf = async (file) => {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        console.log(reader, "reader")
+
+        reader.onload = async (e) => {
             let xmlText = e.target.result;
-            console.log(xmlText, "xmlText")
 
             if (typeof xmlText !== 'string') {
                 const arrayBufferView = new Uint8Array(xmlText);
                 const blob = new Blob([arrayBufferView], { type: 'text/xml' });
-                console.log(blob, "blob")
-
 
                 const reader = new FileReader();
-                console.log(reader, "reader")
-
                 reader.onload = (event) => {
                     xmlText = event.target.result.toString();
-
-                    const parser = new DOMParser();
-                    console.log(parser, "parser")
-
-                    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-                    console.log(xmlDoc, "xmlDoc")
-
-                    const extractedXmlData = xmlFormat(xmlDoc.documentElement);
-                    extractPoPdfData(xmlText, extractedXmlData);
-                    console.log(extractedXmlData, "extractedXmlData");
-                    // console.log(JSON.stringify(extractedXmlData,null));
+                    xmlProcess(xmlText);
                 };
                 reader.readAsText(blob);
             } else {
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-                const extractedXmlData = xmlFormat(xmlDoc.documentElement);
-                extractPoPdfData(xmlText, extractedXmlData);
-                console.log(extractedXmlData, "extractedXmlData");
-                // console.log(JSON.stringify(extractedXmlData,null));
+                xmlProcess(xmlText);
             }
         };
         reader.readAsArrayBuffer(file);
-        if (file) {
-            // Remove this line as it's redundant
-            // extractPoPdfData(xmlText, extractedXmlData);
-        }
-        updateResultProps(file);
+
+        const xmlProcess = (xmlText) => {
+            const parser = new DOMParser();
+            console.log(parser, "parser")
+
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+            console.log(xmlDoc, "xmlDoc")
+
+            const textContent = xmlDoc.documentElement;
+            console.log(textContent, "textContent")
+            extractDataFromPoPdf(textContent);
+
+            const title = pdfFilesValidationObject.find((val) => xmlText.match(val.pdfKeyText))?.pdfName;
+            console.log(title,"title")
+            if (title) {
+                extractPoPdfData(xmlText, textContent);
+            }
+            updateResultProps(title);
+        };
     };
+
+    // const extractTextFromPdf = async (file) => {
+    //     const reader = new FileReader();
+    //     reader.onload = (e) => {
+    //         let xmlText = e.target.result;
+    //         console.log(xmlText, "xmlText")
+
+    //         if (typeof xmlText !== 'string') {
+    //             const arrayBufferView = new Uint8Array(xmlText);
+    //             const blob = new Blob([arrayBufferView], { type: 'text/xml' });
+    //             console.log(blob, "blob")
+
+
+    //             const reader = new FileReader();
+    //             console.log(reader, "reader")
+
+    //             reader.onload = (event) => {
+    //                 xmlText = event.target.result.toString();
+
+    //                 const parser = new DOMParser();
+    //                 console.log(parser, "parser")
+
+    //                 const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    //                 console.log(xmlDoc, "xmlDoc")
+
+    //                 const extractedXmlData = xmlFormat(xmlDoc.documentElement);
+    //                 extractPoPdfData(xmlText, extractedXmlData);
+    //                 console.log(extractedXmlData, "extractedXmlData");
+    //                 // console.log(JSON.stringify(extractedXmlData,null));
+    //             };
+    //             reader.readAsText(blob);
+    //         } else {
+    //             const parser = new DOMParser();
+    //             const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+    //             const extractedXmlData = xmlFormat(xmlDoc.documentElement);
+    //             extractPoPdfData(xmlText, extractedXmlData);
+    //             console.log(extractedXmlData, "extractedXmlData");
+    //             // console.log(JSON.stringify(extractedXmlData,null));
+    //         }
+    //     };
+    //     reader.readAsArrayBuffer(file);
+    //     if (file) {
+    //         // Remove this line as it's redundant
+    //         // extractPoPdfData(xmlText, extractedXmlData);
+    //     }
+    //     updateResultProps(file);
+    // };
 
     const updateResultProps = (title) => {
         const resultProps: ResultPropsModel = new ResultPropsModel()
