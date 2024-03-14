@@ -354,7 +354,7 @@ export class BomController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }}
-        
+
     @Post('/getImcodes')
     async getImcodes():Promise<CommonResponseModel>{
         try{
@@ -362,6 +362,15 @@ export class BomController {
         }
         catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    @Post('/generateProposalForPOIDLabel')
+    async generateProposalForPOIDLabel(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForPOIDLabel(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
 }

@@ -129,4 +129,7 @@ export class BomService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getImcodes")
     }
     
+    async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateProposalForPOIDLabel", req)
+    }
 }
