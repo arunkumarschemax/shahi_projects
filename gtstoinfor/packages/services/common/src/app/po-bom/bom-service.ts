@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -28,8 +28,9 @@ import { DestinationsRepo } from "./repo/destination-repo";
 import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
 import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
 import { ItemEntity } from "./entittes/item-entity";
-import { group } from "console";
+import { Console, group } from "console";
 import { itemWiseMOQ } from "./moq-data";
+import { ApiSizeMatrixRepo } from "./repo/apasizematrix-repo";
 
 
 
@@ -47,7 +48,8 @@ export class BomService {
         private zFactorsRepo: ZFactorsRepo,
         private itemsRepo: ItemsRepo,
         private destinationsRepo: DestinationsRepo,
-        private zFactorsBomRepo: ZFactorsBomRepo
+        private zFactorsBomRepo: ZFactorsBomRepo,
+        private apaSizeamtrixRepo:ApiSizeMatrixRepo
 
     ) { }
     async createBom(req: StyleDto): Promise<CommonResponseModel> {
@@ -454,9 +456,9 @@ export class BomService {
             // moq logic before insering
 
             for (const rec of poBomEntities) {
-                const isBomRecExist = await this.poBomRepo.checkIfBomGenerated( rec.dpom.id ,rec.bom ? rec.bom.id : null,rec.zFactorBom ? rec.zFactorBom.id : null)
+                const isBomRecExist = await this.poBomRepo.checkIfBomGenerated(rec.dpom.id, rec.bom ? rec.bom.id : null, rec.zFactorBom ? rec.zFactorBom.id : null)
                 console.log(isBomRecExist)
-                if(isBomRecExist) continue
+                if (isBomRecExist) continue
                 await transactionManager.getRepository(PoBomEntity).insert(rec)
 
             }
@@ -662,7 +664,8 @@ export class BomService {
 
         const poBomData = await this.poBomRepo.getProposalsData(req)
         const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        let data = [...poBomData, ...poBomZfactorData]
+        let sortData = [...poBomData, ...poBomZfactorData]
+        let data = sortData.sort((a, b) => a.sequence - b.sequence);
         const groupedData: any = data.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, ogacDate, shipToNumber } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
@@ -832,9 +835,7 @@ export class BomService {
             let key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
             if (req.trimName === 'Twill Tape') {
                 key += `-${season}`;
-                console.log(season,"seasonnnnnn")
             }
-            console.log(key,"keyyyyyy")
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -1015,6 +1016,9 @@ export class BomService {
             else if (req.trimName === 'Jocktage Label') {
                 key += `-${season}`;
             }
+            else if (req.trimName === 'Poid Label') {
+                key += `${styleNumber}-${itemNo}`;
+            }
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -1033,7 +1037,7 @@ export class BomService {
                 };
             }
             result[key].bomQty += bomQty;
-
+console.log(bomQty,"poQty at 1036")
 
             return result
         }, {})
@@ -1281,16 +1285,16 @@ export class BomService {
     }
     async getMainWovenLableData(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-    
+
         const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-    
+
             let key = `${styleNumber}-${imCode}-${itemNo}-${season} `;
-    
+
             if (!result[key]) {
                 result[key] = {
                     styleNumber, imCode, itemNo, bomQty: 0, itemId,
@@ -1322,7 +1326,7 @@ export class BomService {
                     result[key].sizeWiseQty.push({ size, qty: bomQty });
                 }
             }
-    
+
             result[key].bomQty += bomQty;
             return result;
         }, {});
@@ -1384,6 +1388,99 @@ export class BomService {
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
+    async getImcodes():Promise<CommonResponseModel>{
+        const data = await this.bomRepo.getImcodes()
+        if(data){
+            return new CommonResponseModel(true,1,'Data Retrived',data)
+        }else{
+            return new CommonResponseModel(false,0,'No Data',[])
+
+        }
+    }
+
+    async getItemname(): Promise<CommonResponseModel> {
+        const records = await this.bomRepo;
+        const query=`SELECT i.item_id as itemId,i.item AS itemName FROM items i`
+        const result = await this.bomRepo.query(query)
+        if(result){
+            return new CommonResponseModel(true,1,'Data Retrived',result)
+        }else{
+            return new CommonResponseModel(false,0,'No Data',[])
+
+        }
+
+    }
+
+
+    async updateItemid(req:updateItemId): Promise<CommonResponseModel> {
+        try {
+           console.log(req,"reqqqqqq")
+            const query = ` UPDATE bom 
+                SET item_id = '${req.itemId}'
+                WHERE im_code = '${req.imCode}' `;
+                const result = await this.dataSource.query(query)
+            if (result) {
+                return new CommonResponseModel(true, 1, 'Data Updated', result);
+            } else {
+                return new CommonResponseModel(false, 0, 'No Data Updated', []);
+            }
+        } catch (error) {
+            console.error("Error occurred during update:", error);
+            return new CommonResponseModel(false, 0, 'Error occurred during update', []);
+        }
+    }
+    async getApaSizeMatrix(req:StyleNumReq):Promise<CommonResponseModel>{
+        try{
+            // const query=`SELECT id,buy_month AS buyMonth,style_number AS styleNumber,style_type AS styleType,usa_size AS usaSize,china_size_matrixtype AS chinaSizeMatrixType,   china_top_size AS chinaTopSize,china_top_bodysize AS chinaTopBodySize,china_bottom_size AS chinaBottomSize,china_bottom_bodysize AS chinabottomBodySize,           korea_size_matrixtype AS koreaSizeMatrixType,korea_top_generic AS koreaTopGeneric,korea_top_chest AS koreaTopChest,            korea_top_height AS koreaTopHeight,korea_bottom_generic AS koreaBottomGeneric,korea_bottom_waist AS koreaBottomWaist,korea_bottom_hip AS koreaBottomWaist FROM apa_size_matrix where style_number in (:...style), { style: req.styleNumber }`
+            // const result = await this.dataSource.query(query)
+            const result = await this.apaSizeamtrixRepo.getApaSizeMatrixData(req)
+            if(result){
+                return new CommonResponseModel(true,1,'Data Retrived',result)
+            }else{
+                return new CommonResponseModel(true,1,'Data Retrived',[])
+            }
+        }
+        catch(err){
+            throw err
+        }
+    }
+    async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        const poBomData = await this.poBomRepo.getProposalsData(req)
+
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            let key = `${styleNumber}-${imCode}-${itemNo}`;
+             if (req.trimName === 'Poid Label') {
+                key += `${styleNumber}-${itemNo}`;
+            }
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    poQty:0,
+                    use, imCode, itemNo, bomQty: 0, destination,
+                    itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
+                    color,
+                    itemColor,
+                    productCode,
+                };
+            }
+            result[key].bomQty += bomQty;
+            result[key].poQty += poQty;
+
+            return result
+        }, {})
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
+    }
 
 }
 

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors, } from "@nestjs/common";
 import { ApiBody, ApiTags, ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { BomExcelreq, BomProposalReq, CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomExcelreq, BomProposalReq, CommonResponseModel, PpmDateFilterRequest, updateItemId,StyleNumReq } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -325,6 +325,88 @@ export class BomController {
     async getSizeStrip(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.getSizeStrip(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+    @Post('/getProductCodeDropdownByCreatedAt')
+    async getProductCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getProductCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
+    @Post('/getSeasonCodeDropdownByCreatedAt')
+    async getSeasonCodeDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonCodeDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    @Post('/getSeasonYearDropdownByCreatedAt')
+    async getSeasonYearDropdownByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getSeasonYearDropdownByCreatedAt(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }}
+
+    @Post('/getImcodes')
+    async getImcodes():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getImcodes()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    @Post('/getApaSizeMatrix')
+    async getApaSizeMatrix(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getApaSizeMatrix(req)
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    
+    @Post('/getItemname')
+    async getItemname():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getItemname()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+    @Post('/updateItemid')
+    async updateItemid(@Body() req: any):Promise<CommonResponseModel>{
+        try{
+            return this.bomService.updateItemid(req)
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
+
+    @Post('/generateProposalForPOIDLabel')
+    async generateProposalForPOIDLabel(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForPOIDLabel(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getPpmStyleNumberByCreatedAt')
+    async getPpmStyleNumberByCreatedAt(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getPpmStyleNumberByCreatedAt(req)
         }
         catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)

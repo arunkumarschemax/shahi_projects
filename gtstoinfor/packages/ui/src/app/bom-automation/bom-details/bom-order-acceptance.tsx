@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { BomItemReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
-import { NikeService } from "@project-management-system/shared-services";
+import { BomItemReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdateBomITemNoFilters } from "@project-management-system/shared-models";
+import { BomService, NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { IExcelColumn } from "antd-table-saveas-excel/app";
@@ -27,12 +27,14 @@ const BomOrderAcceptance = () => {
     const { Option } = Select;
     const [showModal, setShowModal] = useState<boolean>(false)
     const createdAtValues = form.getFieldValue('createdAt');
+    const bomService = new BomService()
+
     useEffect(() => {
 
-        getOrderAcceptanceData()
-        getStyleNumber();
-        getSesonCode();
-        getSesonYear();
+       // getOrderAcceptanceData()
+       // getStyleNumber();
+        // getSesonCode();
+        // getSesonYear();
     }, [])
 
 
@@ -48,27 +50,60 @@ const BomOrderAcceptance = () => {
 
     const onReset = () => {
         form.resetFields()
+        // getOrderAcceptanceData()
         setData([])
         setSelectedRowKeys([])
     }
 
     const getSesonYear = () => {
-        nikeService.getPpmPlanningSeasonYearFactory().then(res => {
-            setPlanSesYear(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonYearDropdownByCreatedAt(req).then(res => {
+                setPlanSesYear(res.data)
+            }).catch(error => {
+                console.error("Error fetching season year dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
-
+    
     const getSesonCode = () => {
-        nikeService.getPpmPlanningSeasonCodeFactory().then(res => {
-            setPlanSesCode(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getSeasonCodeDropdownByCreatedAt(req).then(res => {
+                setPlanSesCode(res.data)
+            }).catch(error => {
+                console.error("Error fetching season code dropdown:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
+    
 
     const getStyleNumber = () => {
-        nikeService.getStyleNumberForItemUpdate().then(res => {
-            setStyleNumber(res.data)
-        })
+        const createdAtValues = form.getFieldValue('createdAt');
+        if (createdAtValues && createdAtValues.length >= 2) {
+            const req = new ItemInfoFilterReq()
+            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD')
+            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD')
+            bomService.getPpmStyleNumberByCreatedAt(req).then(res => {
+                setStyleNumber(res.data)
+            }).catch(error => {
+                console.error("Error fetching style numbers:", error);
+            });
+        } else {
+            console.error("Invalid createdAtValues:", createdAtValues);
+        }
     }
+    
     const getOrderAcceptanceData = () => {
         const req = new UpdateBomITemNoFilters();
 
@@ -81,10 +116,12 @@ const BomOrderAcceptance = () => {
         if (form.getFieldValue('planningSeasonYear') !== undefined) {
             req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
         }
-        if (createdAtValues && createdAtValues.length >= 2) {
-            req.fromDate = dayjs(createdAtValues[0]).format('YYYY-MM-DD');
-            req.toDate = dayjs(createdAtValues[1]).format('YYYY-MM-DD');
-        } 
+        if (form.getFieldValue('itemStatus') !== undefined) {
+            req.itemStatus = form.getFieldValue('itemStatus');
+        }
+req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
+req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
+
         nikeService.getdpomDataForBom(req).then((res) => {
             if (res.data) {
                 setData(res.data)
@@ -179,7 +216,7 @@ const BomOrderAcceptance = () => {
             fixed: 'left'
         },
         {
-            title: 'PO Number and Line',
+            title: 'PO + Line',
             dataIndex: 'po_and_line',
             key: 'po_and_line',
             fixed: 'left',
@@ -213,11 +250,11 @@ const BomOrderAcceptance = () => {
             dataIndex: 'color_desc', width: 80,
         },
         {
-            title: 'Destination Country Code',
+            title: 'Country Code',
             dataIndex: 'destination_country_code', width: 75,
         },
         {
-            title: 'Destination Country',
+            title: 'Country',
             dataIndex: 'destination_country', width: 75,
         },
         // {
@@ -236,12 +273,12 @@ const BomOrderAcceptance = () => {
         //     },
         // },
         {
-            title: 'Planning Season Code',
+            title: 'Season Code',
             dataIndex: 'planning_season_code',
             align: 'center', width: 70,
         },
         {
-            title: 'Planning Season Year',
+            title: 'Year',
             dataIndex: 'planning_season_year', width: 70,
             align: 'center',
         },
@@ -325,7 +362,7 @@ const BomOrderAcceptance = () => {
         exportingColumns = [
           
             {
-                title: 'PO Number and Line',
+                title: 'PO + Line',
                 dataIndex: 'po_and_line',
                 width: 80,
                 ...getColumnSearchProps('po_and_line')
@@ -357,17 +394,17 @@ const BomOrderAcceptance = () => {
                 dataIndex: 'destination_country_code', width: 75,
             },
             {
-                title: 'Destination Country',
+                title: 'Country',
                 dataIndex: 'destination_country', width: 75,
             },
          
             {
-                title: 'Planning Season Code',
+                title: 'Season Code',
                 dataIndex: 'planning_season_code',
                 align: 'center', width: 70,
             },
             {
-                title: 'Planning Season Year',
+                title: 'Season Year',
                 dataIndex: 'planning_season_year', width: 70,
                 align: 'center',
             },
@@ -406,32 +443,34 @@ const BomOrderAcceptance = () => {
                 form={form}
                 layout='vertical'>
                 <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
                         <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode="multiple"
+                                onDropdownVisibleChange={getStyleNumber}
                                 showSearch
                                 placeholder="Select Style Number"
                                 optionFilterProp="children"
                                 allowClear
                             >
-                                {styleNumber?.map((inc: any) => {
+                                {styleNumber && styleNumber?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
                                 })
                                 }
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonCode' label='Code' >
                             <Select
                                 showSearch
-                                placeholder="Select Planning Season Code"
+                                onDropdownVisibleChange={getSesonCode}
+                                placeholder="Select Season Code"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -442,11 +481,12 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 5 }} >
-                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='planningSeasonYear' label='Season Year' >
                             <Select
                                 showSearch
-                                placeholder="Select Planning Season Year"
+                                onDropdownVisibleChange={ getSesonYear}
+                                placeholder="Select Season Year"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -457,15 +497,31 @@ const BomOrderAcceptance = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }} >
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
-                            <Button style={{marginLeft:8}} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
-
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                        <Form.Item name='itemStatus' label='Item Status' >
+                            <Select
+                                showSearch
+                                placeholder="Select Item Status"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                <Option key="all" value="All">All</Option>
+                                <Option key="Updated" value="Updated">Updated</Option>
+                                <Option key="null" value="null">Null</Option>
+                            </Select>
                         </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
+                        <Button htmlType="submit"
+                            icon={<SearchOutlined />}
+                            type="primary">Submit</Button>
                     </Col>
-                   
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
+                        <Button htmlType='button' icon={<UndoOutlined />} onClick={() => onReset()}>
+                            RESET
+                        </Button>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 2 }}  style={{ paddingTop: '23px' }}>
                         <Button onClick={openModeal} style={{
                             backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
                             color: selectedRowKeys.length > 0 ? "black" : "black",

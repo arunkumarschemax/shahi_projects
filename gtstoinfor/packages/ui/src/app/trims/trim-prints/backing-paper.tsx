@@ -16,10 +16,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
         }
     });
 };
-export interface BackingPapertProps{
+export interface BackingPaperProps{
 bomInfo:any
 }
-export function BackingPaper(props:BackingPapertProps) {
+export function BackingPaper(props:BackingPaperProps) {
 console.log(props.bomInfo,"********************************")
 const data = props.bomInfo
 console.log(props.bomInfo.map((e)=> e.itemId));
@@ -96,7 +96,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                             <tr>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.trim !== null ? rec.trim:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >INTERLINING</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.imCode !== null ? rec.imCode:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.description !== null ? rec.description:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.use !== null ? rec.use:''}</td>
