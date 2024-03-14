@@ -29,8 +29,4 @@ export class FunctionService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getFunctionById',req)
     }
 
-    // async  getAllHolesForCategory(req: CategoryIdRequest): Promise<CommonResponseModel> {
-    //     return this.axiosPostCall(this.URL + '/getAllHolesForCategory',req)
-    // }
-
 }

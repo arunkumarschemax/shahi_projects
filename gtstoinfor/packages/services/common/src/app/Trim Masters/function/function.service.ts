@@ -20,7 +20,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Uom data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }
@@ -45,14 +45,14 @@ export class FunctionService {
 
       async createFunction(req: FunctionDTO, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
-          const trimUomData = await this.functionRepo.findOne({ where: { function: req.function } });
+          const functionData = await this.functionRepo.findOne({ where: { function: req.function } });
 
-          if (isUpdate && trimUomData && trimUomData.functionId !== req.functionId) {
+          if (isUpdate && functionData && functionData.functionId !== req.functionId) {
             return new CommonResponseModel(false, 1, 'Another function already exists');
           }
 
-          if (!isUpdate && trimUomData) {
-            return new CommonResponseModel(false, 1, 'Uom already exists');
+          if (!isUpdate && functionData) {
+            return new CommonResponseModel(false, 1, 'InnerDia already exists');
           }
           const entity = new FunctionEntity();
           entity.function = req.function;
@@ -63,7 +63,7 @@ export class FunctionService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.functionRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'Uom updated successfully' : 'Uom created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'InnerDia updated successfully' : 'InnerDia created successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -71,29 +71,29 @@ export class FunctionService {
 
       async activateOrDeactivateFunction(req: FunctionDTO): Promise<CommonResponseModel> {
         try {
-            const trimUomExists = await this.functionRepo.findOne({where:{functionId: req.functionId}});
-            if (trimUomExists) {
-                if (!trimUomExists) {
-                    throw new ErrorResponse(10113, 'Someone updated the current Uom. Refresh and try again');
+            const FunctionExists = await this.functionRepo.findOne({where:{functionId: req.functionId}});
+            if (FunctionExists) {
+                if (!FunctionExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current InnerDia. Refresh and try again');
                 } else {
                     
-                        const trimUomStatus =  await this.functionRepo.update(
+                        const functionStatus =  await this.functionRepo.update(
                             { functionId: req.functionId },
                             { isActive: req.isActive,updatedUser: req.updatedUser });
                        
-                        if (trimUomExists.isActive) {
-                            if (trimUomStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Uom is deactivated successfully');
+                        if (FunctionExists.isActive) {
+                            if (functionStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'InnerDia is deactivated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Uom is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'InnerDia is already deactivated');
                             }
                         } else {
-                            if (trimUomStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Uom is activated successfully');
+                            if (functionStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'InnerDia is activated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Uom is already activated');
+                                throw new CommonResponseModel(false,10112, 'InnerDia is already activated');
                             }
                       }
                 }
@@ -110,7 +110,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{isActive: true},order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Uom data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }
@@ -123,7 +123,7 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{functionId: req.functionId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Uom data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia data retrieved successfully',data)
             }else{
                 return new CommonResponseModel(false, 0, 'No data found',[])
             }

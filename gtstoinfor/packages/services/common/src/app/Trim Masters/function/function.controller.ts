@@ -74,15 +74,6 @@ export class FunctionController {
       }
 
 
-    //   @Post('/getAllHolesForCategory')
-    //   @ApiBody({type: CategoryIdRequest})
-    //   async getAllHolesForCategory(@Body() req: any): Promise<CommonResponseModel>{
-    //       try{
-    //           return await this.trimUomService.getAllHolesForCategory(req)
-    //       }catch (error){
-    //           return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
-    //       }
-    //   }
 
 }
 
