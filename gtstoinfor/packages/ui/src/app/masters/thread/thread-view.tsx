@@ -4,7 +4,7 @@ import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Sw
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TableActions from '../../common/table-actions/table-actions';
 import ThreadForm from './thread-form';
@@ -145,7 +145,8 @@ const ThreadView = () => {
 
     {
       title: "SNo",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>,
+      width:'100px'
 
     },
 
@@ -155,13 +156,17 @@ const ThreadView = () => {
       dataIndex: 'style',
       align: 'center',
       ...getColumnSearchProps('style'),
+      width:'150px'
 
 
     },
     {
       title: "Tex",
       dataIndex: 'tex', 
-      align: 'center'
+      align: 'center',
+      ...getColumnSearchProps('style'),
+      width:'150px'
+
     },
     {
       title: "Quality",
@@ -169,7 +174,9 @@ const ThreadView = () => {
       sorter: (a, b) => a.quality.length - b.quality.length,
       sortDirections: ['descend', 'ascend'],
       // ...getColumnSearchProps('quality'),
-      align: 'center'
+      align: 'center',
+      width:'150px'
+
     },
     {
       title: "Color Combo",
@@ -178,7 +185,7 @@ const ThreadView = () => {
       sorter: (a, b) => a.colorCombo.length - b.colorCombo.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('colorCombo'),
-
+      width:'150px'
     },
     {
       title: "Color Code",
@@ -187,6 +194,7 @@ const ThreadView = () => {
       sorter: (a, b) => a.colorCode.length - b.colorCode.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('colorCode'),
+      width:'150px'
 
     },
     {
@@ -195,6 +203,8 @@ const ThreadView = () => {
       align: 'center',
       sorter: (a, b) => a.shadeNumber.length - b.shadeNumber.length,
       sortDirections: ['descend', 'ascend'],
+      width:'150px'
+
     },
     {
       title: "Supplier",
@@ -202,6 +212,7 @@ const ThreadView = () => {
       align: 'center',
       ...getColumnSearchProps('supplierName'),
 
+      width:'150px'
 
     },
    
@@ -262,17 +273,14 @@ const ThreadView = () => {
      
 
       <div>
-        <Card
-          extra={<span><Button onClick={() => navigate('/bom/thread-form')} type={'primary'}>New</Button></span>}
-          headStyle={{ height: '50px' }}
-          bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-          title={<h4 style={{ textAlign: 'left' }}>Threads</h4>}
-
-        >
+          <Card title={<span style={{color:'white'}}>Threads</span>}
+    style={{textAlign:'center'}} 
+     extra={<Link to='/bom/thread-form' ><span ><Button className='panel_button' type={'primary'} >New </Button> </span></Link>}
+      >
 
           <Table className="custom-table-wrapper" 
            columns={Columns} dataSource={supplier} size='small'
-            scroll={{ x: 1500 }} 
+            // scroll={{ x: 1500 }} 
             pagination={{
               pageSize: 100, 
               onChange(current, pageSize) {
