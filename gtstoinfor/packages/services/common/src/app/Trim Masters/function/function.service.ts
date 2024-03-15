@@ -20,9 +20,9 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -48,11 +48,11 @@ export class FunctionService {
           const functionData = await this.functionRepo.findOne({ where: { function: req.function } });
 
           if (isUpdate && functionData && functionData.functionId !== req.functionId) {
-            return new CommonResponseModel(false, 1, 'Another function already exists');
+            return new CommonResponseModel(false, 1, 'Another Function Already Exists');
           }
 
           if (!isUpdate && functionData) {
-            return new CommonResponseModel(false, 1, 'Function already exists');
+            return new CommonResponseModel(false, 1, 'Function Already Exists');
           }
           const entity = new FunctionEntity();
           entity.function = req.function;
@@ -63,7 +63,7 @@ export class FunctionService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.functionRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'Function updated successfully' : 'Function created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'Function Updated Successfully' : 'Function Created Successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -83,17 +83,17 @@ export class FunctionService {
                        
                         if (FunctionExists.isActive) {
                             if (functionStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Function is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Function Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Function is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Function Is Already Deactivated');
                             }
                         } else {
                             if (functionStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Function is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Function Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Function is already activated');
+                                throw new CommonResponseModel(false,10112, 'Function Is Already Activated');
                             }
                       }
                 }
@@ -110,9 +110,9 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{isActive: true},order:{function:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -123,9 +123,9 @@ export class FunctionService {
         try {
             const data = await this.functionRepo.find({where:{functionId: req.functionId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Function data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Function Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
