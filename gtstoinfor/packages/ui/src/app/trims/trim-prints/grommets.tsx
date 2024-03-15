@@ -20,11 +20,9 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 export interface GrommetsProps{
 itemId:any
-    poLines:string[]
+poLines:string[]
 }
 export function Grommets(props:GrommetsProps) {
-
-const supplier = "supplier";
 
 const { itemId, poLines } = props
 const service = new BomService();
@@ -33,6 +31,7 @@ const [grommets, setGrommets] = useState<any>([])
 useEffect(() => {
     handleButtonTrim()
 },[])
+
 function handleButtonTrim(){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
@@ -122,12 +121,11 @@ function handleButtonTrim(){
                             </>
                                     )}
                             <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                            <td style={{ textAlign: 'center' }}>  {`${rec.attributeValue !== null ? rec.attributeValue:""}${rec.attribute !== null ? rec.attribute:""}`}</td>
+                            <td style={{ textAlign: 'center' }}>  {`${rec.attributeValue !== null ? rec.attributeValue:" "}${rec.attribute !== null ? rec.attribute:" "}`}</td>
 
-                            <td style={{ textAlign: 'center' }}>{rec.itemColor !== null ? rec.itemColor : '-'}</td>
-                            <td style={{ textAlign: 'center' }}> {rec.bQty !== null && rec.poQty !== null && rec.bQty !== null ?
-                                                        (rec.bQty * rec.poQty * rec.bQty) : ''}</td>
-                        <td style={{ textAlign: 'center' }}>supplier</td>
+                            <td style={{ textAlign: 'center' }}>{rec.itemColor !== null ? rec.itemColor : ' '}</td>
+                            <td style={{ textAlign: 'center' }}> {rec.bQty !== null && rec.poQty !== null && rec.bQty !== null ? (rec.bQty * rec.poQty * rec.bQty) : ' '}</td>
+                           <td style={{ textAlign: 'center' }}>supplier</td>
                        
                          </tr>
                          ))}
