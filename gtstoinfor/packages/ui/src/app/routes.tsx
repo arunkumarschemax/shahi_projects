@@ -248,6 +248,8 @@ import LineGrid from "./trim-master/line/line-view"
 import LineForm from "./trim-master/line/line-form"
 import ShapeForm from "./trim-master/shape/shape-form"
 import ShapeGrid from "./trim-master/shape/shape-view"
+import PartsForm from "./trim-master/parts/parts-form"
+import PartsGrid from "./trim-master/parts/parts-view"
 
 
 
@@ -815,6 +817,14 @@ export const AppRoutes = () => {
                         updateShape={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='shape/shape-view' element={<ShapeGrid />}/>
+
+                    <Route path='parts/parts-form' element={<PartsForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateParts={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='parts/parts-view' element={<PartsGrid />}/>
+
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}

@@ -33,7 +33,7 @@ export class PartsController{
 
         @Post('/createParts')
         @ApiBody({type:PartsDto})
-        async createParts(@Body() req:any): Promise<CommonResponseModel>{
+        async createShape(@Body() req:any): Promise<CommonResponseModel>{
             try{
                 return await this.service.createParts(req,false)
             }catch(err){
@@ -50,4 +50,25 @@ export class PartsController{
                 return this.applicationHandler.returnException(CommonResponseModel,err)
             }
         }
+
+        @Post('/activateOrDeactivateParts')
+      @ApiBody({type: PartsDto})
+      async activateOrDeactivateParts(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.activateOrDeactivateParts(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
+      @Post('/getPartsById')
+      @ApiBody({type: PartsDto})
+      async getPartsById(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.getPartsById(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
 }
