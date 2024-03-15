@@ -3,7 +3,9 @@ import { Button, Card, Col, Row } from "antd";
 import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -17,13 +19,32 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface GrommetsProps{
-bomInfo:any
+itemId:any
+    poLines:string[]
 }
 export function Grommets(props:GrommetsProps) {
-// console.log(props.bomInfo,"********************************")
-const data = props.bomInfo
-console.log(props.bomInfo.map((e)=> e.itemId));
+
 const supplier = "supplier";
+
+const { itemId, poLines } = props
+const service = new BomService();
+const [grommets, setGrommets] = useState<any>([])
+
+useEffect(() => {
+    handleButtonTrim()
+},[])
+function handleButtonTrim(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setGrommets(v.data)
+      }
+    })
+  }
+
+
  const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
     if (invoiceContent) {
@@ -61,7 +82,7 @@ const supplier = "supplier";
         }
    }
   
-   const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
+   const groupedData: Array<Array<any>> = Object.values(grommets.reduce((acc, rec) => {
     const itemNo = rec.itemNo || 'undefined';
     acc[itemNo] = acc[itemNo] || [];
     acc[itemNo].push(rec);
