@@ -11,6 +11,9 @@ import { MaterialIssueEntity } from "../../material-issue/entity/material-issue-
 import { MaterialFabricEntity } from "../../material-issue/entity/material-fabric-entity";
 import { promises } from "dns";
 import { SampleInventoryLogEntity } from "../../sample-dev-request/entities/sample-inventory-log-entity";
+import Operation from "antd/es/transfer/operation";
+import { Operations } from "../../operations/operation.entity";
+import { SampleRequest } from "../../sample-dev-request/entities/sample-dev-request.entity";
 
 @Injectable()
 export class OperationInventoryRepository extends Repository<OperationInventory> {
@@ -23,10 +26,12 @@ export class OperationInventoryRepository extends Repository<OperationInventory>
     async getOperationinventory(req:OperationInvRequest){
         console.log(req,'fffffffffffffff')
         const query = this.createQueryBuilder('oi')
-        .select(`oi.operation,concat(oi.physical_quantity,'-',u.uom ) as physicalQuantity,concat(oi.issued_quantity,'-',u.uom) as issuedQuantity,oi.damaged_quantity as damagedQuantity,concat(oi.rejected_quantity,'-',u.uom) as rejectedQuantity,oi.issued_uom_id,s.style as style`)
+        .select(`sr.request_no AS requestNo,oi.operation,oi.next_operation AS nextOperation,concat(oi.physical_quantity,'-',oi.physical_uom ) as physicalQuantity,concat(oi.issued_quantity,'-',oi.issued_uom_id) as issuedQuantity,concat(oi.rejected_quantity,'-',oi.rejected_uom_id) as rejectedQuantity,oi.issued_uom_id,s.style as style`)
         .leftJoin(Style,'s','s.style_id = oi.style_id')
+        .leftJoin(SampleRequest,'sr','sr.sample_request_id = oi.sample_req_id')
         .leftJoin(UomEntity,'u','u.id = oi.issued_uom_id')
-        .where(`oi.operation_inventory_id = '${req.operationId}'`)
+        .leftJoin(Operations,'op','op.operation_code = oi.operation')
+        .where(`op.operation_id = '${req.operationId}'`)
         const data = await query.getRawMany()
         return data
     }

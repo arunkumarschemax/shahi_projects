@@ -47,6 +47,11 @@ export const InventoryView = () => {
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
         },
         {
+            title: 'Sample Request',
+            dataIndex: 'requestNo',
+            width: '80px',
+        },
+        {
             title: 'Style',
             dataIndex: 'style',
             width: '150px',
@@ -59,8 +64,8 @@ export const InventoryView = () => {
             // }
         },
         {
-            title: 'Operation',
-            dataIndex: 'operation',
+            title: 'Next Operation',
+            dataIndex: 'nextOperation',
             width:"100px"
 
         },
