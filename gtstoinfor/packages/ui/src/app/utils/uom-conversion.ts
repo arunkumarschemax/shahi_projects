@@ -18,9 +18,6 @@ export function convertDimensions(fromUOM: UOMEnum, toUOM: UOMEnum, value: numbe
         case UOMEnum.MM:
             valueInMeters = value / 1000;
             break;
-        case UOMEnum.FOOT:
-            valueInMeters = value * 0.3048;
-            break;
         case UOMEnum.INCH:
             valueInMeters = value * 0.0254;
             break;
@@ -39,8 +36,6 @@ export function convertDimensions(fromUOM: UOMEnum, toUOM: UOMEnum, value: numbe
             return parseFloat((valueInMeters * 100).toFixed(2));
         case UOMEnum.MM:
             return parseFloat((valueInMeters * 1000).toFixed(2));
-        case UOMEnum.FOOT:
-            return parseFloat((valueInMeters / 0.3048).toFixed(2));
         case UOMEnum.INCH:
             return parseFloat((valueInMeters / 0.0254).toFixed(2));
         case UOMEnum.YARD:

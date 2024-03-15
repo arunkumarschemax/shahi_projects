@@ -25,6 +25,7 @@ import { PoBomEntity } from './po-bom/entittes/po-bom.entity';
 import { ItemsModule } from './items/items.module';
 import { ThreadQtyModule } from './thread-qty/thread-qty.module';
 import { ThreadSupplierModule } from './thread-supplier/thread-supplier.module';
+import { ThreadsModule } from './threads/threads.module';
 
 
 @Module({
@@ -50,7 +51,7 @@ import { ThreadSupplierModule } from './thread-supplier/thread-supplier.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule,ThreadQtyModule,ThreadSupplierModule,ItemsModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule,ThreadQtyModule,ThreadSupplierModule,ItemsModule,ThreadsModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

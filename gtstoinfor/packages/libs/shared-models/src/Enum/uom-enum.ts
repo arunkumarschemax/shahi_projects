@@ -3,6 +3,6 @@ export enum UOMEnum {
     MM = "MM",
     CM = "CM",
     METER = "METER",
-    FOOT = "FOOT",
-    YARD = 'YARD'
+    YARD = 'YARD',
+    PCS = 'PCS'
 }

@@ -7,7 +7,7 @@ const UserCreationForm = lazy(() => import("./user-management/users/users-form")
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FabricContentdto, FactoryDto, Fobdto, ItemsDto, SupplierCreateDto } from "@project-management-system/shared-models"
+import { FabricContentdto, FactoryDto, Fobdto, ItemsDto, SupplierCreateDto, ThreadsDto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -45,9 +45,7 @@ import BomPdfUpload from "./bom-automation/bom-details-upload/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-automation/bom-details/bom-view"
 import BomPdfInfoDetailView from "./bom-automation/bom-pdf-extraction/deatiled-view"
-import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
-import Button2Print from "./trims/trim-prints/button2-print"
-import Button3Print from "./trims/trim-prints/button3-print"
+import Button3Print from "./trims/trim-prints/button"
 import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
@@ -65,11 +63,11 @@ import BomGenerationSteps from "./bom-automation/bom-generation/bom-generation-s
 import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
 import { BomExcelDownload } from "./bom-automation/bom-excel-download/bom-excel-download"
 import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptance"
-import NecKType from "./trims/trim-prints/neck-type"
-import Interlining from "./trims/trim-prints/interlining-prints"
+import NecKType from "./trims/trim-prints/neck-tape"
+import Interlining from "./trims/trim-prints/interlining"
 import Drawcord from "./trims/trim-prints/drawcord"
 import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
-import Elastic from "./trims/trim-prints/elastic-print"
+import Elastic from "./trims/trim-prints/elastic"
 import Mobilontape from "./trims/trim-prints/mobilon-tape"
 import Twilltape from "./trims/trim-prints/twill-tape"
 import CountryStickerPrint from "./trims/trim-prints/country-sticker"
@@ -175,17 +173,7 @@ export const AppRoutes = () => {
 
                     <Route path='address-upload' element={<AddressUpload />} />
                     <Route path='address-view' element={<AddressView />} />
-                    <Route path='items-view'   element={<ItemsGrid />} />
-                   <Route path='items-form' element={<ItemsForm itemData={undefined} updateItem={function (itemData: ItemsDto): void {
-                       throw new Error("Function not implemented.")
-                   } } isUpdate={false} closeForm={function (): void {
-                       throw new Error("Function not implemented.")
-                   } } />} />                    <Route path='thread-view' element={<ThreadView />} />
-                    <Route path='thread-form' element={<ThreadForm Data={undefined} updateItem={function (Data: SupplierCreateDto): void {
-                        throw new Error("Function not implemented.")
-                    } } isUpdate={false} closeForm={function (): void {
-                        throw new Error("Function not implemented.")
-                    } } />} />
+                 
 
 
                 </Route>
@@ -217,7 +205,7 @@ export const AppRoutes = () => {
                     <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]} />} />
                     <Route path='trim-grid' element={<TrimsGrid />} />
                     <Route path='trim-List' element={<TrimList />} />
-                    <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />} />
+                    <Route path='washcare-label' element={<WasCarelabel itemId={null} poLines={[]} />} />
                     <Route path='hang-tag' element={<HangTag info={[]} />} />
                     <Route path='item-info' element={<ItemInfo />} />
                     <Route path='country-sticker' element={<CountryStickerPrint bomInfo={[]} />} />
@@ -227,7 +215,7 @@ export const AppRoutes = () => {
                     
                     <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
                     <Route path='interlining' element={<Interlining bomInfo={[]} />} />
-                    <Route path='drawcord' element={<Drawcord bomInfo={[]} />} />
+                    {/* <Route path='drawcord' element={<Drawcord bomInfo={[]} />} /> */}
                     <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} />
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
                     <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
@@ -235,8 +223,17 @@ export const AppRoutes = () => {
                    < Route path='grommets' element={<Grommets bomInfo={[]}/>} />
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
+                   <Route path='items-view'   element={<ItemsGrid />} />
+                   {/* <Route path='items-form' element={<ItemsForm itemData={undefined} updateItem={function (itemData: ItemsDto): void {
+                       throw new Error("Function not implemented.")
+                   } } isUpdate={false} closeForm={function (): void {
+                       throw new Error("Function not implemented.")
+                   } } />} />           */}
+                   <Route path="items-form" element={<ItemsForm itemData={[]} />}></Route>
 
-                    
+                             <Route path='thread-view' element={<ThreadView />} />
+                             <Route path="thread-form" element={<ThreadForm Data={[]} />}></Route>
+
                 </Route>
 
                 <Route path='/reports'>
@@ -254,17 +251,11 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
+                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
+                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-                <Route path="/print">
-                    <Route path='button1' element={<Button1Print />} />
-                    <Route path='button2' element={<Button2Print />} />
-                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
-                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
-                    {/* <Route path='snap-button' element={<SnapButton bomInfo={undefined} />} /> */}
-
-                </Route>
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>

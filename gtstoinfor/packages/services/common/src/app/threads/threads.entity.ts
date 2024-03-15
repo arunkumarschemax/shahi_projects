@@ -1,13 +1,17 @@
-import { QtyTypeEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { ThreadSupplierEntity } from "../thread-supplier/thread-supplier.entity";
 
-@Entity('thread_qty')
-export class ThreadQtyEntity {
+@Entity('threads')
+export class ThreadsEntity {
     @PrimaryGeneratedColumn('increment', {
-        name: 'thread_qty_id'
+        name: 'thread_id'
     })
-    threadQtyId: number;
+    threadId: number;
+
+    @Column('int', {
+        name: 'style_Id',
+        nullable: false
+    })
+    styleId: number
 
     @Column('varchar', {
         name: 'tex',
@@ -21,22 +25,30 @@ export class ThreadQtyEntity {
     })
     quality: string
 
-
-    @Column({
-        type: 'enum',
-        nullable: false,
-        enum: QtyTypeEnum,
-        name: "qty"
-    })
-    qty: QtyTypeEnum;
-
     
     @Column('varchar', {
-        name: 'mtrs_per_cone',
+        name: 'color_combo',
         nullable: false
     })
-    mtrsPerCone: string
+    colorCombo: string
 
+    @Column('varchar', {
+        name: 'color_code',
+        nullable: false
+    })
+    colorCode: string
+
+    @Column('varchar', {
+        name: 'shade_number',
+        nullable: false
+    })
+    shadeNumber: string
+
+    @Column('int', {
+        name: 'supplier_Id',
+        nullable: false
+    })
+    supplierId: number
 
     @CreateDateColumn({
         name: 'created_at'
@@ -74,10 +86,6 @@ export class ThreadQtyEntity {
         default: true
     })
     isActive: boolean;
-
-    @ManyToOne(type => ThreadSupplierEntity, entity => entity.threadQty)
-    @JoinColumn({ name: 'thread_supplier_id' })
-    ThreadSupplier: ThreadSupplierEntity
 
 
 

@@ -49,7 +49,7 @@ export class BomService {
         private itemsRepo: ItemsRepo,
         private destinationsRepo: DestinationsRepo,
         private zFactorsBomRepo: ZFactorsBomRepo,
-        private apaSizeamtrixRepo:ApiSizeMatrixRepo
+        private apaSizeamtrixRepo: ApiSizeMatrixRepo
 
     ) { }
     async createBom(req: StyleDto): Promise<CommonResponseModel> {
@@ -378,9 +378,10 @@ export class BomService {
                     const totalQty = regionDataMap.get(geoCode).totalQty + po.qty
                     regionDataMap.set(geoCode, { poData, totalQty })
                 }
+
                 let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
-                    styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
+                    styleData = await this.bomRepo.getTrimBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year, itemId: req.itemId })
                     styleDataMap.set(po.styleNumber, styleData)
                 } else {
                     styleData = styleDataMap.get(po.styleNumber)
@@ -408,8 +409,8 @@ export class BomService {
                     poBomEntity.consumption = consumption ? consumption : 0
                     poBomEntity.moq = moq ? moq : 0
                     poBomEntity.wastage = wastage ? wastage : 0
-                    poBomEntity.bomQty = bomQty
-                    poBomEntity.poQty = updatedQty
+                    poBomEntity.bomQty = po.qty
+                    poBomEntity.poQty = po.qty
                     const dpom = new DpomEntity()
                     dpom.id = po.id
                     poBomEntity.dpom = dpom
@@ -924,12 +925,15 @@ export class BomService {
             // });
 
             const key2 = `${color}-${itemColor}`;
-            if (!result[key].colors.find((c: any) => c.key === key2)) {
+            const existingColor = result[key].colors.find((c: any) => c.key === key2);
+            if (existingColor) {
+                existingColor.bomQty += bomQty;
+            } else {
                 result[key].colors.push({
                     key: key2,
                     color,
-                    itemColor, bomQty
-
+                    itemColor,
+                    bomQty
                 });
             }
             return result;
@@ -1035,7 +1039,7 @@ export class BomService {
                 };
             }
             result[key].bomQty += bomQty;
-console.log(bomQty,"poQty at 1036")
+            console.log(bomQty, "poQty at 1036")
 
             return result
         }, {})
@@ -1386,37 +1390,37 @@ console.log(bomQty,"poQty at 1036")
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
-    async getImcodes():Promise<CommonResponseModel>{
+    async getImcodes(): Promise<CommonResponseModel> {
         const data = await this.bomRepo.getImcodes()
-        if(data){
-            return new CommonResponseModel(true,1,'Data Retrived',data)
-        }else{
-            return new CommonResponseModel(false,0,'No Data',[])
+        if (data) {
+            return new CommonResponseModel(true, 1, 'Data Retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data', [])
 
         }
     }
 
     async getItemname(): Promise<CommonResponseModel> {
         const records = await this.bomRepo;
-        const query=`SELECT i.item_id as itemId,i.item AS itemName FROM items i`
+        const query = `SELECT i.item_id as itemId,i.item AS itemName FROM items i`
         const result = await this.bomRepo.query(query)
-        if(result){
-            return new CommonResponseModel(true,1,'Data Retrived',result)
-        }else{
-            return new CommonResponseModel(false,0,'No Data',[])
+        if (result) {
+            return new CommonResponseModel(true, 1, 'Data Retrived', result)
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data', [])
 
         }
 
     }
 
 
-    async updateItemid(req:updateItemId): Promise<CommonResponseModel> {
+    async updateItemid(req: updateItemId): Promise<CommonResponseModel> {
         try {
-        //    console.log(req,"reqqqqqq")
+            console.log(req, "reqqqqqq")
             const query = ` UPDATE bom 
                 SET item_id = '${req.itemId}'
                 WHERE im_code = '${req.imCode}' `;
-                const result = await this.dataSource.query(query)
+            const result = await this.dataSource.query(query)
             if (result) {
                 return new CommonResponseModel(true, 1, 'Data Updated', result);
             } else {
@@ -1427,18 +1431,18 @@ console.log(bomQty,"poQty at 1036")
             return new CommonResponseModel(false, 0, 'Error occurred during update', []);
         }
     }
-    async getApaSizeMatrix(req:StyleNumReq):Promise<CommonResponseModel>{
-        try{
+    async getApaSizeMatrix(req: StyleNumReq): Promise<CommonResponseModel> {
+        try {
             // const query=`SELECT id,buy_month AS buyMonth,style_number AS styleNumber,style_type AS styleType,usa_size AS usaSize,china_size_matrixtype AS chinaSizeMatrixType,   china_top_size AS chinaTopSize,china_top_bodysize AS chinaTopBodySize,china_bottom_size AS chinaBottomSize,china_bottom_bodysize AS chinabottomBodySize,           korea_size_matrixtype AS koreaSizeMatrixType,korea_top_generic AS koreaTopGeneric,korea_top_chest AS koreaTopChest,            korea_top_height AS koreaTopHeight,korea_bottom_generic AS koreaBottomGeneric,korea_bottom_waist AS koreaBottomWaist,korea_bottom_hip AS koreaBottomWaist FROM apa_size_matrix where style_number in (:...style), { style: req.styleNumber }`
             // const result = await this.dataSource.query(query)
             const result = await this.apaSizeamtrixRepo.getApaSizeMatrixData(req)
-            if(result){
-                return new CommonResponseModel(true,1,'Data Retrived',result)
-            }else{
-                return new CommonResponseModel(true,1,'Data Retrived',[])
+            if (result) {
+                return new CommonResponseModel(true, 1, 'Data Retrived', result)
+            } else {
+                return new CommonResponseModel(true, 1, 'Data Retrived', [])
             }
         }
-        catch(err){
+        catch (err) {
             throw err
         }
     }
@@ -1451,7 +1455,7 @@ console.log(bomQty,"poQty at 1036")
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
-             if (req.trimName === 'Poid Label') {
+            if (req.trimName === 'Poid Label') {
                 key += `${styleNumber}-${itemNo}`;
             }
             if (!result[key]) {
@@ -1459,7 +1463,7 @@ console.log(bomQty,"poQty at 1036")
                     geoCode,
                     styleNumber,
                     description,
-                    poQty:0,
+                    poQty: 0,
                     use, imCode, itemNo, bomQty: 0, destination,
                     itemId,
                     poNumber,
