@@ -16,13 +16,30 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 
 export interface InterlinigProps {
-    bomInfo: any
+  itemId: any,
+  poLines: string[]
 }
 export const  Interlining = (props: InterlinigProps) => {
-  const data = props.bomInfo
+  const { itemId, poLines } = props
   
-  const bomservice=new BomService
+  const service = new BomService();
+  
   const [interlining, setInterlining] = useState<any>([])
+
+useEffect(() => {
+  handleInterlining();
+},[])
+
+  function handleInterlining(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setInterlining(res.data)
+      }
+    })
+  }
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -85,7 +102,7 @@ export const  Interlining = (props: InterlinigProps) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((rec, index) => (
+        {interlining.map((rec, index) => (
           <tr key={index}>
             <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
             <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
@@ -99,7 +116,7 @@ export const  Interlining = (props: InterlinigProps) => {
         <tr>
           <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
           <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-            {calculateTotalBomQty(data)}
+            {calculateTotalBomQty(interlining)}
           </td>
         </tr>
       </tfoot>

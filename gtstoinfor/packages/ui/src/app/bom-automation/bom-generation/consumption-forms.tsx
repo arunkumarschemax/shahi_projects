@@ -18,7 +18,7 @@ type Props = {
 export default function ConsumptionForms(props: Props) {
 
     const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
-    const { itemId, printComponent, consumptionAgainst,uom } = itemDetails
+    const { itemId, printComponent, consumptionAgainst, uom } = itemDetails
     const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
     const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -27,7 +27,7 @@ export default function ConsumptionForms(props: Props) {
 
     const handleFieldChange = (value: any, style: string, field: string) => {
         const existingIndex = consumptions.findIndex(item => item.style === style);
-        const newConsumption = { style, itemId, [field]: value,uom };
+        const newConsumption = { style, itemId, [field]: value, uom };
         if (existingIndex !== -1) {
             const updatedConsumptions = [...consumptions];
             updatedConsumptions[existingIndex][field] = value;
@@ -97,7 +97,9 @@ export default function ConsumptionForms(props: Props) {
 
     const onView = () => {
         setDynamiComponent(null)
+        // console.log(printComponent,"at 103")
         const Comp = React.lazy(() => import(`../../trims/trim-prints/${printComponent}`))
+        // console.log(Comp," at 105")
         setDynamiComponent(Comp)
         setModalOpen(true)
     }
@@ -106,6 +108,7 @@ export default function ConsumptionForms(props: Props) {
         setModalOpen(false)
     }
 
+    // console.log(poLines,'po lines')
 
 
     return (

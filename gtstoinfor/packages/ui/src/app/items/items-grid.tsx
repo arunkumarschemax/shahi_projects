@@ -124,19 +124,7 @@ export const ItemsGrid = () => {
       render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
     },
  
-    //  {
-    //   title: <div style={{textAlign:'center'}}>Currency Name</div>,
-    //   dataIndex: 'currencyName',
-    //   width: '90px',align :'left',
-    //   sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
-    //   sortDirections: ['ascend', 'descend'],
-    //   ...getColumnSearchProps('currencyName'),
-    //   render: (text, record) => (
-    //     <span>
-    //      <strong>{currencySymbolMapping[record.currencyName]}</strong>  -  {text}
-    //     </span>
-    //   ),
-    // }, this can be used for only concatenated values
+  
     {
       title:'Item',
       dataIndex: 'item',
@@ -192,90 +180,7 @@ export const ItemsGrid = () => {
      
     },
     
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'isActive', align:'center',
-    //   width: '90px',
-
-    //   render: (isActive, rowData) => (
-    //     <>
-    //       {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
-    //     </>
-    //   ),
-    //   filters: [
-    //     {
-    //       text: 'Active',
-    //       value: true,
-    //     },
-    //     {
-    //       text: 'InActive',
-    //       value: false,
-    //     },
-    //   ],
-    //   filterMultiple: false,
-    //   onFilter: (value, record) => record.isActive === value,
-    //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-    //     <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
-    //       <Checkbox
-    //         checked={selectedKeys.includes(true)}
-    //         onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
-    //       >
-    //         <span style={{color:'green'}}>Active</span>
-    //       </Checkbox>
-    //       <Checkbox
-    //         checked={selectedKeys.includes(false)}
-    //         onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
-    //       >
-    //         <span style={{color:'red'}}>Inactive</span>
-    //       </Checkbox>
-    //       <div className="custom-filter-dropdown-btns" >
-    //       <Button  onClick={() => clearFilters()} className="custom-reset-button">
-    //           Reset
-    //         </Button>
-    //         <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
-    //           OK
-    //         </Button>
-          
-    //       </div>
-    //     </div>
-    //   ),
-
-    // },
-    // {
-    //   title: `Action`,
-    //   dataIndex: 'action',    align:'center',  width: '120px',
-    //   render: (text, rowData) => (
-    //     <span>
-    //       <EditOutlined className={'editSamplTypeIcon'} type="edit"
-    //         onClick={() => {
-    //           if (rowData.isActive) {
-    //             openFormWithData(rowData);
-    //           } else {
-    //             AlertMessages.getErrorMessage('You Cannot Edit Deactivated Currencies');
-    //           }
-    //         }}
-    //         style={{ color: '#1890ff', fontSize: '14px' }}
-    //       />
-
-    //       <Divider type="vertical" />
-    //       <Popconfirm onConfirm={e => { deleteVariant(rowData); }}
-    //         title={
-    //           rowData.isActive
-    //             ? 'Are you sure to Deactivate this Currency ?'
-    //             : 'Are you sure to Activate this Currency ?'
-    //         }
-    //       >
-    //         <Switch size="default"
-    //           className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-    //           checkedChildren={<RightSquareOutlined type="check" />}
-    //           unCheckedChildren={<RightSquareOutlined type="close" />}
-    //           checked={rowData.isActive}
-    //         />
-
-    //       </Popconfirm>
-    //     </span>
-    //   )
-    // }
+   
   ];
 
   /**
@@ -289,14 +194,6 @@ export const ItemsGrid = () => {
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  // const getAllCurrencys = async (params = {}, sort, filter) => {
-  //   const res = await service.getAllCurrencies()
-  //   if (res.status) {
-  //     return { data: res.data, sucess: true, total: res.data.length }
-  //   } else {
-  //     return { data: [], sucess: false, total: 0 }
-  //   }
-  // }
 
   const getAllItems= () => {
     service.getAllItems().then(res => {
@@ -342,97 +239,14 @@ export const ItemsGrid = () => {
     })
   }
 
-  /**
-   * 
-   * @param variantData 
-   */
-  // const updateCurrency = (currencyData: CurrencyDto) => {
-  //   currencyData.updatedUser = JSON.parse(localStorage.getItem('username'))
-  //   service.updateCurrency(currencyData).then(res => {
-  //     console.log(res);
-  //     if (res.status) {
-  //       AlertMessages.getSuccessMessage('Updated Successfully');
-  //       window.location.reload();
-  //       // getAllCurrencys();
-  //       setDrawerVisible(false);
-  //     } else {
-  //       // if (res.intlCode) {
-  //       //   AlertMessages.getErrorMessage(res.internalMessage);
-  //       // } else {
-  //       AlertMessages.getErrorMessage(res.internalMessage);
-  //       // }
-  //     }
-  //   }).catch(err => {
-  //     AlertMessages.getErrorMessage(err.message);
-  //   })
-  // }
-  /**
-   * 
-   * @param CurrencyViewData 
-   */
-  // const deleteVariant = (CurrencyViewData: CurrencyDto) => {
-  //   CurrencyViewData.isActive = CurrencyViewData.isActive ? false : true;
-  //   service.ActivatedeActivateCurrency(CurrencyViewData).then(res => {
-  //     console.log(res);
-  //     if (res.status) {
-  //       // getAllCurrencys();
-  //       // AlertMessages.getSuccessMessage('Success');
-  //       message.success(res.internalMessage)
-  //     } else {
-  //       // if (res.intlCode) {
-  //       //   AlertMessages.getErrorMessage(res.internalMessage);
-  //       // } else {
-  //       // AlertMessages.getErrorMessage(res.internalMessage);
-  //       message.error(res.internalMessage)
-
-  //       // }
-  //     }
-  //   }).catch(err => {
-  //     AlertMessages.getErrorMessage(err.message);
-  //   })
-  // }
 
   return (
-<Card title='Items' extra={<span><Button onClick={()=>navigate('/masters/items-form')} type={'primary'}>New</Button></span>}>
+<Card title='Items' extra={<span><Button onClick={()=>navigate('/bom/items-form')} type={'primary'}>New</Button></span>}>
       <>
-      {/* <Row gutter={24}>
-         <Col span={4}></Col>
-        <Col span={5}>
-        <Alert type='success' message={'Total Currencies: ' + variantData.length} style={{fontSize:'15px'}} /> */}
-          {/* <Card title={'Total Currencies: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card> */}
-        {/* </Col>
-        <Col span={5}> */}
-          {/* <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card> */}
-          {/* <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
-        </Col>
-        <Col span={5}> */}
-          {/* <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card> */}
-          {/* <Alert type='info' message={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
-        </Col> */}
-        {/* <Col>
-        <span><Button onClick={() => navigate('/global/currencies/currency-form')}
-              type={'primary'}>New</Button></span>
-        </Col> */}
-      {/* </Row> */}
+     
       <br></br>
       <Card >
-        {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
-        {/* <ProTable
-          request={getAllCurrencys}
-          bordered size='small'
-          cardBordered
-          editable={{
-            type: 'multiple',
-          }}
-          // cardProps={{
-          //   extra: <span><Button onClick={() => navigate('/global/currencies/currency-form')}
-          //     type={'primary'}>New</Button></span>
-          // }}
-          search={false} headerTitle={'Currencies'}
-          columns={columnsSkelton}
-
-        /> */}
-
+        
 <Table className="custom-table-wrapper" 
 columns={columnsSkelton} dataSource={variantData} size='small'
             pagination={{

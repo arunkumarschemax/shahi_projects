@@ -1426,7 +1426,7 @@ export class BomService {
                 return new CommonResponseModel(false, 0, 'No Data Updated', []);
             }
         } catch (error) {
-            console.error("Error occurred during update:", error);
+            // console.error("Error occurred during update:", error);
             return new CommonResponseModel(false, 0, 'Error occurred during update', []);
         }
     }
@@ -1448,7 +1448,7 @@ export class BomService {
     async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
-
+        console.log(poBomData,"poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
@@ -1482,7 +1482,33 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+    async generateProposalForKimble(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size,ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            let key = `${styleNumber}-${imCode}-${itemNo}`;
+            if (req.trimName === 'Poid Label') {
+                key += `${styleNumber}-${ogacDate}`;
+            }
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,styleNumber,
+                    poQty: 0, itemNo, bomQty: 0,
+                    itemId,poNumber,gender,primaryColor,
+                    season,year,color,itemColor,productCode,ogacDate
+                };
+            }
+            result[key].bomQty += bomQty;
+            result[key].poQty += poQty;
 
+            return result
+        }, {})
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
+    }
 }
 
 

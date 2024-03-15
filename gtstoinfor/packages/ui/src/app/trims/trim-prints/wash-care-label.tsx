@@ -3,10 +3,11 @@ import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import { useEffect, useRef, useState } from "react"
 import './table-styles.css'
-// import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import * as XLSX from 'xlsx';
 import moment from "moment";
 import { object } from "prop-types";
+import { group } from "console";
 export const getCssFromComponent = (fromDoc, toDoc) => {
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
         if (styleSheet.cssRules) {
@@ -27,12 +28,12 @@ export const WasCarelabel = (props: washCareprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
-   const [sizeMatrixData, setSizeMatrixData] = useState<any[]>([])
+    const [sizeMatrixData, setSizeMatrixData] = useState<any[]>([])
     const service = new BomService();
 
     const bomService = new BomService()
     let grandTotal = 0
-   
+
 
 
 
@@ -98,7 +99,7 @@ export const WasCarelabel = (props: washCareprops) => {
     }
 
 
-  
+
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {
@@ -243,7 +244,14 @@ export const WasCarelabel = (props: washCareprops) => {
         return acc;
     }, {});
 
+    const groupedData: Array<Array<any>> = Object.values(sizeMatrixData.reduce((acc, rec) => {
+        const styleNumber = rec.styleNumber || 'undefined';
+        acc[styleNumber] = acc[styleNumber] || [];
+        acc[styleNumber].push(rec);
+        return acc;
+    }, {}));
 
+    console.log(groupedData)
 
 
     // for APA region need to display OGAG date wise size quantities
@@ -255,7 +263,7 @@ export const WasCarelabel = (props: washCareprops) => {
 
         // Extract the size keys from the object with the maximum size keys
         const sizes = Object.keys(maxSizeObject).filter(key => key !== 'ogacDate');
-        const customOrder = ['S', 'M', 'L', 'XL', 'XXL', '2XL'];
+        const customOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL', '4XL', '5XL'];
         sizes.sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b))
         console.log(sizes)
 
@@ -297,25 +305,25 @@ export const WasCarelabel = (props: washCareprops) => {
         );
     };
 
- 
-console.log(itemWiseGroup)
+
+    console.log(itemWiseGroup)
 
     return (
         <div id='print'>
             <Card title={'WashCare Label'}
                 extra={<><span><Button onClick={handlePrint}>Print</Button></span><span>
-                    {/* <ReactHTMLTableToExcel
-                id="test-table-xls-button"
-                className="download-table-xls-button"
-                table="table-to-xls"
-                filename="tablexls"
-                sheet="sheet 1"
-                buttonText="Excel"
-            /> */}
+                    <ReactHTMLTableToExcel
+                        id="test-table-xls-button"
+                        className="download-table-xls-button"
+                        table="something"
+                        filename="tablexls"
+                        sheet="sheet 1"
+                        buttonText="Excel"
+                    />
                 </span></>}
             >
 
-                <div>
+                <table id='something'>
                     <br /><br />
                     <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="1" cellPadding='5'
                     //   ref={tableRef}
@@ -379,17 +387,18 @@ console.log(itemWiseGroup)
                             : <></>
                         }
                     </table>
-                    <br /><br />
-
                     {Object.keys(itemWiseGroup).map((itemNo, index) => (
-                        <div key={index} style={{ paddingTop: '10px' }}>
-                            {index == 0 && itemWiseGroup[itemNo].filter(rec => rec.displayInMainReq != false).map((row, index) => (
-                                <>
-                                    {index === 0 && row?.geoCode === 'APA' && row?.sizeWiseQty?.length ? renderOgadDateWiseSizeQuantits(row?.sizeWiseQty) : <></>}
-                                </>
-                            ))}
-                        </div>
+                        <>
+                            <div key={index} style={{ paddingTop: '10px' }}>
+                                {index == 0 && itemWiseGroup[itemNo].filter(rec => rec.displayInMainReq != false).map((row, index) => (
+                                    <>
+                                        {index === 0 && row?.geoCode === 'APA' && row?.sizeWiseQty?.length ? renderOgadDateWiseSizeQuantits(row?.sizeWiseQty) : <></>}
+                                    </>
+                                ))}
+                            </div>
+                        </>
                     ))}
+                    <br />
                     {Object.keys(itemWiseGroup).map((itemNo, index) => (
                         <div key={index}>
                             {itemWiseGroup[itemNo][0].geoCode === 'AAO' && itemWiseGroup[itemNo][0].destination !== 'Brazil' && (
@@ -415,7 +424,7 @@ console.log(itemWiseGroup)
                                 </div>
                             )}
                             <div key={index} style={{ paddingTop: '10px' }}>
-                                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='5' id="table-to-xls">
+                                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='5' id="table-to-xls" >
                                     <thead>
                                         <tr className="col-styles">
                                             <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >ITEM </th>
@@ -468,82 +477,85 @@ console.log(itemWiseGroup)
 
                         </div>
                     ))}
-                </div>
-                {sizeMatrixData.length > 0 ?
-                    <div style={{ paddingTop: '10px' }}>
+                        <br></br>
+                    {sizeMatrixData.length > 0 ?
+                        <div style={{ paddingTop: '10px' }}>
+                            {groupedData?.map((group, index) => (
+                                <>
+                                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="1" cellPadding='5'>
+                                        <thead>
+                                            <tr>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BUY </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >FD </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >STYLE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >STYLE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >USA </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHINA SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN TOP </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN  </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN BOT </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOREA SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOR TOP </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOR BOT </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
+                                            </tr>
+                                            <tr>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MTH </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >OF </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >NUMBER </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >TYPE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MATRIX TYPE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > TOP SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BODY SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BOT SIZE</th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BODY SIZE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MATRIX TYPE </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >GENERIC </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > CHEST</th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > HEIGHT</th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >GENERIC </th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > WAIST</th>
+                                                <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >HIP </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {group?.map((rec, index) => {
+                                                return (
+                                                    <tr key={index}>
+                                                        <td style={{ textAlign: 'center' }}>{rec.buyMonth}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.fdof}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.styleNumber}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.styleType}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.usaSize}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.chinaSizeMatrixType}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.chinaTopSize}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.chinaTopBodySize}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.chinaBottomSize}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.chinaTopBodySize}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaSizeMatrixType}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaTopGeneric}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaTopChest ? rec.koreaTopChest : 'N/A'}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaTopHeight ? rec.koreaTopHeight : 'N/A'}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaTopHeight ? rec.koreaTopHeight : 'N/A'}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaBottomGeneric ? rec.koreaBottomGeneric : 'N/A'}</td>
+                                                        <td style={{ textAlign: 'center' }}>{rec.koreaBottomWaist ? rec.koreaBottomWaist : 'N/A'}</td>
+                                                    </tr>
+                                                )
 
-                        <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="1" cellPadding='5'>
-                            <thead>
-                                <tr>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BUY </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >FD </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >STYLE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >STYLE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >USA </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHINA SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN TOP </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN  </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >CHN BOT </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOREA SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOR TOP </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >KOR BOT </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > </th>
-                                </tr>
-                                <tr>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MTH </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >OF </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >NUMBER </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >TYPE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MATRIX TYPE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > TOP SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BODY SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BOT SIZE</th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >BODY SIZE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >MATRIX TYPE </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >GENERIC </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > CHEST</th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > HEIGHT</th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >GENERIC </th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} > WAIST</th>
-                                    <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >HIP </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {sizeMatrixData.map((rec, index) => {
-                                    return (
-                                        <tr key={index}>
-                                            <td style={{ textAlign: 'center' }}>{rec.buyMonth}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.fdof}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.styleNumber}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.styleType}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.usaSize}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.chinaSizeMatrixType}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.chinaTopSize}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.chinaTopBodySize}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.chinaBottomSize}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.chinaTopBodySize}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaSizeMatrixType}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaTopGeneric}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaTopChest ? rec.koreaTopChest : 'N/A'}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaTopHeight ? rec.koreaTopHeight : 'N/A'}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaTopHeight ? rec.koreaTopHeight : 'N/A'}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaBottomGeneric ? rec.koreaBottomGeneric : 'N/A'}</td>
-                                            <td style={{ textAlign: 'center' }}>{rec.koreaBottomWaist ? rec.koreaBottomWaist : 'N/A'}</td>
-                                        </tr>
-                                    )
-
-                                })}
-                            </tbody>
-
-                        </table>
-                    </div> : <></>
-                }
-
+                                            })}
+                                        </tbody>
+                                    </table>
+                                    <br></br>
+                                </>
+                            ))}
+                        </div> : <></>
+                    }
+                </table>
             </Card>
 
         </div>
