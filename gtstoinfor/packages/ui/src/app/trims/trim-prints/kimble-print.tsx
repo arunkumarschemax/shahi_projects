@@ -1,19 +1,37 @@
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 
 export interface poidProps {
-    bomInfo: any
+  itemId: any,
+  poLines: string[]
 }
 export function KimbleLable(props: poidProps) {
     const [bomInfo, setBomInfo] = useState([]);
-    console.log(props.bomInfo,"props.bomInfo")
+    const { itemId, poLines } = props
+    const service = new BomService();
+
+console.log(props,"props in kimble")
+
+
 
 useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+  console.log(props,"props in kimble")
 
+  KimbleLable()
+  }, []);
+
+  function KimbleLable() {
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {
@@ -51,9 +69,7 @@ useEffect(() => {
     }
 
     
-      const tableCellStyle = {
-        padding: '8px',
-     };
+    
 
     
     return (

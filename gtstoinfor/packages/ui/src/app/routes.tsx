@@ -208,7 +208,7 @@ export const AppRoutes = () => {
                     <Route path='washcare-label' element={<WasCarelabel itemId={null} poLines={[]} />} />
                     <Route path='hang-tag' element={<HangTag info={[]} />} />
                     <Route path='item-info' element={<ItemInfo />} />
-                    <Route path='country-sticker' element={<CountryStickerPrint bomInfo={[]} />} />
+                    {/* <Route path='country-sticker' element={<CountryStickerPrint  />} /> */}
                     <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
                     <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
