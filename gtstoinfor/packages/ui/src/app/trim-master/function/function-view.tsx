@@ -233,8 +233,8 @@ export function FunctionGrid(props: FunctionProps) {
             <Popconfirm onConfirm={e =>{saveFunction(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate function ?'
-                :  'Are you sure to Activate function ?'
+                ? 'Are You Sure To Deactivate Function ?'
+                :  'Are You Sure To Activate Function ?'
             }
           >
             <Switch  size="default"

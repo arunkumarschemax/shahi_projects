@@ -70,7 +70,7 @@ export function PartsForm(props: PartsFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Parts is Required"
+                      message:"Parts Is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,

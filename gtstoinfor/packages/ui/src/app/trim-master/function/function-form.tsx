@@ -70,7 +70,7 @@ export function FunctionForm(props: FunctionFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Function is Required"
+                      message:"Function Is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,

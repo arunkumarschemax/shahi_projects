@@ -17,9 +17,9 @@ export class LineService{
         try{
             const data = await this.repo.find({where:{isActive: true}, order:{line:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -30,9 +30,9 @@ export class LineService{
         try{
             const data = await this.repo.find({order:{line:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -44,7 +44,7 @@ export class LineService{
             if(!isUpdate) {
                 const existing = await this.repo.findOne({ where: { line: dto.line }})
                 if(existing) {
-                    throw new Error('Line already exists');
+                    throw new Error('Line Already Exists');
                 }
             }
             const entityData = new LineEntity()
@@ -58,7 +58,7 @@ export class LineService{
                 entityData.createdUser = dto.createdUser;
             }
             const data = await this.repo.save(entityData);
-            return new CommonResponseModel(true, 1, isUpdate ? 'Line updated successfully' : 'Line created successfully', data)
+            return new CommonResponseModel(true, 1, isUpdate ? 'Line Updated Successfully' : 'Line Created Successfully', data)
         }catch(err){
             throw(err)
         }
@@ -78,17 +78,17 @@ export class LineService{
                        
                         if (LineExists.isActive) {
                             if (lineStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Line is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Line Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Line is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Line is Already Deactivated');
                             }
                         } else {
                             if (lineStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Line is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Line Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Line is already activated');
+                                throw new CommonResponseModel(false,10112, 'Line Is Already Activated');
                             }
                       }
                 }
@@ -104,9 +104,9 @@ export class LineService{
         try {
             const data = await this.repo.find({where:{lineId: req.lineId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Line data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Line Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
