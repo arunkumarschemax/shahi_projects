@@ -13,7 +13,6 @@ export class ThreadsService {
   
     constructor(
       
-        @InjectRepository(ThreadsEntity)
         private threadsRepository: ThreadsRepository,
         private threadAdapter: ThreadsAdapter,
     ){}
@@ -30,7 +29,6 @@ export class ThreadsService {
       }
 
       async createThread(threadDto: ThreadsDto, isUpdate: boolean): Promise<ThreadsResponseModel> {
-        console.log(threadDto,"threadDto+++++++++++at 33");
         try {
           let previousValue
           if (!isUpdate) {
@@ -69,18 +67,27 @@ export class ThreadsService {
         }
       }  
 
-      async getAllThreads(): Promise<CommonResponseModel> {
-        try {
-            const info = await this.threadsRepository.find()
-            if (info) {
-                return new CommonResponseModel(true, 1, 'Data retrieved', info)
-            } else {
-                return new CommonResponseModel(false, 0, 'No data found')
-            }
-        } catch (err) {
-            return new CommonResponseModel(false, 0, 'Something went wrong', err)
-        }
-    }
+      // async getAllThreads(): Promise<CommonResponseModel> {
+       
+      //       const info = await this.threadsRepository.getThreadsData()
+      //       console.log(info,"finsp-------------------------")
+      //       if (info) {
+      //           return new CommonResponseModel(true, 1, 'Data retrieved', info)
+      //       } else {
+      //           return new CommonResponseModel(false, 0, 'No data found')
+      //       }
+      //   } catch (err) {
+      //       return new CommonResponseModel(false, 0, 'Something went wrong', err)
+      //   }
+    
+    async getAllThreads(): Promise<CommonResponseModel> {
+      const data = await this.threadsRepository.getThreadsData()
+      if (data.length > 0)
+          return new CommonResponseModel(true, 1, 'data retrived', data)
+      else
+          return new CommonResponseModel(false, 0, 'No data found');
+  }
+
       async getAllActiveThreads(): Promise<AllThreadsResponseModel> {
         // const page: number = 1;
         try {

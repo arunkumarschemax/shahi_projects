@@ -393,7 +393,7 @@ export const ItemsGrid = () => {
   // }
 
   return (
-<Card title='Items' extra={<span><Button onClick={()=>navigate('/masters/items-form')} type={'primary'}>New</Button></span>}>
+<Card title='Items' extra={<span><Button onClick={()=>navigate('/bom/items-form')} type={'primary'}>New</Button></span>}>
       <>
       {/* <Row gutter={24}>
          <Col span={4}></Col>

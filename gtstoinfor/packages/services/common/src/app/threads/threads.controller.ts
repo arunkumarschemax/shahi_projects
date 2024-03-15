@@ -34,7 +34,6 @@ export class ThreadsController {
     }
   }
   @Post('/getAllThread')
-  // @UseGuards(AuthGuard('jwt'))
   async getAllThread(): Promise<CommonResponseModel> {
     try {
       return await this.threadService.getAllThreads();

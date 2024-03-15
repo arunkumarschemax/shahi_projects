@@ -174,17 +174,7 @@ export const AppRoutes = () => {
 
                     <Route path='address-upload' element={<AddressUpload />} />
                     <Route path='address-view' element={<AddressView />} />
-                    <Route path='items-view'   element={<ItemsGrid />} />
-                   <Route path='items-form' element={<ItemsForm itemData={undefined} updateItem={function (itemData: ItemsDto): void {
-                       throw new Error("Function not implemented.")
-                   } } isUpdate={false} closeForm={function (): void {
-                       throw new Error("Function not implemented.")
-                   } } />} />                    <Route path='thread-view' element={<ThreadView />} />
-                    <Route path='thread-form' element={<ThreadForm Data={undefined} updateItem={function (Data: ThreadsDto): void {
-                        throw new Error("Function not implemented.")
-                    } } isUpdate={false} closeForm={function (): void {
-                        throw new Error("Function not implemented.")
-                    } }  />} />
+                 
 
 
                 </Route>
@@ -233,8 +223,17 @@ export const AppRoutes = () => {
                     <Route path='twilltape' element={<Twilltape bomInfo={[]} />} />
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
+                   <Route path='items-view'   element={<ItemsGrid />} />
+                   {/* <Route path='items-form' element={<ItemsForm itemData={undefined} updateItem={function (itemData: ItemsDto): void {
+                       throw new Error("Function not implemented.")
+                   } } isUpdate={false} closeForm={function (): void {
+                       throw new Error("Function not implemented.")
+                   } } />} />           */}
+                   <Route path="items-form" element={<ItemsForm itemData={[]} />}></Route>
 
-                    
+                             <Route path='thread-view' element={<ThreadView />} />
+                             <Route path="thread-form" element={<ThreadForm Data={[]} />}></Route>
+
                 </Route>
 
                 <Route path='/reports'>

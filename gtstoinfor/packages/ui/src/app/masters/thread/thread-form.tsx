@@ -10,10 +10,10 @@ import { BomService, ThreadService, ThreadSupplierService } from '@project-manag
 
 
 export interface ThreadFormprops {
-    Data: ThreadsDto;
-    updateItem: (Data:ThreadsDto ) => void;
-    isUpdate: boolean;
-    closeForm: () => void;
+    Data: any;
+    // updateItem: (Data:ThreadsDto ) => void;
+    // isUpdate: boolean;
+    // closeForm: () => void;
 }
 
 export function ThreadForm(props:ThreadFormprops) {
@@ -70,26 +70,26 @@ export function ThreadForm(props:ThreadFormprops) {
           AlertMessages.getErrorMessage(err.message);
         })
       }
-      const saveData = (values: ThreadsDto) => {
-        setDisable(false)
-        if(props.isUpdate){
-          props.updateItem(values);
-        }else{
-          setDisable(false)
-          create(values);
-        }
-      };
+    //   const saveData = (values: ThreadsDto) => {
+    //     setDisable(false)
+    //     if(props.isUpdate){
+    //       props.updateItem(values);
+    //     }else{
+    //       setDisable(false)
+    //       create(values);
+    //     }
+    //   };
 
      const onFinish = (values : ThreadsDto ) =>{
         setDisable(false)
 
-        if(props.isUpdate){
-          props.updateItem(values)
-        } else {
-            setDisable(false)
-            saveData(values)
+        // if(props.isUpdate){
+        //   props.updateItem(values)
+        // } else {
+        //     setDisable(false)
+        //     saveData(values)
 
-        }
+        // }
 
      }
 
@@ -103,7 +103,7 @@ export function ThreadForm(props:ThreadFormprops) {
 
 
         <Card
-            extra={<span><Button type='primary' onClick={() => navigate('/masters/thread-view')}>View</Button></span>} headStyle={{  height: '40px' }}
+            extra={<span><Button type='primary' onClick={() => navigate('/bom/thread-view')}>View</Button></span>} headStyle={{  height: '40px' }}
             bodyStyle={{ paddingTop: '2px', paddingBottom: '12px' }}
             title={<h4 style={{ textAlign: 'left', padding: '20px' }}>Threads</h4>}>
             <Form layout="vertical"
@@ -208,9 +208,9 @@ export function ThreadForm(props:ThreadFormprops) {
                     <Col span={24}>
                         <Form.Item>
                             <Button htmlType='submit' style={{ marginRight: '18px', backgroundColor: ' green' }}>Submit</Button>
-                            {(props.isUpdate !==true) &&
+                            
                             <Button htmlType='reset' onClick={handleReset} style={{ backgroundColor: ' red' }} >Reset</Button>
-}
+
                         </Form.Item>
                     </Col>
 

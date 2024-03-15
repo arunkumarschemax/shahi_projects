@@ -20,7 +20,8 @@ const ThreadView = () => {
   const [data, setData] = useState<any>(undefined);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const services = new ThreadService
-
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     getAllThread()
@@ -152,7 +153,9 @@ const ThreadView = () => {
 
       title: "Style",
       dataIndex: 'style',
-      align: 'center'
+      align: 'center',
+      ...getColumnSearchProps('style'),
+
 
     },
     {
@@ -165,28 +168,41 @@ const ThreadView = () => {
       dataIndex: 'quality',
       sorter: (a, b) => a.quality.length - b.quality.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('quality'),
+      // ...getColumnSearchProps('quality'),
       align: 'center'
     },
     {
       title: "Color Combo",
       dataIndex: 'colorCombo',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.colorCombo.length - b.colorCombo.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('colorCombo'),
+
     },
     {
       title: "Color Code",
       dataIndex: 'colorCode',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.colorCode.length - b.colorCode.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('colorCode'),
+
     },
     {
       title: "Shade Number",
       dataIndex: 'shadeNumber',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.shadeNumber.length - b.shadeNumber.length,
+      sortDirections: ['descend', 'ascend'],
     },
     {
       title: "Supplier",
       dataIndex: 'supplierName',
-      align: 'center'
+      align: 'center',
+      ...getColumnSearchProps('supplierName'),
+
+
     },
    
     // {
@@ -247,26 +263,25 @@ const ThreadView = () => {
 
       <div>
         <Card
-          extra={<span><Button onClick={() => navigate('/masters/thread-form')} type={'primary'}>New</Button></span>}
+          extra={<span><Button onClick={() => navigate('/bom/thread-form')} type={'primary'}>New</Button></span>}
           headStyle={{ height: '50px' }}
           bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
           title={<h4 style={{ textAlign: 'left' }}>Threads</h4>}
 
         >
 
-          <Table columns={Columns} dataSource={supplier}
-            scroll={{ x: 1500 }} />
+          <Table className="custom-table-wrapper" 
+           columns={Columns} dataSource={supplier} size='small'
+            scroll={{ x: 1500 }} 
+            pagination={{
+              pageSize: 100, 
+              onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+              }
+          }}/>
         </Card>
-        <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
-          onClose={closeDrawer} visible={drawerVisible} closable={true}>
-          <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
-            <ThreadForm Data={undefined} updateItem={function (Data: ThreadsDto): void {
-              throw new Error('Function not implemented.');
-            } } isUpdate={false} closeForm={function (): void {
-              throw new Error('Function not implemented.');
-            } }               />
-          </Card>
-        </Drawer>
+     
       </div>
     </>
   )
