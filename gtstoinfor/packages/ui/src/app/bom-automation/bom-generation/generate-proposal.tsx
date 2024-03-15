@@ -70,7 +70,7 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     // "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
-    "BUTTON":<Button3Print bomInfo={buttonData}/>,
+    // "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,

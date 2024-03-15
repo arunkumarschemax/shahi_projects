@@ -24,7 +24,9 @@ export class UpdatedConsumptions {
     moq: number;
     consumption: number
     style: string;
-    uom: UOMEnum
+    uom: UOMEnum;
+    item:string;
+    consumptionAgainst : string
 }
 
 export class BomGenerationReq {
@@ -55,7 +57,8 @@ export class PoDataForBomGenerationModel {
     year: string;
     qty: number;
     size: string;
-    gender: string
+    gender: string;
+    item : string
 }
 
 export class BomDataForStyleAndSeasonModel {

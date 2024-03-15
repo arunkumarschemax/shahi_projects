@@ -349,8 +349,8 @@ export class BomService {
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
             const regionDataMap = new Map<string, { poData: PoDataForBomGenerationModel[], totalQty: number }>()
             // moq logic for wash care label
-            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
-                return  poQty * consumption
+            function calculateBomQty(poQty: number, consumption: number) {
+                return poQty * consumption
             }
 
             function getUpdatedQty(poLine: string, poQty) {
@@ -396,10 +396,17 @@ export class BomService {
                 const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                 for (const styleBom of styleData) {
                     // console.log(styleBom)
-                   
+
                     // console.log(consumptions,styleBom.itemId)
-                    const { consumption, moq, wastage } = req.updatedConsumptions.find((v) => v.style === po.styleNumber)
-                    const bomQty = calculateBomQty(updatedQty, moq, consumption, wastage)
+
+                    const { consumption, moq, wastage } = req.updatedConsumptions.find((v) => {
+                        if (v.consumptionAgainst == 'item') {
+                            return v.item == po.item
+                        } else {
+                            return v.style == po.styleNumber
+                        }
+                    })
+                    const bomQty = calculateBomQty(updatedQty, consumption,)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
 
@@ -408,7 +415,7 @@ export class BomService {
                     poBomEntity.consumption = consumption ? consumption : 1
                     poBomEntity.moq = moq ? moq : 0
                     poBomEntity.wastage = wastage ? wastage : 0
-                    poBomEntity.bomQty = po.qty
+                    poBomEntity.bomQty = bomQty
                     poBomEntity.poQty = po.qty
                     const dpom = new DpomEntity()
                     dpom.id = po.id
@@ -431,7 +438,7 @@ export class BomService {
                     // await transactionManager.getRepository(PoBomEntity).insert(poBomEntity)
 
                 }
-                const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd()
+                const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd(req.itemId)
                 for (const ab of zfactorsToAdd) {
                     if (po.destination == ab.destination || po.styleNumber == ab.style) {
                         const poBomExtraITem = new PoBomEntity()
@@ -1448,7 +1455,7 @@ export class BomService {
     async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
-        console.log(poBomData,"poBomData")
+        console.log(poBomData, "poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
@@ -1486,7 +1493,7 @@ export class BomService {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size,ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size, ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
@@ -1495,10 +1502,10 @@ export class BomService {
             }
             if (!result[key]) {
                 result[key] = {
-                    geoCode,styleNumber,
+                    geoCode, styleNumber,
                     poQty: 0, itemNo, bomQty: 0,
-                    itemId,poNumber,gender,primaryColor,
-                    season,year,color,itemColor,productCode,ogacDate
+                    itemId, poNumber, gender, primaryColor,
+                    season, year, color, itemColor, productCode, ogacDate
                 };
             }
             result[key].bomQty += bomQty;

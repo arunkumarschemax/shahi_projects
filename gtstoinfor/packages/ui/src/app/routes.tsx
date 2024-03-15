@@ -251,7 +251,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
-                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
+                    {/* <Route path='button3' element={<Button3Print itemId = {null} poLines={[""]} />} /> */}
                     <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

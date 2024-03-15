@@ -3,7 +3,12 @@ import { Button, Card, Col, Row } from "antd";
 import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import './prints-common.css'
+
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -17,12 +22,39 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface Button3PrintProps {
-    bomInfo: any
+    itemId: any,
+    poLines: string[]
 }
 export function Button3Print(props: Button3PrintProps) {
-    console.log(props.bomInfo)
-    const data = props.bomInfo
+    const service = new BomService();
+    const [data, setData] = useState<any[]>([])
+    const [groupedData,setGroupedData] = useState<any>([])
 
+    useEffect(() => {
+        handleButtonTrim()
+    },[])
+
+
+
+    function handleButtonTrim() {
+        const bomProposalReq = new BomProposalReq()
+        bomProposalReq.itemId = [props.itemId]
+        bomProposalReq.poLine = props.poLines
+        console.log(bomProposalReq, "requesttttttttt");
+
+        service.generateProposalForButton(bomProposalReq).then((v) => {
+            if (v.status) {
+                setData(v.data)
+                const group: Array<Array<any>> = Object.values(v.data?.reduce((acc, rec) => {
+                    const itemNo = rec.itemNo || 'undefined';
+                    acc[itemNo] = acc[itemNo] || [];
+                    acc[itemNo].push(rec);
+                    return acc;
+                }, {}));
+                setGroupedData(group)
+            }
+        })
+    }
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {
@@ -59,42 +91,61 @@ export function Button3Print(props: Button3PrintProps) {
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
-    const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
-        const itemNo = rec.itemNo || 'undefined';
-        acc[itemNo] = acc[itemNo] || [];
-        acc[itemNo].push(rec);
-        return acc;
-    }, {}));
+
+  
 
     const countColumnOccurrences = (columnKey) => {
         const counts = {};
         data.forEach((rec) => {
-          const value = rec[columnKey];
-          counts[value] = (counts[value] || 0) + 1;
+            const value = rec[columnKey];
+            counts[value] = (counts[value] || 0) + 1;
         });
         return counts;
-      };
-    
-      // Determine if a cell should be merged
-      const shouldMergeCell = (columnKey, value) => {
+    };
+
+    // Determine if a cell should be merged
+    const shouldMergeCell = (columnKey, value) => {
         const counts = countColumnOccurrences(columnKey);
         return counts[value] > 1;
-      };
+    };
 
-      const calculateTotalBomQty = (data) => {
+    const calculateTotalBomQty = (data) => {
         return data.reduce((total, item) => {
-          const bomQty = Number(item?.bomQty) || 0;
-          return total + bomQty;
+            const bomQty = Number(item?.bomQty) || 0;
+            return total + bomQty;
         }, 0);
-      };
-      const tableCellStyle = {
+    };
+    const tableCellStyle = {
         padding: '8px',
-     };
+    };
+
     return (
         <div id='print'>
-                <Card  title="BUTTON" extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-            {groupedData.map((group, groupIndex) => (
-                    <table key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
+            <Card title="BUTTON" extra={<><span><Button onClick={handlePrint}>Print</Button></span>
+            {/* <span>
+                    <ReactHTMLTableToExcel
+                        style={{padding:'5px', background : '#grey'}}
+                        id="test-table-xls-button"
+                        className="download-table-xls-button"
+                        table="bom-table"
+                        filename="button"
+                        sheet="sheet 1"
+                        buttonText="Excel"
+                    />
+                </span> */}
+                </>}>
+                { groupedData.map((group, groupIndex) => (
+                    <>
+                    <ReactHTMLTableToExcel
+                        style={{padding:'5px', background : '#grey'}}
+                        id={`test-table-xls-button-${groupIndex}`}
+                        className={`download-table-xls-button-${groupIndex}`}
+                        table={`bom-table-${groupIndex}`}
+                        filename={`Button-Item-${group[0].itemNo}`}
+                        sheet="sheet 1"
+                        buttonText="Excel"
+                    />
+                    <table id={`bom-table-${groupIndex}`} key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', marginBottom: '20px' }} border={1} cellSpacing="0" cellPadding='5'>
                         <thead>
                             <tr>
                                 <th style={{ width: '3%' }}>ITEM#</th>
@@ -146,9 +197,11 @@ export function Button3Print(props: Button3PrintProps) {
                             </tr>
                         </tfoot>
                     </table>
-            ))}
+                    </>
+                   
+                ))}
 
-                </Card>
+            </Card>
         </div>
 
     )

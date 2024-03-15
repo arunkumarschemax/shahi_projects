@@ -27,7 +27,7 @@ export default function ConsumptionForms(props: Props) {
 
     const handleFieldChange = (value: any, style: string, field: string) => {
         const existingIndex = consumptions.findIndex(item => item.style === style);
-        const newConsumption = { style, itemId, [field]: value, uom };
+        const newConsumption = {[consumptionAgainst] : style,consumptionAgainst, itemId, [field]: value, uom };
         if (existingIndex !== -1) {
             const updatedConsumptions = [...consumptions];
             updatedConsumptions[existingIndex][field] = value;

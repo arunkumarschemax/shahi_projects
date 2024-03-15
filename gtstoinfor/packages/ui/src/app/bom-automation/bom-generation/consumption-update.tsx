@@ -62,6 +62,8 @@ export default function ConsumptionUpdate(props: Props) {
                     columns={columns}
                     dataSource={trims} /> */}
             <Tabs
+                
+                
                 tabPosition={'left'}
                 onChange={setActiveKey}
                 style={{ height: 420, left: 0 }}
@@ -70,7 +72,9 @@ export default function ConsumptionUpdate(props: Props) {
                     return {
                         label: v.item,
                         key: id,
-                        children: <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} />,
+                        children: <>
+                        <Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link>
+                        <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} /></>,
                     };
                 })}
             />
