@@ -246,6 +246,8 @@ import AirHoleForm from "./trim-master/air-hole/air-hole-form"
 import AirHoleGrid from "./trim-master/air-hole/air-hole-view"
 import LineGrid from "./trim-master/line/line-view"
 import LineForm from "./trim-master/line/line-form"
+import ShapeForm from "./trim-master/shape/shape-form"
+import ShapeGrid from "./trim-master/shape/shape-view"
 
 
 
@@ -806,6 +808,13 @@ export const AppRoutes = () => {
                         updateLine={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='line/line-view' element={<LineGrid />}/>
+
+                    <Route path='shape/shape-form' element={<ShapeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateShape={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='shape/shape-view' element={<ShapeGrid />}/>
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}
