@@ -233,8 +233,8 @@ export function PartsGrid(props: PartsProps) {
             <Popconfirm onConfirm={e =>{saveFunction(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Parts ?'
-                :  'Are you sure to Activate Parts ?'
+                ? 'Are You Sure To Deactivate Parts ?'
+                :  'Are You Sure To Activate Parts ?'
             }
           >
             <Switch  size="default"
