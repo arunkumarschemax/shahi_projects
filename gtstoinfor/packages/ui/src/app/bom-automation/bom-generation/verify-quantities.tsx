@@ -27,21 +27,21 @@ export default function VerifyQuantities(props: Props) {
                     item: currentItem.item.substring(0, 4),
                     styleNumber: currentItem.styleNumber,
                     geoCode: currentItem.geoCode,
-                    total: 0,  // Total sum of all sizes
+                    Total: 0,  // Total sum of all sizes
                 };
             }
             // result[key].total++;
 
             // Loop through each size key and add it to the grouped data if it doesn't exist
             Object.keys(currentItem).forEach(sizeKey => {
-                if (!['poNumber', 'poLineItemNumber', 'poLine', 'item', 'styleNumber', 'planningSeasonCode', 'planningSeasonYear', 'geoCode', 'destinationCountryCode', 'genderAgeDesc', 'destinationCountry', 'plant'].includes(sizeKey)) {
+                if (!['poNumber', 'poLineItemNumber', 'poLine', 'item', 'styleNumber', 'planningSeasonCode', 'planningSeasonYear', 'geoCode', 'destinationCountryCode', 'genderAgeDesc', 'destinationCountry', 'plant','productCode','colorDesc'].includes(sizeKey)) {
                     // If the size key doesn't exist in the grouped data, initialize it to 0
                     if (!result[key].hasOwnProperty(sizeKey)) {
                         result[key][sizeKey] = 0;
                     }
                     // Increment the quantity for the current size
                     result[key][sizeKey] += parseInt(currentItem[sizeKey] || 0, 10);
-                    result[key].total += parseInt(currentItem[sizeKey] || 0, 10);
+                    result[key].Total += parseInt(currentItem[sizeKey] || 0, 10);
                 }
             });
 
@@ -56,7 +56,7 @@ export default function VerifyQuantities(props: Props) {
         });
 
     }
-
+    console.log(clubbedData,selectedData)
 
     function renderColumns(): any {
 
@@ -75,7 +75,7 @@ export default function VerifyQuantities(props: Props) {
     }
     return (
         <Card title={'Quantities break up'} >
-            <Table pagination={false} columns={renderColumns()} dataSource={clubbedData} />
+            <Table  scroll={{ x: 'max-content', y: 450 }} pagination={false} columns={renderColumns()} dataSource={clubbedData} />
         </Card>
     )
 }

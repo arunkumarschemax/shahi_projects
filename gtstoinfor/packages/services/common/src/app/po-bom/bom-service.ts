@@ -350,9 +350,7 @@ export class BomService {
             const regionDataMap = new Map<string, { poData: PoDataForBomGenerationModel[], totalQty: number }>()
             // moq logic for wash care label
             function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
-                const wastageQty = (poQty * consumption) * (wastage / 100)
-                const bomQty = (poQty * consumption) + wastageQty
-                return bomQty
+                return  poQty * consumption
             }
 
             function getUpdatedQty(poLine: string, poQty) {
@@ -389,6 +387,7 @@ export class BomService {
                 // console.log(po.styleNumber,styleData.length,' style size')
                 // console.log(styleData.length, 'style data -----')
                 if (!styleData.length) {
+                    await transactionManager.releaseTransaction()
                     return new CommonResponseModel(false, 11111, `Style data not found for selected style ${po.styleNumber}`)
                 }
 
@@ -397,16 +396,16 @@ export class BomService {
                 const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                 for (const styleBom of styleData) {
                     // console.log(styleBom)
-                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
+                   
                     // console.log(consumptions,styleBom.itemId)
-                    const { consumption, moq, wastage } = consumptions
+                    const { consumption, moq, wastage } = req.updatedConsumptions.find((v) => v.style === po.styleNumber)
                     const bomQty = calculateBomQty(updatedQty, moq, consumption, wastage)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
 
                     bom.id = styleBom.bomId
                     poBomEntity.bom = bom
-                    poBomEntity.consumption = consumption ? consumption : 0
+                    poBomEntity.consumption = consumption ? consumption : 1
                     poBomEntity.moq = moq ? moq : 0
                     poBomEntity.wastage = wastage ? wastage : 0
                     poBomEntity.bomQty = po.qty

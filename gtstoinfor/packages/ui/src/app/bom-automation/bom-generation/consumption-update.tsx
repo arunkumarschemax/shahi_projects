@@ -10,8 +10,8 @@ type Props = {
     setTrimWiseConsumptions: (value: any) => void
     distinctValues: any
     generateBom: () => void;
-    poLines : string[]
-    updatedSizes : any[]
+    poLines: string[]
+    updatedSizes: any[]
 }
 
 export default function ConsumptionUpdate(props: Props) {
@@ -43,7 +43,7 @@ export default function ConsumptionUpdate(props: Props) {
         setViewModal(false)
     }
 
-    function setActiveKey(activeKey){
+    function setActiveKey(activeKey) {
         props.setItemId(activeKey)
     }
     return (
@@ -63,14 +63,14 @@ export default function ConsumptionUpdate(props: Props) {
                     dataSource={trims} /> */}
             <Tabs
                 tabPosition={'left'}
-                onChange={setActiveKey }
+                onChange={setActiveKey}
                 style={{ height: 420, left: 0 }}
                 items={trims.map((v, i) => {
                     const id = v.itemId;
                     return {
                         label: v.item,
                         key: id,
-                        children: <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} printComponent={v.printComponent} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemId={v.itemId} selectedStyles={props.distinctValues.distinctStyles} key={id} />,
+                        children: <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} />,
                     };
                 })}
             />
