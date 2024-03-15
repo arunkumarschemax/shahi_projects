@@ -233,8 +233,8 @@ export function LineGrid(props: LineProps) {
             <Popconfirm onConfirm={e =>{saveFunction(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Line ?'
-                :  'Are you sure to Activate Line ?'
+                ? 'Are You Sure To Deactivate Line ?'
+                :  'Are You Sure To Activate Line ?'
             }
           >
             <Switch  size="default"

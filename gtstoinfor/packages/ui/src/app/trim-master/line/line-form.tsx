@@ -70,7 +70,7 @@ export function LineForm(props: LineFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Line is Required"
+                      message:"Line Is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
