@@ -20,9 +20,9 @@ export class GaugeService {
         try {
             const data = await this.gaugeRepo.find({order:{gauge:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Gauge data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Gauge Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -35,11 +35,11 @@ export class GaugeService {
           const gaugeData = await this.gaugeRepo.findOne({ where: { gauge: req.gauge } });
 
           if (isUpdate && gaugeData && gaugeData.gaugeId !== req.gaugeId) {
-            return new CommonResponseModel(false, 1, 'Another gauge already exists');
+            return new CommonResponseModel(false, 1, 'Another Gauge Already Exists');
           }
 
           if (!isUpdate && gaugeData) {
-            return new CommonResponseModel(false, 1, 'Gauge already exists');
+            return new CommonResponseModel(false, 1, 'Gauge Already Exists');
           }
           const entity = new GaugeEntity();
           entity.gauge = req.gauge;
@@ -50,7 +50,7 @@ export class GaugeService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.gaugeRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'Gauge updated successfully' : 'Gauge created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'Gauge Updated Successfully' : 'Gauge Created Successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -70,17 +70,17 @@ export class GaugeService {
                        
                         if (GaugeExists.isActive) {
                             if (gaugeStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Gauge is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Gauge Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Gauge is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Gauge Is Already Deactivated');
                             }
                         } else {
                             if (gaugeStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Gauge is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Gauge Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Gauge is already activated');
+                                throw new CommonResponseModel(false,10112, 'Gauge Is Already Activated');
                             }
                       }
                 }
@@ -97,9 +97,9 @@ export class GaugeService {
         try {
             const data = await this.gaugeRepo.find({where:{isActive: true},order:{gauge:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Gauge data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Gauge Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -110,9 +110,9 @@ export class GaugeService {
         try {
             const data = await this.gaugeRepo.find({where:{gaugeId: req.gaugeId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Gauge data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Gauge Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;

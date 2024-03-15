@@ -234,8 +234,8 @@ export function GaugeGrid(props: GaugeProps) {
             <Popconfirm onConfirm={e =>{saveGauge(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Gauge ?'
-                :  'Are you sure to Activate Gauge ?'
+                ? 'Are You Sure To Deactivate Gauge ?'
+                :  'Are You Sure To Activate Gauge ?'
             }
           >
             <Switch  size="default"
