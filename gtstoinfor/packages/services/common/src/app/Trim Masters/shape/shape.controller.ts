@@ -50,4 +50,26 @@ export class ShapeController{
                 return this.applicationHandler.returnException(CommonResponseModel,err)
             }
         }
+
+
+        @Post('/activateOrDeactivateShape')
+      @ApiBody({type: ShapeDto})
+      async activateOrDeactivateShape(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.activateOrDeactivateShape(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
+      @Post('/getShapeById')
+      @ApiBody({type: ShapeDto})
+      async getShapeById(@Body() req: any): Promise<CommonResponseModel>{
+          try{
+              return await this.service.getShapeById(req)
+          }catch (error){
+              return this.applicationHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
 }

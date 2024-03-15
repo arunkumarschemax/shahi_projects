@@ -1,31 +1,31 @@
-import {FunctionDTO } from "@project-management-system/shared-models";
-import {FunctionService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
+import { PartsService } from "packages/libs/shared-services/src/common/parts.service";
+import { PartsDto } from "packages/libs/shared-models/src/trim-masters/parts/parts.dto";
 
 
 const { TextArea } = Input;
 
-export interface FunctionFormProps {
-  data:FunctionDTO;
-  updateFunction:(dto:FunctionDTO)=>void;
+export interface PartsFormProps {
+  data:PartsDto;
+  updateParts:(dto:PartsDto)=>void;
   isUpdate:boolean;
   closeForm: () => void;
 }
 
-export function FunctionForm(props: FunctionFormProps) {
+export function PartsForm(props: PartsFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
-  const Service = new FunctionService()
+  const Service = new PartsService()
 
-  const createFunction=(dto:FunctionDTO)=>{
+  const createParts=(dto:PartsDto)=>{
     dto.createdUser = 'admin'
-    Service.createFunction(dto).then(res => {
+    Service.createParts(dto).then(res => {
       if (res.status) {
         message.success(res.internalMessage,2);
-        navigate("/trim-master/function/function-view");
+        navigate("/trim-master/parts/parts-view");
         onReset();
       } else {
         if (res.status) {
@@ -43,20 +43,20 @@ export function FunctionForm(props: FunctionFormProps) {
     form.resetFields();
   }
 
-  const saveData = (values: FunctionDTO) => {
+  const saveData = (values: PartsDto) => {
     if(props.isUpdate){
-      props.updateFunction(values);
+      props.updateParts(values);
     }else{
-        createFunction(values);
+        createParts(values);
     }
   
   };
 
   return (
-    <Card title={<span >Function</span>} 
-    style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/trim-master/function/function-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
+    <Card title={<span >Parts</span>} 
+    style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={props.isUpdate==true?"":<Link to='/trim-master/parts/parts-view' ><span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span></Link>} >
       <Form form={form } layout={'vertical'} initialValues={props.data} name="control-hooks" onFinish={saveData}>   
-      <Form.Item name="functionId" style={{display:"none"}} >
+      <Form.Item name="partsId" style={{display:"none"}} >
         <Input hidden/>
       </Form.Item>
     <Form.Item style={{display:"none"}} name="createdUser" >
@@ -65,19 +65,19 @@ export function FunctionForm(props: FunctionFormProps) {
     <Row>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
               <Form.Item
-                  name="function"
-                  label="Function"
+                  name="parts"
+                  label="Parts"
                   rules={[
                     {
                       required: true,
-                      message:"Function is Required"
+                      message:"Parts is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
                       message: `Should contain only alphabets and numbers.`
                     }
                   ]}>
-                  <Input placeholder='Enter Function'/>
+                  <Input placeholder='Enter Parts'/>
                 </Form.Item>
         </Col>
       </Row>
@@ -99,4 +99,4 @@ export function FunctionForm(props: FunctionFormProps) {
   );
 }
 
-export default FunctionForm;
+export default PartsForm;

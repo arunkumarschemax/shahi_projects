@@ -244,6 +244,14 @@ import LogoForm from "./trim-master/logo/logo-form"
 import LogoGrid from "./trim-master/logo/logo-view"
 import TrimSizeForm from "./trim-master/trim-size/trim-size-form"
 import TrimSizeGrid from "./trim-master/trim-size/trim-size-view"
+import AirHoleForm from "./trim-master/air-hole/air-hole-form"
+import AirHoleGrid from "./trim-master/air-hole/air-hole-view"
+import LineGrid from "./trim-master/line/line-view"
+import LineForm from "./trim-master/line/line-form"
+import ShapeForm from "./trim-master/shape/shape-form"
+import ShapeGrid from "./trim-master/shape/shape-view"
+import PartsForm from "./trim-master/parts/parts-form"
+import PartsGrid from "./trim-master/parts/parts-view"
 
 
 
@@ -790,6 +798,35 @@ export const AppRoutes = () => {
                         updateGauge={(undefined) => {}}
                         data={undefined} />} />
                     <Route path='gauge/gauge-view' element={<GaugeGrid />}/>
+
+                    <Route path='air-hole/air-hole-form' element={<AirHoleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateAirHole={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='air-hole/air-hole-view' element={<AirHoleGrid />}/>
+
+                    <Route path='line/line-form' element={<LineForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateLine={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='line/line-view' element={<LineGrid />}/>
+
+                    <Route path='shape/shape-form' element={<ShapeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateShape={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='shape/shape-view' element={<ShapeGrid />}/>
+
+                    <Route path='parts/parts-form' element={<PartsForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateParts={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='parts/parts-view' element={<PartsGrid />}/>
+
 
                     <Route path='finish/finish-form' element={<FinishForm
                         isUpdate={false}

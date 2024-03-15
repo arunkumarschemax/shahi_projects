@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { ShapeEntity } from "./shape-entity";
 import { ShapeDto } from "./shape-dto";
+import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 
 @Injectable()
 export class ShapeService{
@@ -62,5 +63,56 @@ export class ShapeService{
             throw(err)
         }
     }
+
+
+    async activateOrDeactivateShape(req: ShapeDto): Promise<CommonResponseModel> {
+        try {
+            const ShapeExists = await this.repo.findOne({where:{shapeId: req.shapeId}});
+            if (ShapeExists) {
+                if (!ShapeExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current Shape. Refresh and try again');
+                } else {
+                    
+                        const shapeStatus =  await this.repo.update(
+                            { shapeId: req.shapeId },
+                            { isActive: req.isActive,updatedUser: req.updatedUser });
+                       
+                        if (ShapeExists.isActive) {
+                            if (shapeStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Shape is deactivated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10111, 'Shape is already deactivated');
+                            }
+                        } else {
+                            if (shapeStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Shape is activated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10112, 'Shape is already activated');
+                            }
+                      }
+                }
+            } else {
+                throw new CommonResponseModel(false,99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+      }
+
+      async getShapeById(req:ShapeDto): Promise<CommonResponseModel> {
+        try {
+            const data = await this.repo.find({where:{shapeId: req.shapeId,isActive: true}})
+            if(data.length > 0){
+                return new CommonResponseModel(true, 1, 'Shape data retrieved successfully',data)
+            }else{
+                return new CommonResponseModel(false, 0, 'No data found',[])
+            }
+        } catch (err) {
+          return err;
+        }
+      }
+
 
 }
