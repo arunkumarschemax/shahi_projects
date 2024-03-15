@@ -24,6 +24,7 @@ import TissuePaper from '../../trims/trim-prints/tissue-paper-print';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 import SizeStrip from '../../trims/trim-prints/size-strip';
 import POIDLable from '../../trims/trim-prints/poid-trim-print';
+import { Grommets } from '../../trims/trim-prints/groomets';
 type Props = {
   poLine: string[]
 }
@@ -40,6 +41,8 @@ export default function GenerateProposal(props: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
   const [buttonData, setButtonData] = useState<any>([]);
+  const [grommets, setGrommets] = useState<any>([]);
+
   const [sizestripData, setSizeStripData] = useState<any>([]);
   const [necktapeData,setNeckTapeData]= useState<any>([]);
   const [jocktageData, setJockTageData] = useState<any>([])
@@ -82,6 +85,7 @@ export default function GenerateProposal(props: Props) {
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
+    "Grommets": <Grommets bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
@@ -538,6 +542,11 @@ export default function GenerateProposal(props: Props) {
      if(val.item === 'Snap Button'){
       handleButtonTrim(val.itemId)
     }
+
+    if(val.item ===  "Grommets"){
+      handleButtonTrim(val.itemId)
+    }
+
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
     } 

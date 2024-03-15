@@ -78,6 +78,7 @@ import ItemsGrid from "./items/items-grid"
 import ItemsForm from "./items/items-form"
 import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
+import Grommets from "./trims/trim-prints/groomets"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -231,6 +232,7 @@ export const AppRoutes = () => {
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
                     <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
                     <Route path='twilltape' element={<Twilltape bomInfo={[]} />} />
+                   < Route path='grommets' element={<Grommets bomInfo={[]}/>} />
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
 

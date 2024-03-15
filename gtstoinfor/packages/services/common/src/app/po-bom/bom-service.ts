@@ -1412,7 +1412,7 @@ console.log(bomQty,"poQty at 1036")
 
     async updateItemid(req:updateItemId): Promise<CommonResponseModel> {
         try {
-           console.log(req,"reqqqqqq")
+        //    console.log(req,"reqqqqqq")
             const query = ` UPDATE bom 
                 SET item_id = '${req.itemId}'
                 WHERE im_code = '${req.imCode}' `;
@@ -1423,7 +1423,7 @@ console.log(bomQty,"poQty at 1036")
                 return new CommonResponseModel(false, 0, 'No Data Updated', []);
             }
         } catch (error) {
-            console.error("Error occurred during update:", error);
+            // console.error("Error occurred during update:", error);
             return new CommonResponseModel(false, 0, 'Error occurred during update', []);
         }
     }
