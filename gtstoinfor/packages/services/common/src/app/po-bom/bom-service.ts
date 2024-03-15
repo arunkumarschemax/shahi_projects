@@ -1427,7 +1427,7 @@ export class BomService {
                 return new CommonResponseModel(false, 0, 'No Data Updated', []);
             }
         } catch (error) {
-            console.error("Error occurred during update:", error);
+            // console.error("Error occurred during update:", error);
             return new CommonResponseModel(false, 0, 'Error occurred during update', []);
         }
     }

@@ -8,11 +8,11 @@ import AlertMessages from '../common/common-functions/alert-messages';
 import { ItemsService } from '@project-management-system/shared-services';
 
 export interface ItemsFormProps {
-  itemData: ItemsDto;
-  updateItem: (itemData: ItemsDto) => void;
-  isUpdate: boolean;
+  itemData: any;
+  // updateItem: (itemData: ItemsDto) => void;
+  // isUpdate: boolean;
 //   saveItem:(varirantData:VariantDto) => void;
-  closeForm: () => void;
+  // closeForm: () => void;
 }
 
 export const ItemsForm = (props:ItemsFormProps) => {
@@ -23,10 +23,10 @@ export const ItemsForm = (props:ItemsFormProps) => {
   let history = useLocation();
 
   let createdUser="";
-  if(!props.isUpdate){
-    // createdUser= localStorage.getItem("createdUser");
-    createdUser= 'admin';
-  }
+  // if(!props.isUpdate){
+  //   // createdUser= localStorage.getItem("createdUser");
+  //   createdUser= 'admin';
+  // }
   
   const saveItems = (itemData: ItemsDto) => {
     setDisable(true)
@@ -57,12 +57,12 @@ export const ItemsForm = (props:ItemsFormProps) => {
     // if(values.currencyName.startsWith(" "))
     //   AlertMessages.getErrorMessage("Invalid Input");
    
-      if (props.isUpdate) {
-        props.updateItem(values);
-      } else {
-        setDisable(false)
-        saveItems(values);
-      }
+      // if (props.isUpdate) {
+      //   props.updateItem(values);
+      // } else {
+      //   setDisable(false)
+      //   saveItems(values);
+      // }
     
 
     
@@ -77,7 +77,7 @@ export const ItemsForm = (props:ItemsFormProps) => {
   return (
 <Card title={<span style={{color:'white'}}>Items</span>}
     style={{textAlign:'center'}} 
-     extra={props.isUpdate==true?"":<Link to='/masters/items-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
+     extra={<Link to='/bom/items-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
 
