@@ -207,9 +207,9 @@ export function ThreadForm(props:ThreadFormprops) {
                 <Row style={{ textAlign: 'right', marginRight: '30px' }}>
                     <Col span={24}>
                         <Form.Item>
-                            <Button htmlType='submit' style={{ marginRight: '18px', backgroundColor: ' green' }}>Submit</Button>
+                            <Button htmlType='submit' style={{ marginRight: '18px', backgroundColor: ' green',color:"white" }}>Submit</Button>
                             
-                            <Button htmlType='reset' onClick={handleReset} style={{ backgroundColor: ' red' }} >Reset</Button>
+                            <Button htmlType='reset' onClick={handleReset}  >Reset</Button>
 
                         </Form.Item>
                     </Col>
