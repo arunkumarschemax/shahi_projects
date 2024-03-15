@@ -18,14 +18,15 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 export interface DrawcordProps {
   itemId: any,
-  poLine: string[]
+  poLines: string[]
 }
 export const Drawcord = (props: DrawcordProps) => {
   // console.log(props.bomInfo)
   const service = new BomService();
-  const { itemId, poLine } = props
+  const { itemId, poLines } = props
 
   useEffect(() => {
+    console.log('drawcord component mounted')
     handleDrawcord()
   }, []);
 
@@ -93,7 +94,7 @@ export const Drawcord = (props: DrawcordProps) => {
   function handleDrawcord() {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
-    bomProposalReq.poLine = poLine
+    bomProposalReq.poLine = poLines
     service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
         setBomInfo(v.data)

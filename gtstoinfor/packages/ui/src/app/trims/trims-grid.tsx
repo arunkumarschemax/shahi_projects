@@ -5,9 +5,8 @@ import Highlighter from 'react-highlight-words';
 import { trimService } from '@project-management-system/shared-services';
 import { PrinterOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
-import { BackingPaper, Button1Print } from './trim-prints';
-import Button2Print from './trim-prints/button2-print';
-import Button3Print from './trim-prints/button3-print';
+import { BackingPaper } from './trim-prints';
+import Button3Print from './trim-prints/button';
 
 
 
@@ -145,8 +144,6 @@ const TrimsGrid = () => {
         <Table
           columns={columns}
           dataSource={trim} />
-
-
         <Modal
           //   className='print-docket-modal'
           //  key={'modal'}
@@ -161,9 +158,7 @@ const TrimsGrid = () => {
           ]}
         >
           {selectedPrintId === 1 && <BackingPaper bomInfo={undefined} />}
-          {selectedPrintId === 2 && <Button1Print />}
-          {selectedPrintId === 3 && <Button2Print />}
-          {selectedPrintId === 4 && <Button3Print bomInfo={''}/>}
+          {selectedPrintId === 4 && <Button3Print bomInfo={''} />}
 
         </Modal>
       </Card>

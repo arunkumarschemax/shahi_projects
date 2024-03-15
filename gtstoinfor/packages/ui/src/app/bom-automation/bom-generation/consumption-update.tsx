@@ -1,4 +1,4 @@
-import { UOMEnum, UpdatedConsumptions } from '@project-management-system/shared-models';
+import { UOMEnum, UpdatedConsumptions, updateItemId } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Col, Drawer, InputNumber, Modal, Row, Select, Table, Tabs, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
@@ -11,6 +11,7 @@ type Props = {
     distinctValues: any
     generateBom: () => void;
     poLines : string[]
+    updatedSizes : any[]
 }
 
 export default function ConsumptionUpdate(props: Props) {
@@ -69,7 +70,7 @@ export default function ConsumptionUpdate(props: Props) {
                     return {
                         label: v.item,
                         key: id,
-                        children: <ConsumptionForms poLines={props.poLines} printComponent={v.printComponent} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemId={v.itemId} selectedStyles={props.distinctValues.distinctStyles} key={id} />,
+                        children: <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} printComponent={v.printComponent} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemId={v.itemId} selectedStyles={props.distinctValues.distinctStyles} key={id} />,
                     };
                 })}
             />

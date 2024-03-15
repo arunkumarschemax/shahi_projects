@@ -1,8 +1,10 @@
-import { UOMEnum } from '@project-management-system/shared-models'
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Table } from 'antd'
+import { BomGenerationReq, UOMEnum } from '@project-management-system/shared-models'
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Table, message } from 'antd'
 import React, { Suspense, useState } from 'react'
 import UOMConversion from './uom-convserion-form'
 import { DownloadOutlined } from '@ant-design/icons'
+import moment from 'moment'
+import { BomService } from '@project-management-system/shared-services'
 
 type Props = {
     selectedStyles: string[],
@@ -11,14 +13,16 @@ type Props = {
     printComponent: string
     setTrimWiseConsumptions: (consumptions: any) => void
     generateBom: () => void
+    updatedSizes : any[]
 
 }
 export default function ConsumptionForms(props: Props) {
 
-    const { selectedStyles, itemId, setTrimWiseConsumptions, poLines,printComponent } = props
+    const { selectedStyles, itemId, setTrimWiseConsumptions, poLines,printComponent,updatedSizes } = props
     const [consumptions, setConsumptions] = useState<any[]>([])
     const [modalOpen, setModalOpen] = useState<boolean>(false)
-    const [DynamicComponent, setDynamiComponent] = useState<any>(<></>)
+    const [DynamicComponent, setDynamiComponent] = useState<any>(null)
+    const bomService = new BomService()
 
     const handleFieldChange = (value: any, style: string, field: string) => {
         const existingIndex = consumptions.findIndex(item => item.style === style);
@@ -57,6 +61,23 @@ export default function ConsumptionForms(props: Props) {
         }
     ]
 
+    const generateBom = () => {
+        const req = new BomGenerationReq()
+        req.poLine = poLines
+        req.updatedConsumptions = consumptions
+        req.updatedSizes = updatedSizes
+        req.itemId = Number(itemId)
+        bomService.generateBom(req).then((res) => {
+            if (res.status) {
+                onView()
+                message.success('Bom generated sucessfully', 3)
+                // setCurrent(current + 1);
+            }else{
+                message.info(res.internalMessage)
+            }
+        })
+    }
+
     function onGenerateBom() {
         // Convert consumptions array to a Map for easier lookup
         const consumptionsMap = new Map(consumptions.map(item => [item.style, item]));
@@ -72,12 +93,16 @@ export default function ConsumptionForms(props: Props) {
                 break// Missing consumption or uom value
             }
         }
-        props.generateBom()
-        onView()
+        generateBom()
+      
+        
     }
 
     const onView = () => {
+        setDynamiComponent(null)
+        console.log(printComponent)
         const Comp = React.lazy(() => import(`../../trims/trim-prints/${printComponent}`))
+        console.log(Comp)
         setDynamiComponent(Comp)
         setModalOpen(true)
     }
@@ -86,7 +111,7 @@ export default function ConsumptionForms(props: Props) {
         setModalOpen(false)
     }
 
-
+    console.log(poLines,'po lines')
 
 
     return (
@@ -100,11 +125,11 @@ export default function ConsumptionForms(props: Props) {
             <Col span={4}>
                 <Button icon={<DownloadOutlined />} onClick={onGenerateBom} type='primary'>View BOM </Button>
             </Col>
-            <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
+            <Modal key={moment().format("dd-mm-yyy hh:mm:ss")} open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
                 <div>
                     {DynamicComponent ? (
                         <Suspense fallback={<p>Loading..</p>}>
-                            <DynamicComponent itemId={itemId} poLine={poLines} />
+                            <DynamicComponent itemId={itemId} poLines={poLines} />
                         </Suspense>
                     ) : (
                         <p>Loading..</p>

@@ -56,7 +56,7 @@ export default function BomGenerationSteps() {
         },
         {
             title: 'Update Consumption',
-            content: <ConsumptionUpdate poLines={selectedPoLines} generateBom={generateBom} setItemId={setItemId} setTrimWiseConsumptions={setTrimsConsumptions} distinctValues={distinctValues} />,
+            content: <ConsumptionUpdate updatedSizes={updatedData} poLines={selectedPoLines} generateBom={generateBom} setItemId={setItemId} setTrimWiseConsumptions={setTrimsConsumptions} distinctValues={distinctValues} />,
         },
         {
             title: 'Generate proposal',
