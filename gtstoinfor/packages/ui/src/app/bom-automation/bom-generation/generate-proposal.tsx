@@ -16,7 +16,7 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
-import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import Mobilontape from '../../trims/trim-prints/mobilion-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 import Twilltape from '../../trims/trim-prints/twill-tape';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
@@ -24,6 +24,7 @@ import TissuePaper from '../../trims/trim-prints/tissue-paper';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 import SizeStrip from '../../trims/trim-prints/size-strip';
 import POIDLable from '../../trims/trim-prints/poid';
+import { Grommets } from '../../trims/trim-prints/grommets';
 type Props = {
   poLine: string[]
 }
@@ -40,6 +41,8 @@ export default function GenerateProposal(props: Props) {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
   const [buttonData, setButtonData] = useState<any>([]);
+  const [grommets, setGrommets] = useState<any>([]);
+
   const [sizestripData, setSizeStripData] = useState<any>([]);
   const [necktapeData,setNeckTapeData]= useState<any>([]);
   const [jocktageData, setJockTageData] = useState<any>([])
@@ -69,22 +72,23 @@ export default function GenerateProposal(props: Props) {
     // "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
-    "Interlining":<Interlining bomInfo={interlining}/>,
+    // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
-    "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
+    // "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
-    "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
-    "Twill Tape":<Twilltape bomInfo={twilltape}/>,
+    // "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
+    // "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
+    // "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
+    // "Grommets": <Grommets bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
-    "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
-    "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
+    // "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
+    // "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
     "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
     "Poid Label":<POIDLable bomInfo={poidData}/>,
   }
@@ -538,6 +542,11 @@ export default function GenerateProposal(props: Props) {
      if(val.item === 'Snap Button'){
       handleButtonTrim(val.itemId)
     }
+
+    if(val.item ===  "Grommets"){
+      handleButtonTrim(val.itemId)
+    }
+
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
     } 

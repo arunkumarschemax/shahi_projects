@@ -10,4 +10,5 @@ export * from './address.services';
 export * from './bom-services';
 export * from './trims.services';
 export * from './item-service-master'
-export * from './thread-supplier-service'
+export * from './thread-supplier-service';
+export * from './threads.services'

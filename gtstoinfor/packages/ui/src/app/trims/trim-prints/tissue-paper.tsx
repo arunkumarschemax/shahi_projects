@@ -1,4 +1,4 @@
-import { BomInfo, ItemInfoFilterReq } from "@project-management-system/shared-models";
+import { BomInfo, BomProposalReq, ItemInfoFilterReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import { useEffect, useRef, useState } from "react"
@@ -18,23 +18,33 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 
 export interface TissuePaperprops {
-    bomInfo: any[]
+  itemId: any,
+  poLines: string[]
 } const TissuePaper = (props: TissuePaperprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
-    const [vCode, setVCode] = useState('')
-    const data = props.bomInfo;
+    const { itemId, poLines } = props
+    const service = new BomService();
+
 
 
     
     useEffect(() => {
-        if (props.bomInfo) {
-            console.log(props.bomInfo)
-
-            setBomInfo(props.bomInfo)
-        }
-    }, [props.bomInfo])
+      handleTissuePaper()
+    }, [])
 
    
+  function handleTissuePaper(){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    // bomProposalReq.trimName = item
+    service.generateProposalForTissuePaper(bomProposalReq).then((res) =>{
+      if(res.status){
+        setBomInfo(res.data)
+      }
+     })
+  }
 
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
@@ -90,7 +100,7 @@ export interface TissuePaperprops {
 
       const groupedData = {};
   
-      data.forEach((item) => {
+      bomInfo.forEach((item) => {
         const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
         if (!groupedData[key]) {
           groupedData[key] = [];
@@ -113,18 +123,18 @@ export interface TissuePaperprops {
                 </tr>
               </thead>
               <tbody>
-                {data.length === 0 ? (
+                {bomInfo.length === 0 ? (
                   <tr>
                     <td  style={{ textAlign: 'center' }}>
                       No data available
                     </td>
                   </tr>
                 ) : (
-                  data.map((rec, index) => (
+                  bomInfo.map((rec, index) => (
                     <tr key={index + 1}>
                       <td style={{ textAlign: 'center' }}>{index + 1}</td>
                       <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
-                      <td style={{ textAlign: 'center' }}></td>
+                      <td style={{ textAlign: 'center' }}>U - 26</td>
                       <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
                       <td style={{ textAlign: 'center' }}>L 10" X W 10" BUTTER PAPER</td>
                       <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>

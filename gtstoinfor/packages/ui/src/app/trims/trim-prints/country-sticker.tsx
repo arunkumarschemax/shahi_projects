@@ -99,11 +99,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
 import Malaysia from './malasia-sticker';
 import Philippines from './philippines';
+import { BomProposalReq } from '@project-management-system/shared-models';
+import { BomService } from '@project-management-system/shared-services';
 export interface countryProps {
-  bomInfo: any
+  // bomInfo: any
+  itemId: any,
+  poLines: string[]
 }
 const CountryStickerPrint = (props:countryProps) => {
   const [bomInfo, setBomInfo] = useState([]);
+  const { itemId, poLines } = props
+  const service = new BomService();
+
 
   const tableCellStyle = {
     padding: '8px',
@@ -111,12 +118,21 @@ const CountryStickerPrint = (props:countryProps) => {
 
   const tableRef = useRef(null);
 
-  useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
 
+  useEffect(() => {
+    handleCountrySticker()
+  }, []);
+  
+  function handleCountrySticker(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setBomInfo(res.data)
+      }
+    })
+  }
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
     if (invoiceContent) {
@@ -180,7 +196,6 @@ const CountryStickerPrint = (props:countryProps) => {
       }, 1000);
     }
   };
-
   const groupDataByCountry = () => {
     if (bomInfo && bomInfo.length > 0) {
       const groupedData = {};
@@ -283,16 +298,16 @@ const CountryStickerPrint = (props:countryProps) => {
     <Card title={'Country Sticker'} extra={<Button className="no-print" onClick={handlePrint}>Print</Button>}>
 
     <div id="print">
-      {/* {bomInfo && bomInfo.length > 0 ? (
+      {bomInfo && bomInfo.length > 0 ? (
         <>
           {generateTables()}
           </>
       ) : (
         <div>No data available</div>
-      )} */}
-        <>
+      )}
+        {/* <>
           {generateTables()}
-          </>
+          </> */}
      
     </div>
     </Card>

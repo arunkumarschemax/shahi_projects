@@ -72,6 +72,10 @@ useEffect(() => {
           setButtonDisabled(true);
         }
       };
+
+      const handleReset = () => {
+        form.resetFields();
+    }
       return (
         <div>
           <Card title={<span style={{fontWeight: "bold"}}>Item Mapping</span>}>
@@ -80,7 +84,6 @@ useEffect(() => {
                 <Col    xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                   <Form.Item name={'imCode'} label='Im Code'>
                     <Select  placeholder='Select Im Code' style={{textAlign:"center"}} onChange={imCodeHandler}
-                     dropdownStyle={{ textAlign: "center" }}
                     showSearch
                     >
                       {data.map((item) => (
@@ -94,7 +97,6 @@ useEffect(() => {
                   <Form.Item name={'itemId'} label='Item Name'>
                     <Select  placeholder='Select Item Name' style={{textAlign:"center"}} onChange={itemIdHandler}
                     showSearch
-                    dropdownStyle={{ textAlign: "center" }}
                      >
                       {item.map((item) => (
                         <Option key={item.itemId} value={item.itemId}>{item.itemName}</Option>
@@ -102,12 +104,14 @@ useEffect(() => {
                     </Select>
                   </Form.Item>
                 </Col>
+              
              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }} style={{paddingTop:"20px"}}>
-                <Button type="primary" onClick={handleUpdateButtonClick} disabled={isButtonDisabled}>
-                    Update Item
-                </Button>
-             </Col>
-              </Row>
+                <Button type="primary" onClick={handleUpdateButtonClick} disabled={isButtonDisabled}>  Update Item </Button>
+                   &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button htmlType='reset' onClick={handleReset}  >Reset</Button>
+
+                 </Col>
+             </Row>
             </Form>
           </Card>
         </div>

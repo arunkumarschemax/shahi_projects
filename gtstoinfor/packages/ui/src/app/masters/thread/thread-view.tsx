@@ -1,13 +1,14 @@
 import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { SupplierActivateDeactivateDto, SupplierCreateDto } from '@project-management-system/shared-models';
+import { SupplierActivateDeactivateDto, SupplierCreateDto, ThreadsDto } from '@project-management-system/shared-models';
 import { Button, Card, Col, Divider, Drawer, Input, message, Popconfirm, Row, Switch, Table, Tag } from 'antd';
 import SupplierService from 'packages/libs/shared-services/src/supplier/supplier-service';
 import React, { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import TableActions from '../../common/table-actions/table-actions';
 import ThreadForm from './thread-form';
+import { ThreadService } from '@project-management-system/shared-services';
 
 const ThreadView = () => {
   const [supplier, setSupllier] = useState([]);
@@ -18,14 +19,16 @@ const ThreadView = () => {
   const service = new SupplierService();
   const [data, setData] = useState<any>(undefined);
   const [drawerVisible, setDrawerVisible] = useState(false);
-
+  const services = new ThreadService
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    getSupplierData()
+    getAllThread()
   }, []);
 
-  const getSupplierData = () => {
-    service.getAllSuppliers().then((res) => {
+  const getAllThread = () => {
+    services.getAllThread().then((res) => {
       if (res.status) {
         setSupllier(res.data);
       } else {
@@ -52,7 +55,7 @@ const ThreadView = () => {
       console.log(res, "ressssssssssss");
       if (res.status) {
         AlertMessages.getSuccessMessage('Upadted Succesfully');
-        getSupplierData()
+        getAllThread()
         setDrawerVisible(false);
 
       }
@@ -69,7 +72,7 @@ const ThreadView = () => {
     service.ActivateOrDeactivate(req).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
-        getSupplierData();
+        getAllThread();
       }
     })
   }
@@ -142,7 +145,8 @@ const ThreadView = () => {
 
     {
       title: "SNo",
-      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>
+      render: (_text: any, record: any, index: number) => <span>{index + 1}</span>,
+      width:'100px'
 
     },
 
@@ -150,118 +154,142 @@ const ThreadView = () => {
 
       title: "Style",
       dataIndex: 'style',
-      align: 'center'
+      align: 'center',
+      ...getColumnSearchProps('style'),
+      width:'150px'
+
 
     },
     {
       title: "Tex",
       dataIndex: 'tex', 
-      align: 'center'
+      align: 'center',
+      ...getColumnSearchProps('style'),
+      width:'150px'
+
     },
     {
       title: "Quality",
       dataIndex: 'quality',
       sorter: (a, b) => a.quality.length - b.quality.length,
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('quality'),
-      align: 'center'
+      // ...getColumnSearchProps('quality'),
+      align: 'center',
+      width:'150px'
+
     },
     {
       title: "Color Combo",
       dataIndex: 'colorCombo',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.colorCombo.length - b.colorCombo.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('colorCombo'),
+      width:'150px'
     },
     {
       title: "Color Code",
       dataIndex: 'colorCode',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.colorCode.length - b.colorCode.length,
+      sortDirections: ['descend', 'ascend'],
+      ...getColumnSearchProps('colorCode'),
+      width:'150px'
+
     },
     {
       title: "Shade Number",
       dataIndex: 'shadeNumber',
-      align: 'center'
+      align: 'center',
+      sorter: (a, b) => a.shadeNumber.length - b.shadeNumber.length,
+      sortDirections: ['descend', 'ascend'],
+      width:'150px'
+
     },
     {
       title: "Supplier",
-      dataIndex: 'supplier',
-      align: 'center'
+      dataIndex: 'supplierName',
+      align: 'center',
+      ...getColumnSearchProps('supplierName'),
+
+      width:'150px'
+
     },
    
-    {
-      title: "Status",
-      dataIndex: "isActive",
-      render: (isActive, rowData) => (
-        <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
-        </>
-      ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, recod) => {
-        return recod.isActive === value;
-      }
+    // {
+    //   title: "Status",
+    //   dataIndex: "isActive",
+    //   render: (isActive, rowData) => (
+    //     <>
+    //       {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
+    //     </>
+    //   ),
+    //   filters: [
+    //     {
+    //       text: 'Active',
+    //       value: true,
+    //     },
+    //     {
+    //       text: 'InActive',
+    //       value: false,
+    //     },
+    //   ],
+    //   filterMultiple: false,
+    //   onFilter: (value, recod) => {
+    //     return recod.isActive === value;
+    //   }
 
 
-    },
-    {
-      title: "Actions",
-      width: 50,
-      render: (text, rowData, index: number) => {
-        return <>
-          <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
+    // },
+    // {
+    //   title: "Actions",
+    //   width: 50,
+    //   render: (text, rowData, index: number) => {
+    //     return <>
+    //       <EditOutlined style={{ color: 'blue' }} onClick={() => { openFormwithData(rowData) }} type="edit" />
 
-          <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
-            title={
-              rowData.isActive
-                ? 'Are you sure to deactivated ?'
-                : 'Are you sure to activated ?'
-            }
-          >
-            <Switch size="default"
-              className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
-              checkedChildren={<RightSquareOutlined type="check" />}
-              unCheckedChildren={<RightSquareOutlined type="close" />}
-              checked={rowData.isActive}
-            />
-          </Popconfirm>
-        </>
+    //       <Divider type="vertical" />
+    //       <Popconfirm onConfirm={e => { activateOrDeactivate(rowData) }}
+    //         title={
+    //           rowData.isActive
+    //             ? 'Are you sure to deactivated ?'
+    //             : 'Are you sure to activated ?'
+    //         }
+    //       >
+    //         <Switch size="default"
+    //           className={rowData.isActive ? 'toggle-activated' : 'toggle-deactivated'}
+    //           checkedChildren={<RightSquareOutlined type="check" />}
+    //           unCheckedChildren={<RightSquareOutlined type="close" />}
+    //           checked={rowData.isActive}
+    //         />
+    //       </Popconfirm>
+    //     </>
 
-      }
-    },
+    //   }
+    // },
   ]
   return (
     <>
      
 
       <div>
-        <Card
-          extra={<span><Button onClick={() => navigate('/masters/thread-form')} type={'primary'}>New</Button></span>}
-          headStyle={{ height: '50px' }}
-          bodyStyle={{ height: '300px', paddingTop: '2px', paddingBottom: '5px' }}
-          title={<h4 style={{ textAlign: 'left' }}>Threads</h4>}
+          <Card title={<span style={{color:'white'}}>Threads</span>}
+    style={{textAlign:'center'}} 
+     extra={<Link to='/bom/thread-form' ><span ><Button className='panel_button' type={'primary'} >New </Button> </span></Link>}
+      >
 
-        >
-
-          <Table columns={Columns} dataSource={supplier}
-            scroll={{ x: 1500 }} />
+          <Table className="custom-table-wrapper" 
+           columns={Columns} dataSource={supplier} size='small'
+            // scroll={{ x: 1500 }} 
+            pagination={{
+              pageSize: 100, 
+              onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+              }
+          }}/>
         </Card>
-        <Drawer bodyStyle={{ paddingBottom: 80 }} title='update' width={window.innerWidth > 768 ? '75%' : '85%'}
-          onClose={closeDrawer} visible={drawerVisible} closable={true}>
-          <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small' >
-            <ThreadForm
-              updateItem={updateSupplier} Data={data} isUpdate={true} closeForm={closeDrawer} />
-          </Card>
-        </Drawer>
+     
       </div>
     </>
   )
