@@ -242,6 +242,8 @@ import TrimBuyerForm from "./trim-master/trim-buyers/trim-buyer-form"
 import TrimBuyerGrid from "./trim-master/trim-buyers/trim-buyer-view"
 import LogoForm from "./trim-master/logo/logo-form"
 import LogoGrid from "./trim-master/logo/logo-view"
+import TrimSizeForm from "./trim-master/trim-size/trim-size-form"
+import TrimSizeGrid from "./trim-master/trim-size/trim-size-view"
 
 
 
@@ -847,6 +849,12 @@ export const AppRoutes = () => {
                         updateData={(undefined) => { }} 
                         data={undefined} />} />
                     <Route path='logo/logo-view' element={<LogoGrid />} />
+                    <Route path='size/size-form' element={<TrimSizeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='size/size-view' element={<TrimSizeGrid />} />
                     
                 </Route>
 

@@ -50,4 +50,14 @@ export class TrimSizeController{
                 return this.applicationHandler.returnException(CommonResponseModel,err)
             }
         }
+
+        @Post('/activateOrDeactivateSize')
+        @ApiBody({type:TrimSizeDto})
+        async activateOrDeactivateSize(@Body() req:any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.activateOrDeactivateSize(req)
+            }catch(err){
+                return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
 }

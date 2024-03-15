@@ -1,3 +1,4 @@
+import { TrimSizeTypeEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('trim_size')
@@ -14,6 +15,13 @@ export class TrimSizeEntity{
         nullable:false
     })
     trimSize: string
+
+    @Column('enum',{
+        name:'type',
+        nullable:false,
+        enum: TrimSizeTypeEnum
+    })
+    type: TrimSizeTypeEnum
 
     @Column('boolean',{
         name:'is_active',
