@@ -27,7 +27,7 @@ export class BomGenerationReq {
     poLine: string[]
     updatedSizes: UpdatedSizes[]
     updatedConsumptions: UpdatedConsumptions[]
-
+    itemId : number
 }
 
 export class BomProposalReq {

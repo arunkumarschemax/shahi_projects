@@ -1,3 +1,5 @@
+import { BomProposalReq } from '@project-management-system/shared-models';
+import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 
@@ -5,30 +7,35 @@ import React, { useEffect, useState } from 'react';
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
   Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
-      if (styleSheet.cssRules) {
-          const newStyleElement = toDoc.createElement("style");
-          Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
-              newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
-          });
-          toDoc.head.appendChild(newStyleElement);
-      }
+    if (styleSheet.cssRules) {
+      const newStyleElement = toDoc.createElement("style");
+      Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
+        newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
+      });
+      toDoc.head.appendChild(newStyleElement);
+    }
   });
 };
 export interface DrawcordProps {
-    bomInfo: any
+  itemId: any,
+  poLines: string[]
 }
-export const  Drawcord = (props: DrawcordProps) => {
-// console.log(props.bomInfo)
- const data=props.bomInfo
- const [drawcord, setDrawcord] = useState<any>([])
+export const Drawcord = (props: DrawcordProps) => {
+  // console.log(props.bomInfo)
+  const service = new BomService();
+  const { itemId, poLines } = props
 
+  useEffect(() => {
+    console.log('drawcord component mounted')
+    handleDrawcord()
+  }, []);
 
- const handlePrint = () => {
+  const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
     if (invoiceContent) {
       const devContent = invoiceContent.innerHTML;
       const printWindow = window.open('', 'PRINT', 'height=900,width=1600');
-  
+
       printWindow.document.write(`
         <html>
           <head>
@@ -70,7 +77,7 @@ export const  Drawcord = (props: DrawcordProps) => {
           <body>${devContent}</body>
         </html>
       `);
-  
+
       printWindow.document.close();
       setTimeout(function () {
         printWindow.print();
@@ -78,19 +85,25 @@ export const  Drawcord = (props: DrawcordProps) => {
       }, 1000);
     }
   };
-  
- const [bomInfo, setBomInfo] = useState([]);
 
+  const [bomInfo, setBomInfo] = useState([]);
 
- useEffect(() => {
-    // console.log(props.bomInfo);
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
 
   
- const groupDataByItemNo = () => {
+
+  function handleDrawcord() {
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
+
+
+  const groupDataByItemNo = () => {
     if (bomInfo && bomInfo.length > 0) {
       const groupedData = {};
       bomInfo.forEach((item) => {
@@ -107,9 +120,9 @@ export const  Drawcord = (props: DrawcordProps) => {
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
-      
+
       return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20px'}}>
+        <div key={index} style={{ marginBottom: '20px' }}>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}
@@ -131,7 +144,7 @@ export const  Drawcord = (props: DrawcordProps) => {
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
             <tfoot>
               <tr>
-              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
+                <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
@@ -154,11 +167,11 @@ export const  Drawcord = (props: DrawcordProps) => {
 
   const tableCellStyle = {
     padding: '8px',
- };
+  };
 
   const generateRows = (data) => {
     const groupedData = {};
-  
+
     data.forEach((item) => {
       const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
       if (!groupedData[key]) {
@@ -166,7 +179,7 @@ export const  Drawcord = (props: DrawcordProps) => {
       }
       groupedData[key].push(item);
     });
-  
+
     // Generate rows based on grouped data
     return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
       <React.Fragment key={groupIndex}>
@@ -199,18 +212,18 @@ export const  Drawcord = (props: DrawcordProps) => {
       </React.Fragment>
     ));
   };
-  
+
   return (
 
     <div id="print">
-    {bomInfo && bomInfo.length > 0 ? (
-      <Card title={'DRAWCORD'} extra={<Button onClick={handlePrint}>Print</Button>}>
-        {generateTables()}
-      </Card>
-    ) : (
-      <div>No data available</div>
-    )}
-  </div>
+      {bomInfo && bomInfo.length > 0 ? (
+        <Card title={'DRAWCORD'} extra={<Button onClick={handlePrint}>Print</Button>}>
+          {generateTables()}
+        </Card>
+      ) : (
+        <div>No data available</div>
+      )}
+    </div>
 
     // <Card title={'DrawCord'}
     //             extra={<Button onClick={handlePrint}>Print</Button>}>
@@ -224,7 +237,7 @@ export const  Drawcord = (props: DrawcordProps) => {
     //                 <th style={{ width: '3%' }}>GARMENT COLOUR + CODE</th>
     //                 <th style={{ width: '3%' }}>TAPE COLOUR</th>
     //                 <th style={{ width: '3%' }}>QTY IN YDS</th>
-                  
+
     //                 </tr>
     //                 {data.map((rec,index) =>{
     //                     return(
@@ -239,18 +252,18 @@ export const  Drawcord = (props: DrawcordProps) => {
     //                         <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
     //                      </tr>
     //                     )
-                      
+
     //                 })}
-               
+
     //         </table>
 
-      
+
     // </Card>
   );
 };
 
 
 
- 
+
 
 export default Drawcord;

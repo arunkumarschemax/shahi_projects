@@ -1,4 +1,4 @@
-import { UOMEnum, UpdatedConsumptions } from '@project-management-system/shared-models';
+import { UOMEnum, UpdatedConsumptions, updateItemId } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Col, Drawer, InputNumber, Modal, Row, Select, Table, Tabs, Typography } from 'antd';
 import React, { useEffect, useState } from 'react'
@@ -6,8 +6,12 @@ import UOMConversion from './uom-convserion-form';
 import ConsumptionForms from './consumption-forms';
 
 type Props = {
-    setTrims: (value: any) => void
-    seletedStyles: string[]
+    setItemId: (value: any) => void
+    setTrimWiseConsumptions: (value: any) => void
+    distinctValues: any
+    generateBom: () => void;
+    poLines : string[]
+    updatedSizes : any[]
 }
 
 export default function ConsumptionUpdate(props: Props) {
@@ -21,10 +25,6 @@ export default function ConsumptionUpdate(props: Props) {
         getAllTrims();
     }, [])
 
-    useEffect(() => {
-        props.setTrims(trims)
-    }, [trims])
-
 
     const getAllTrims = () => {
         service.getAllConsumptionRequiredTrims().then(res => {
@@ -34,65 +34,17 @@ export default function ConsumptionUpdate(props: Props) {
         })
     }
 
-    const handleFieldChange = (value, fieldName, record) => {
-        console.log(value)
-        const updatedTrims = trims.map(trim => {
-            if (trim.id === record.id) {
-                return { ...trim, [fieldName]: value };
-            }
-            return trim;
-        });
-        setTrims(updatedTrims);
-    };
-
-
-    const columns: any = [
-        {
-            title: "S.No",
-            width: 120,
-            render: (_text: any, record: any, index: number) => {
-                const continuousIndex = (page - 1) * pageSize + index + 1;
-                return <span>{continuousIndex}</span>;
-            },
-        },
-        {
-            title: 'Trim',
-            dataIndex: 'item'
-        },
-        {
-            title: 'Consumption',
-            render: (v, r) => <InputNumber addonBefore={UOMDropdown(r)}
-                defaultValue={r.consumption}
-                onChange={value => handleFieldChange(value, 'consumption', r)}
-                key={r.id}
-            />
-        },
-        {
-            title: 'Wastage %',
-            render: (v, r) => <InputNumber onChange={value => handleFieldChange(value, 'wastage', r)} defaultValue={r.wastage} key={r.id} />
-        },
-        // {
-        //     title: 'MOQ',
-        //     render: (v, r) => <InputNumber onChange={value => handleFieldChange(value, 'moq', r)} defaultValue={r.moq} key={r.id} />
-        // },
-
-    ]
-
-    function UOMDropdown(record) {
-        return <Select key={record.id} onChange={value => handleFieldChange(value, 'consumptionUOM', record)} style={{ width: '100px' }} placeholder='Select UOM' >
-            {
-                Object.values(UOMEnum).map((v) => {
-                    return <Select.Option key={v} value={v}>{v}</Select.Option>
-                })
-            }
-        </Select>
-    }
 
     function openConversionModal() {
         setViewModal(true)
     }
+
     function closeConversionModal() {
         setViewModal(false)
+    }
+
+    function setActiveKey(activeKey){
+        props.setItemId(activeKey)
     }
     return (
         <>
@@ -110,16 +62,15 @@ export default function ConsumptionUpdate(props: Props) {
                     columns={columns}
                     dataSource={trims} /> */}
             <Tabs
-                defaultActiveKey="1"
                 tabPosition={'left'}
+                onChange={setActiveKey }
                 style={{ height: 420, left: 0 }}
                 items={trims.map((v, i) => {
-                    const id = String(i);
+                    const id = v.itemId;
                     return {
                         label: v.item,
                         key: id,
-                        disabled: i === 28,
-                        children: <ConsumptionForms itemId={v.itemId} selectedStyles={props.seletedStyles} key={id} />,
+                        children: <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} printComponent={v.printComponent} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemId={v.itemId} selectedStyles={props.distinctValues.distinctStyles} key={id} />,
                     };
                 })}
             />

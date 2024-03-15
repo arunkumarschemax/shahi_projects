@@ -16,7 +16,8 @@ export default function BomGenerationSteps() {
     const [selectedData, setSelectedData] = useState<any>([])
     const [updatedData, setUpdatedData] = useState<UpdatedSizes[]>([])
     const [trimsConsumptions, setTrimsConsumptions] = useState<UpdatedConsumptions[]>([])
-    const [distinctStyles,setDistinctstyles] = useState<any[]>()
+    const [distinctValues,setDistinctValues] = useState<any>()
+    const [itemId,setItemId] = useState<any>()
     const contentStyle: React.CSSProperties = {
         // lineHeight: '260px',
         textAlign: 'center',
@@ -34,16 +35,16 @@ export default function BomGenerationSteps() {
         req.poLine = selectedPoLines
         req.updatedConsumptions = trimsConsumptions
         req.updatedSizes = updatedData
+        req.itemId = Number(itemId)
         bomService.generateBom(req).then((res) => {
             if (res.status) {
                 message.success('Bom generated sucessfully', 3)
-                setCurrent(current + 1);
+                // setCurrent(current + 1);
             }else{
                 message.info(res.internalMessage)
             }
         })
     }
-    console.log(distinctStyles)
     const steps = [
         {
             title: 'Update Quantites',
@@ -51,11 +52,11 @@ export default function BomGenerationSteps() {
         },
         {
             title: 'Verfiy Quantities',
-            content: <VerifyQuantities setDistinctStyles={setDistinctstyles} selectedData={selectedData} updatedData={updatedData} />,
+            content: <VerifyQuantities setDistinctValues={setDistinctValues} selectedData={selectedData} updatedData={updatedData} />,
         },
         {
             title: 'Update Consumption',
-            content: <ConsumptionUpdate setTrims={setTrimsConsumptions} seletedStyles={distinctStyles} />,
+            content: <ConsumptionUpdate updatedSizes={updatedData} poLines={selectedPoLines} generateBom={generateBom} setItemId={setItemId} setTrimWiseConsumptions={setTrimsConsumptions} distinctValues={distinctValues} />,
         },
         {
             title: 'Generate proposal',
@@ -67,10 +68,10 @@ export default function BomGenerationSteps() {
     const next = () => {
         if (current == 2) {
             generateBom()
-        } else {
+        }
+        else {
             setCurrent(current + 1);
         }
-
     };
 
     const prev = () => {

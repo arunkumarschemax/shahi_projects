@@ -27,7 +27,7 @@ export const TrimList = ({ }) => {
     const componentsMapping = {
         "Joker Tag": <JokerTagPrint info={bomInfo} />,
         "Hangtag": <HangTag info={bomInfo} />,
-        "Wash Care Label": <WasCarelabel bomInfo={bomInfo} />,
+        "Wash Care Label": <WasCarelabel itemId={null} poLines={[]} />,
         // "Country Sticker": <CountryStickerPrint info={state?.state?.info} />
 
     }
