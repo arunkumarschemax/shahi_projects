@@ -233,8 +233,8 @@ export function TrimUomGrid(props: TrimUomProps) {
             <Popconfirm onConfirm={e =>{saveTrimUom(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Uom ?'
-                :  'Are you sure to Activate Uom ?'
+                ? 'Are you sure to Deactivate UOM ?'
+                :  'Are you sure to Activate UOM ?'
             }
           >
             <Switch  size="default"
