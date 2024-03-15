@@ -100,9 +100,9 @@ export default function ConsumptionForms(props: Props) {
 
     const onView = () => {
         setDynamiComponent(null)
-        console.log(printComponent)
+        // console.log(printComponent,"at 103")
         const Comp = React.lazy(() => import(`../../trims/trim-prints/${printComponent}`))
-        console.log(Comp)
+        // console.log(Comp," at 105")
         setDynamiComponent(Comp)
         setModalOpen(true)
     }
@@ -111,7 +111,7 @@ export default function ConsumptionForms(props: Props) {
         setModalOpen(false)
     }
 
-    console.log(poLines,'po lines')
+    // console.log(poLines,'po lines')
 
 
     return (

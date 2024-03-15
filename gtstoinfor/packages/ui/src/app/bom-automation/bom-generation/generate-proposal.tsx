@@ -83,7 +83,7 @@ export default function GenerateProposal(props: Props) {
     "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
     "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
+    // "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
     "Grommets": <Grommets bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
