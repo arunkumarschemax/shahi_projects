@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {  ItemsDTO } from './items.dto';
-import { Items } from '../items.entity';
+import { ItemEntity } from '../../po-bom/entittes/item-entity';
 
 @Injectable()
 export class ItemsAdapter {
@@ -10,11 +10,11 @@ export class ItemsAdapter {
    * @param isUpdate 
    * @returns 
    */
-  public convertDtoToEntity(  itemsDto: ItemsDTO,  isUpdate: boolean = false ): Items {
-    const items = new Items();
+  public convertDtoToEntity(  itemsDto: ItemsDTO,  isUpdate: boolean = false ): ItemEntity {
+    const items = new ItemEntity();
     items.itemId=itemsDto.itemId;
     items.item=itemsDto.item;
-    items.consumptionrequired=itemsDto.consumptionrequired;
+    items.consumptionRequired=itemsDto.consumptionrequired;
     items.consumption=itemsDto.consumption;
     items.moq=itemsDto.moq;
     items.wastage=itemsDto.wastage;
@@ -28,11 +28,11 @@ export class ItemsAdapter {
     }
    return items;
   }
-  public convertEntityToDto(itemsObject: Items): ItemsDTO {
+  public convertEntityToDto(itemsObject: ItemEntity): ItemsDTO {
     const itemsDto= new ItemsDTO;
     itemsDto.itemId=itemsObject.itemId;
     itemsDto.item=itemsObject.item;
-    itemsDto.consumptionrequired=itemsObject.consumptionrequired;
+    itemsDto.consumptionrequired=itemsObject.consumptionRequired;
     itemsDto.consumption=itemsObject.consumption;
     itemsDto.moq=itemsObject.moq;
     itemsDto.wastage=itemsObject.wastage;
