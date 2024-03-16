@@ -26,13 +26,11 @@ export interface Button3PrintProps {
     poLines: string[]
 }
 export function Button3Print(props: Button3PrintProps) {
-    console.log(props.bomInfo)
-    const data = props.bomInfo
-    const [buttonData, setButtonData] = useState<any>([]);
+
+    const [groupedData, setGroupedData] = useState<any[]>([])
     const service = new BomService();
 
-    console.log(props.poLines)
-    console.log(props.itemId)
+
 
 
     useEffect(() => {
@@ -43,15 +41,20 @@ export function Button3Print(props: Button3PrintProps) {
         const bomProposalReq = new BomProposalReq()
         bomProposalReq.itemId = [props.itemId]
         bomProposalReq.poLine = props.poLines
-        console.log(bomProposalReq, "requesttttttttt");
 
         service.generateProposalForButton(bomProposalReq).then((v) => {
             if (v.status) {
-                setButtonData(v.data)
+                const group: Array<Array<any>> = Object.values(v.data?.reduce((acc, rec) => {
+                    const itemNo = rec.itemNo || 'undefined';
+                    acc[itemNo] = acc[itemNo] || [];
+                    acc[itemNo].push(rec);
+                    return acc;
+                }, {}));
+                setGroupedData(group)
             }
         })
     }
-
+    console.log(groupedData)
     //     service.generateProposalForButton(bomProposalReq).then((v) => {
     //         if (v.status) {
     //             setData(v.data)
@@ -101,12 +104,7 @@ export function Button3Print(props: Button3PrintProps) {
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
-    const groupedData: Array<Array<any>> = Object.values(buttonData.reduce((acc, rec) => {
-        const itemNo = rec.itemNo || 'undefined';
-        acc[itemNo] = acc[itemNo] || [];
-        acc[itemNo].push(rec);
-        return acc;
-    }, {}));
+
 
     // const countColumnOccurrences = (columnKey) => {
     //     const counts = {};
@@ -134,18 +132,18 @@ export function Button3Print(props: Button3PrintProps) {
     };
     return (
         <div id='print'>
-            <Card title="BUTTON" extra={<><span style={{paddingRight:'5px'}}><Button onClick={handlePrint}>Print</Button></span><ReactHTMLTableToExcel
+            <Card title="BUTTON" extra={<><span style={{ paddingRight: '5px' }}><Button onClick={handlePrint}>Print</Button></span><ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
                 table="something"
                 filename="tablexls"
                 sheet="sheet 1"
                 buttonText="Excel" /></>
-        
-        }>
+
+            }>
                 <table id='something'>
                     {groupedData.map((group, groupIndex) => (
-                        <table key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
+                        <table key={groupIndex} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' ,marginBottom :'20px'}} border={1} cellSpacing="0" cellPadding='5'>
                             <thead>
                                 <tr>
                                     <th style={{ width: '3%' }}>ITEM#</th>
@@ -171,7 +169,7 @@ export function Button3Print(props: Button3PrintProps) {
                                                     {rec.styleNumber !== null ? rec.styleNumber : ''}
                                                 </td>
                                                 <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
-                                                    {rec.season !== null ? rec.season : ''}
+                                                    {rec.season !== null ? (rec.season + "'" + rec.year.substring(2)) : ''}
                                                 </td>
                                                 <td style={{ textAlign: 'center', width: '3%' }} rowSpan={group.length}>
                                                     {rec.imCode !== null ? rec.imCode : ''}

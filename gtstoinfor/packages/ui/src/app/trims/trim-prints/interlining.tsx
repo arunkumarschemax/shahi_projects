@@ -87,42 +87,52 @@ useEffect(() => {
       return total + bomQty;
     }, 0);
   };
-  
+   
+   const groupedData : Array<Array<any>> = Object.values(interlining.reduce((acc, item) => {
+    acc[item.color] = acc[item.color] || [];
+    acc[item.color].push(item);
+    return acc;
+  }, {}));
+
   return (
-    <div id='print'>
-    <Card title={'INTERLINING'} extra={<Button onClick={handlePrint}>Print</Button>}>
-    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-      <thead>
-        <tr>
-          <th style={{ width: '3%' }}>ITEM</th>
-          <th style={{ width: '3%' }}>STYLE</th>
-          <th style={{ width: '3%' }}>IM#</th>
-          <th style={{ width: '3%' }}>COLOR </th>
-          <th style={{ width: '3%' }}>QTY </th>
-        </tr>
-      </thead>
-      <tbody>
-        {interlining.map((rec, index) => (
-          <tr key={index}>
-            <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.imCode !== null ? rec.imCode : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.color !== null ? rec.color : ''}</td>
-            <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
-          </tr>
+    <div id="print">
+      <Card title={'INTERLINING'} extra={<Button onClick={handlePrint}>Print</Button>}>
+        {groupedData.map((group, index) => (
+          <div key={index} style={{ marginBottom: '20px' }}>
+            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
+              <thead>
+                <tr>
+                  <th style={{ width: '3%' }}>ITEM</th>
+                  <th style={{ width: '3%' }}>STYLE</th>
+                  <th style={{ width: '3%' }}>IM#</th>
+                  <th style={{ width: '3%' }}>COLOR</th>
+                  <th style={{ width: '3%' }}>QTY</th>
+                </tr>
+              </thead>
+              <tbody>
+                {group.map((rec, idx) => (
+                  <tr key={idx}>
+                    <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
+                    <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
+                    <td style={{ textAlign: 'center' }}>{rec.imCode !== null ? rec.imCode : ''}</td>
+                    <td style={{ textAlign: 'center' }}>{rec.color !== null ? rec.color : ''}</td>
+                    <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+                  <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+                    {calculateTotalBomQty(group)}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         ))}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colSpan={4} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
-          <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-            {calculateTotalBomQty(interlining)}
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </Card>
-  </div>
+      </Card>
+    </div>
   );
 };
 

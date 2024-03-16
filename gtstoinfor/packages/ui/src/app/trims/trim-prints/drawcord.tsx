@@ -2,6 +2,8 @@ import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
@@ -25,11 +27,19 @@ export const Drawcord = (props: DrawcordProps) => {
   const service = new BomService();
   const { itemId, poLines } = props
   const [bomInfo, setBomInfo] = useState([]);
+  const [tablesGenerated, setTablesGenerated] = useState(false);
+
 
   useEffect(() => {
-    console.log('drawcord component mounted')
     handleDrawcord()
   }, []);
+
+  useEffect(() => {
+    if (!tablesGenerated) {
+      generateTables();
+    }
+  }, [tablesGenerated]); 
+
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
@@ -98,6 +108,7 @@ export const Drawcord = (props: DrawcordProps) => {
     service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
         setBomInfo(v.data)
+        setTablesGenerated(true)
       }
     })
   }
@@ -123,6 +134,17 @@ export const Drawcord = (props: DrawcordProps) => {
 
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            {/* <h3>Item No: {itemNo}</h3> */}
+            <ReactHTMLTableToExcel
+              id={`excel-button-${index}`}
+              className={`excel-button-${index}`}
+              table={`bom-table-${index}`}
+              filename={`BOM-Item-${itemNo}`}
+              sheet="Sheet 1"
+              buttonText={`${itemNo}-Export to Excel`}
+            />
+          </div>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}

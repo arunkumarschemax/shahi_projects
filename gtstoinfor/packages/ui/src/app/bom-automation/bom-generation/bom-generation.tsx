@@ -55,7 +55,7 @@ export default function BomGeneration(props: Props) {
 
     const createdDateHandler = (val) => {
         console.log(val)
-        if(val){
+        if (val) {
             setItemDisable(false)
         }
 
@@ -80,7 +80,7 @@ export default function BomGeneration(props: Props) {
         }
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
-          }
+        }
         req.fromDate = dayjs(form.getFieldValue('createdAt')[0]).format('YYYY-MM-DD')
         req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
         setTableLoading(true)
@@ -137,7 +137,7 @@ export default function BomGeneration(props: Props) {
             console.error("Invalid createdAtValues:", createdAtValues);
         }
     }
-    
+
     const getSesonCode = () => {
         const createdAtValues = form.getFieldValue('createdAt');
         if (createdAtValues && createdAtValues.length >= 2) {
@@ -153,7 +153,7 @@ export default function BomGeneration(props: Props) {
             console.error("Invalid createdAtValues:", createdAtValues);
         }
     }
-    
+
 
     const getStyleNumber = () => {
         const createdAtValues = form.getFieldValue('createdAt');
@@ -190,7 +190,7 @@ export default function BomGeneration(props: Props) {
             console.error("Invalid createdAtValues:", createdAtValues);
         }
     }
-    
+
     function formatInput(value) {
         return value.replace(/\D/g, '');
     }
@@ -266,48 +266,48 @@ export default function BomGeneration(props: Props) {
         props.sendUpdatedData(changedSizes)
     }, [changedSizes, setChangedSizes]);
 
-    const columns = [ 
+    const columns = [
         {
-            title : 'Sno',
-            render : (v,r,i) => i+1
-        },{
-            title:"PO + Line",
+            title: 'Sno',
+            render: (v, r, i) => i + 1
+        }, {
+            title: "PO + Line",
             dataIndex: 'poLine',
             ...getColumnSearchProps('poLine'),
-        },{
-            title : "Style",
+        }, {
+            title: "Style",
             dataIndex: 'styleNumber'
-        },{
-            title : "Item",
+        }, {
+            title: "Item",
             dataIndex: 'item'
-        },{
-            title : "Geo code",
+        }, {
+            title: "Geo code",
             dataIndex: 'geoCode'
-        },{
-            title : "Destination",
+        }, {
+            title: "Destination",
             dataIndex: 'destinationCountry'
         },
         {
-            title : "Destination",
+            title: "Destination",
             dataIndex: 'destinationCountry'
         }, {
-            title : "Plant",
+            title: "Plant",
             dataIndex: 'plant'
         },
         {
-            title : "Season Code",
+            title: "Season Code",
             dataIndex: 'planningSeasonCode'
         },
         {
-            title : "Year",
+            title: "Year",
             dataIndex: 'planningSeasonYear'
         },
-      
-        
+
+
     ]
 
     function renderColumns(): any {
-        const unWantedColumns = ['poNumber', 'poLineItemNumber','destinationCountryCode', 'genderAgeDesc',]
+        const unWantedColumns = ['poNumber', 'poLineItemNumber', 'destinationCountryCode', 'genderAgeDesc',]
         if (filterData.length)
             return Object.keys(filterData[0]).filter((k) => !unWantedColumns.includes(k)).map((key) => {
                 return {
@@ -353,10 +353,10 @@ export default function BomGeneration(props: Props) {
 
     const onSelectChange = (newSelectedRowKeys: any, selectedRows: any[]) => {
         const isItemNoNull = selectedRows.find((v) => v.item == null)
-        if(isItemNoNull){
-            notification.info({message : `Please update ItemNo for all the selected PO's`,placement:'topRight'})
+        if (isItemNoNull) {
+            notification.info({ message: `Please update ItemNo for all the selected PO's`, placement: 'topRight' })
             return
-        } 
+        }
         setSelectedRowKeys(newSelectedRowKeys);
         setSelectedData(selectedRows)
         props.sendSelectedData(selectedRows)
@@ -403,21 +403,21 @@ export default function BomGeneration(props: Props) {
     }
     const handleExport = (e: any) => {
         e.preventDefault();
-    
-    
+
+
         const currentDate = new Date()
-          .toISOString()
-          .slice(0, 10)
-          .split("-")
-          .join("/");
-    
+            .toISOString()
+            .slice(0, 10)
+            .split("-")
+            .join("/");
+
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
-          
+
             {
                 title: 'PO + Line',
                 dataIndex: 'poLine',
-               
+
             },
             {
                 title: 'Bom Item',
@@ -427,43 +427,43 @@ export default function BomGeneration(props: Props) {
                 title: 'Style',
                 dataIndex: 'styleNumber',
             },
-           
+
             {
                 title: 'Geo Code',
                 dataIndex: 'geoCode',
             },
-          {
+            {
                 title: 'Destination Country',
                 dataIndex: 'destinationCountry'
             },
-         
+
             {
                 title: ' Season Code',
                 dataIndex: 'planningSeasonCode',
-               
+
             },
             {
                 title: ' Season Year',
                 dataIndex: 'planningSeasonYear'
             },
             {
-                title : "Product Code",
+                title: "Product Code",
                 dataIndex: 'productCode'
             },
             {
-                title : "Color Desc",
+                title: "Color Desc",
                 dataIndex: 'colorDesc'
             },
         ]
-    
-    
+
+
         const excel = new Excel();
         excel.addSheet("Sheet1");
         excel.addRow();
         excel.addColumns(exportingColumns);
         excel.addDataSource(filterData);
         excel.saveAs(`Generate-proposal-${currentDate}.xlsx`);
-      }
+    }
 
 
     return (
@@ -488,12 +488,12 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col> */}
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}   >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5 }}   >
                         <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                         <Form.Item name='item' label='Item' >
                             <Select onFocus={getItem} mode='multiple' placeholder='Select Item' showSearch disabled={itemDisable} allowClear>
                                 {
@@ -507,7 +507,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span:4 }}  >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 3 }} xl={{ span: 3 }}  >
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode='multiple'
@@ -524,7 +524,7 @@ export default function BomGeneration(props: Props) {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }}  >
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }}  >
                         <Form.Item name='geoCode' label='Geo Code' >
                             <Select
                                 mode='multiple'
@@ -533,15 +533,15 @@ export default function BomGeneration(props: Props) {
                                 placeholder="Select Geo Code"
                                 optionFilterProp="children"
                                 allowClear
-                        >
+                            >
                                 {geoCode?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
                                 })
                                 }
                             </Select>
                         </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                    </Col> */}
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 3 }} xl={{ span: 3 }} >
                         <Form.Item name='planningSeasonCode' label=' Season' >
                             <Select
                                 showSearch
@@ -562,7 +562,7 @@ export default function BomGeneration(props: Props) {
                         <Form.Item name='planningSeasonYear' label='Year' >
                             <Select
                                 showSearch
-                               onDropdownVisibleChange={ getSesonYear}
+                                onDropdownVisibleChange={getSesonYear}
 
                                 placeholder=" Year"
                                 optionFilterProp="children"
@@ -576,21 +576,21 @@ export default function BomGeneration(props: Props) {
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                <Form.Item name='productCode' label='Product Code' >
-                  <Select
-                    showSearch
-                    onDropdownVisibleChange={getProductCode}
-                    placeholder="Select Product Code"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {productCode?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
+                        <Form.Item name='productCode' label='Product Code' >
+                            <Select
+                                showSearch
+                                onDropdownVisibleChange={getProductCode}
+                                placeholder="Select Product Code"
+                                optionFilterProp="children"
+                                allowClear
+                            >
+                                {productCode?.map((inc: any) => {
+                                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                                })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
                         <Button htmlType="submit"
                             icon={<SearchOutlined />}
@@ -637,7 +637,7 @@ export default function BomGeneration(props: Props) {
                 </Col> */}
             </Row>
             <br />
-            </Card>
+        </Card>
 
         </>
     )

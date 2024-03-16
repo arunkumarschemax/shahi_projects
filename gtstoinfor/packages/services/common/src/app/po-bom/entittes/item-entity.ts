@@ -74,7 +74,7 @@ export class ItemEntity {
     @CreateDateColumn({
         name: 'created_at'
     })
-    createdAt: string;
+    createdAt: Date;
 
     @Column('varchar', {
         nullable: true,
@@ -86,7 +86,7 @@ export class ItemEntity {
     @UpdateDateColumn({
         name: 'updated_at'
     })
-    updatedAt: string;
+    updatedAt: Date;
 
     @Column('varchar', {
         nullable: true,

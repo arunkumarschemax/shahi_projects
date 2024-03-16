@@ -16,30 +16,31 @@ export class ItemsDTO {
   @IsNotEmpty({message:"consumptionrequired should not be empty"})
   @IsAlphanumeric()
   @IsOptional()
-  consumptionrequired: string;
+  consumptionrequired: boolean;
 
   @ApiProperty()
   @IsNotEmpty({message:"consumption should not be empty"})
   @IsAlphanumeric()
   @IsOptional()
-  consumption: string;
+  consumption: number;
 
   @ApiProperty()
   @IsNotEmpty({message:"wastage should not be empty"})
   @IsAlphanumeric()
   @IsOptional()
-  wastage: string;
+  wastage: number;
 
   @ApiProperty()
   @IsNotEmpty({message:"moq should not be empty"})
   @IsAlphanumeric()
   @IsOptional()
-  moq: string;
+  moq: number;
 
+  
   @ApiProperty()
   isActive: boolean;
 
-  createdAt : Date;
+  createdAt?: Date;
 
   @ApiProperty()
   @IsOptional()
@@ -47,7 +48,7 @@ export class ItemsDTO {
   @Matches(new RegExp("^(?:[a-zA-Z\\s]|)+$"),{ message: "created user should be only numbers" })
   createdUser : string;
 
-  updatedAt : Date;
+  updatedAt?: Date;
   @ApiProperty()
   @IsOptional()
   @MaxLength(40, { message: "Updated User allows maximum 40 characters"})

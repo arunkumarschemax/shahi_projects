@@ -125,7 +125,7 @@ return(
                     <td>{rec.styleNumber !== null ? rec.styleNumber:''}</td>
                     <td>{rec.imCode !== null ? rec.imCode:''}</td>
                     <td style={{width:'50%'}}>{rec.description !== null ? rec.description:''}</td>
-                    <td>{rec.season !== null ? rec.season:''}</td>
+                    <td>{rec.season !== null ?(rec.season + "'" + rec.year.substring(2)):''}</td>
                     <td>{rec.bomQty !== null ? rec.bomQty :''}</td>
                 </tr>
             )

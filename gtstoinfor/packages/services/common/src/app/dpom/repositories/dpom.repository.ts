@@ -1069,7 +1069,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             distinctSizesQuery.andWhere(`LEFT(dpom.bom_item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
-            distinctSizesQuery.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+            distinctSizesQuery.andWhere(`dpom.document_date BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
         }
         if (req.poLine !== undefined) {
             distinctSizesQuery.andWhere(`dpom.po_and_line IN (:...poLine)`, { poLine: req.poLine })
