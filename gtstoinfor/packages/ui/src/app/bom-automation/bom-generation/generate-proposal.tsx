@@ -6,7 +6,7 @@ import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
-import Button3Print from '../../trims/trim-prints/button';
+// import Button3Print from '../../trims/trim-prints/button';
 import NecKType from '../../trims/trim-prints/neck-tape';
 import Interlining from '../../trims/trim-prints/interlining';
 import Drawcord from '../../trims/trim-prints/drawcord';
@@ -70,7 +70,7 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     // "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
-    "BUTTON":<Button3Print bomInfo={buttonData} itemId={0} poLines={[]}/>,
+    // "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,

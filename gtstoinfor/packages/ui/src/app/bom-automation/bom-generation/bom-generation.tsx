@@ -511,7 +511,7 @@ export default function BomGeneration(props: Props) {
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode='multiple'
-                                onDropdownVisibleChange={getStyleNumber}
+                                onFocus={getStyleNumber}
                                 showSearch
                                 placeholder="Select Style Number"
                                 optionFilterProp="children"

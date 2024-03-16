@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { BomEntity } from "./bom-entity";
 import { StyleComboEntity } from "./style-combo-entity";
-import { ItemTypeEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, UOMEnum } from "@project-management-system/shared-models";
 import { ZFactorsEntity } from "./z-factors.entity";
 
 @Entity('items')
@@ -58,6 +58,18 @@ export class ItemEntity {
     })
     printComponent: string
 
+    @Column('varchar', {
+        name: 'consumption_against',
+        length: 50,
+    })
+    consumptionAgainst: string
+
+    @Column('enum', {
+        name: 'uom',
+        enum:UOMEnum,
+        nullable:true
+    })
+    uom: UOMEnum
 
     @CreateDateColumn({
         name: 'created_at'

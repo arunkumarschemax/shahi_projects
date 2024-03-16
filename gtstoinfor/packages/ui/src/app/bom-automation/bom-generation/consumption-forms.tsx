@@ -7,18 +7,19 @@ import moment from 'moment'
 import { BomService } from '@project-management-system/shared-services'
 
 type Props = {
-    selectedStyles: string[],
-    itemId: number,
+    distinctValues: any,
     poLines: string[]
-    printComponent: string
+    itemDetails: any
     setTrimWiseConsumptions: (consumptions: any) => void
     generateBom: () => void
-    updatedSizes : any[]
+    updatedSizes: any[]
 
 }
 export default function ConsumptionForms(props: Props) {
 
-    const { selectedStyles, itemId, setTrimWiseConsumptions, poLines,printComponent,updatedSizes } = props
+    const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
+    const { itemId, printComponent, consumptionAgainst, uom } = itemDetails
+    const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
@@ -26,7 +27,7 @@ export default function ConsumptionForms(props: Props) {
 
     const handleFieldChange = (value: any, style: string, field: string) => {
         const existingIndex = consumptions.findIndex(item => item.style === style);
-        const newConsumption = { style, itemId, [field]: value };
+        const newConsumption = {[consumptionAgainst] : style,consumptionAgainst, itemId, [field]: value, uom };
         if (existingIndex !== -1) {
             const updatedConsumptions = [...consumptions];
             updatedConsumptions[existingIndex][field] = value;
@@ -39,7 +40,7 @@ export default function ConsumptionForms(props: Props) {
 
 
     function UOMDropdown(record) {
-        return <Select key={record.id} onChange={value => handleFieldChange(value, record.style, "uom")} style={{ width: '100px' }} placeholder='Select UOM' >
+        return <Select defaultValue={uom} key={record.id} disabled style={{ width: '100px' }} placeholder='Select UOM' >
             {
                 Object.values(UOMEnum).map((v) => {
                     return <Select.Option key={v} value={v}>{v}</Select.Option>
@@ -50,12 +51,12 @@ export default function ConsumptionForms(props: Props) {
 
     const columns = [
         {
-            title: 'Style',
-            dataIndex: 'style'
+            title: consumptionAgainst,
+            dataIndex: 'value'
         }, {
             title: 'Consumption',
             render: (v, r) => <InputNumber addonBefore={UOMDropdown(r)}
-                onChange={(value: any) => handleFieldChange(Number(value), r.style, "consumption")}
+                onChange={(value: any) => handleFieldChange(Number(value), r.value, "consumption")}
                 key={r.id}
             />
         }
@@ -72,30 +73,26 @@ export default function ConsumptionForms(props: Props) {
                 onView()
                 message.success('Bom generated sucessfully', 3)
                 // setCurrent(current + 1);
-            }else{
+            } else {
                 message.info(res.internalMessage)
             }
         })
     }
-
+    console.log(consumptions)
     function onGenerateBom() {
         // Convert consumptions array to a Map for easier lookup
-        const consumptionsMap = new Map(consumptions.map(item => [item.style, item]));
 
-        // Check if all selected styles have corresponding entries in consumptions array
-        for (const style of selectedStyles) {
-            if (!consumptionsMap.has(style)) {
-                break // Style not found in consumptions array
-            }
-
-            const consumptionEntry: any = consumptionsMap.get(style);
-            if (!consumptionEntry?.consumption || !consumptionEntry?.uom) {
-                break// Missing consumption or uom value
-            }
-        }
         generateBom()
-      
-        
+
+
+    }
+
+    function handleDynamicDataSource() {
+        if (consumptionAgainst == 'item') {
+            return distinctItems.map((v) => { return { value: v } })
+        } else {
+            return distinctStyles.map((v) => { return { value: v } })
+        }
     }
 
     const onView = () => {
@@ -117,7 +114,7 @@ export default function ConsumptionForms(props: Props) {
     return (
         <Row gutter={[24, 24]} justify={'center'}>
             <Col span={24}>
-                <Table rowKey={(row) => row.style} bordered pagination={false} columns={columns} dataSource={selectedStyles.map((v) => { return { style: v } })} />
+                <Table rowKey={(row) => row.style} bordered pagination={false} columns={columns} dataSource={handleDynamicDataSource()} />
             </Col>
             {/* <Col span={4}>
                 <Button icon={<DownloadOutlined />} onClick={props.generateBom} type='primary'>Download BOM </Button>

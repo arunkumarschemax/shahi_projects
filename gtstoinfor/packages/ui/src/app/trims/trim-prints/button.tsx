@@ -52,6 +52,19 @@ export function Button3Print(props: Button3PrintProps) {
         })
     }
 
+    //     service.generateProposalForButton(bomProposalReq).then((v) => {
+    //         if (v.status) {
+    //             setData(v.data)
+    //             const group: Array<Array<any>> = Object.values(v.data?.reduce((acc, rec) => {
+    //                 const itemNo = rec.itemNo || 'undefined';
+    //                 acc[itemNo] = acc[itemNo] || [];
+    //                 acc[itemNo].push(rec);
+    //                 return acc;
+    //             }, {}));
+    //             setGroupedData(group)
+    //         }
+    //     })
+    // }
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {
