@@ -214,11 +214,11 @@ export const AppRoutes = () => {
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
                     <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
                     
-                    <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
+                    {/* <Route path='neck-type' element={<NecKType bomInfo={[]} />} /> */}
                     {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
                     {/* <Route path='drawcord' element={<Drawcord bomInfo={[]} />} /> */}
                     {/* <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} /> */}
-                    <Route path='elastic' element={<Elastic bomInfo={[]} />} />
+                    {/* <Route path='elastic' element={<Elastic bomInfo={[]} />} /> */}
                     {/* <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} /> */}
                     {/* <Route path='twilltape' element={<Twilltape bomInfo={[]} />} /> */}
                    {/* < Route path='grommets' element={<Grommets bomInfo={[]}/>} /> */}

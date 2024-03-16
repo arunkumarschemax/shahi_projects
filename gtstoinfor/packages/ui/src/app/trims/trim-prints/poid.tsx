@@ -1,20 +1,31 @@
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 
 export interface poidProps {
-    bomInfo: any
+  itemId: any,
+  poLines: string[]
 }
 export function POIDLable(props: poidProps) {
     const [bomInfo, setBomInfo] = useState([]);
-    console.log(props.bomInfo,"props.bomInfo")
-
+    const { itemId, poLines } = props
+    const service = new BomService();
 useEffect(() => {
-    // console.log(props.bomInfo);
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+  handlePoidLable()
+  }, []);
 
+  function handlePoidLable(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForPOIDLabel(bomProposalReq).then((res) =>{
+      if(res.status){
+        setBomInfo(res.data)
+      }
+    })
+  }
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {

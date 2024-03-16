@@ -1,26 +1,38 @@
+import { BomProposalReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import React from "react";
 import { useEffect, useRef, useState } from "react"
 
 export interface Elasticprops {
-    bomInfo: any[]
+  itemId: any,
+  poLines: string[]
 }
 export const Elastic = (props: Elasticprops) => {
-    const [bomInfo, setBomInfo] = useState<any>([])
+    const [bomInfo, setBomInfo] = useState<any>([]);
+    const { itemId, poLines } = props
+    const service = new BomService();
 
     useEffect(() => {
-        if (props.bomInfo) {
-            console.log(props.bomInfo)
-
-            setBomInfo(props.bomInfo)
-        }
-    }, [props.bomInfo])
+      handleElasticTrim()
+    }, [])
 
     const tableCellStyle = {
        
         padding: '8px',
       };
+
+      function handleElasticTrim(){
+        const bomProposalReq = new BomProposalReq()
+        bomProposalReq.itemId = [itemId]
+        bomProposalReq.poLine = poLines
+        service.generateProposalForElasticTrim(bomProposalReq).then((v) => {
+          if (v.status) {
+            setBomInfo(v.data)
+          }
+        })
+      }
+
     const groupDataByItemNo = () => {
         if (bomInfo && bomInfo.length > 0) {
           const groupedData = {};

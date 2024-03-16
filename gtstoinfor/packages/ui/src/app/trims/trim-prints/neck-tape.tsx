@@ -1,9 +1,17 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
+import { BomProposalReq } from '@project-management-system/shared-models';
+import { BomService } from '@project-management-system/shared-services';
+export interface NeckTapeProps {
+  itemId: any,
+  poLines: string[]
+}
 
-const NeckType = (props) => {
+const NeckType = (props: NeckTapeProps) => {
   const [bomInfo, setBomInfo] = useState([]);
+  const { itemId, poLines } = props
+  const service = new BomService();
 
   const tableCellStyle = {
      padding: '8px',
@@ -12,10 +20,8 @@ const NeckType = (props) => {
   const tableRef = useRef(null);
 
   useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+    handleNeckTapeTrim()
+  }, []);
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
@@ -72,6 +78,17 @@ const NeckType = (props) => {
       }, 1000);
     }
   };
+
+  function handleNeckTapeTrim(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
   
 
   const groupDataByItemNo = () => {
