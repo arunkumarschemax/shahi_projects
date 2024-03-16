@@ -245,8 +245,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.po_number AS purchaseOrderNumber,dpom.document_date AS documentDate, dpom.created_at,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS destinationCountry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_vas_text AS itemVasText,dpom.po_and_line ,dpom.po_line_item_number AS poLineItemNumber, dpom.schedule_line_item_number, dpom.color_desc AS colorDesc, dpom.item_vas_pdf, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
-            .where(` od.column_name='item_vas_text' AND od.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK) AND (od.po_number, od.od_version) IN (
-                SELECT po_number, MAX(od_version) AS max_version FROM dpom_diff GROUP BY po_number)`)
+            .where(` od.column_name='item_vas_text' AND od.created_at >= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)`)
             .groupBy(' dpom.po_and_line')
             .orderBy(' od.created_at')
         return await query.getRawMany();

@@ -164,10 +164,46 @@ const VASChangesCompareGrid = () => {
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)',
             dataIndex: '', width: 200,
+            render: (text, record) => {
+                if (record.old_val == null) {
+                    return record.new_val
+                } else if (record.new_val == null) {
+                    return record.old_val
+                } else {
+                    const charsDiff = diffChars(record.old_val, record.new_val);
+                    // Extract only the added and removed parts
+                    const addedText = charsDiff.filter((part) => part.added).map((part) => part.value).join('');
+                    const removedText = charsDiff.filter((part) => part.removed).map((part) => part.value).join('');
+                    return (
+                        <div>
+                            <p>{addedText}</p>
+                            <p>{removedText}</p>
+                        </div>
+                    );
+                }
+            }
         },
         {
             title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO) ',
             dataIndex: '', width: 200,
+            render: (text, record) => {
+                if (record.item_vas_pdf == null) {
+                    return record.new_val
+                } else if (record.new_val == null) {
+                    return record.item_vas_pdf
+                } else {
+                    const charsDiff = diffChars(record.item_vas_pdf, record.new_val);
+                    // Extract only the added and removed parts
+                    const addedText = charsDiff.filter((part) => part.added).map((part) => part.value).join('');
+                    const removedText = charsDiff.filter((part) => part.removed).map((part) => part.value).join('');
+                    return (
+                        <div>
+                            <p>{addedText}</p>
+                            <p>{removedText}</p>
+                        </div>
+                    );
+                }
+            }
         }
     ]
 
