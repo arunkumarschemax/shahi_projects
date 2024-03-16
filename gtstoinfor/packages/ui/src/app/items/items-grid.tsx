@@ -16,7 +16,7 @@ import axios from 'axios';
 
 export interface ItemsGridProps {
 
- }
+}
 
 export const ItemsGrid = () => {
   const [searchText, setSearchText] = useState('');
@@ -39,65 +39,65 @@ export const ItemsGrid = () => {
    * used for column filter
    * @param dataIndex column data index
    */
-  useEffect(() => {getAllItems();}, [])
+  useEffect(() => { getAllItems(); }, [])
 
-  
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-        <div style={{ padding: 8 }}>
-            <Input
-                ref={searchInput}
-                placeholder={`Search ${dataIndex}`}
-                value={selectedKeys[0]}
-                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                style={{ width: 188, marginBottom: 8, display: 'block' }}
-            />
-            <Button
-                type="primary"
-                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                icon={<SearchOutlined />}
-                size="small"
-                style={{ width: 90, marginRight: 8 }}
-            >
-                Search
-            </Button>
-            <Button size="small" style={{ width: 90 }}
-                onClick={() => {
-                    handleReset(clearFilters)
-                    setSearchedColumn(dataIndex);
-                    confirm({ closeDropdown: true });
-                }}>
-                Reset
-            </Button>
-        </div>
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button size="small" style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters)
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}>
+          Reset
+        </Button>
+      </div>
     ),
     filterIcon: filtered => (
-        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-        record[dataIndex]
-            ? record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes(value.toLowerCase())
-            : false,
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
     onFilterDropdownVisibleChange: visible => {
-        if (visible) { setTimeout(() => searchInput.current.select()); }
+      if (visible) { setTimeout(() => searchInput.current.select()); }
     },
     render: text =>
-        text ? (
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text.toString()}
-                />
-            ) : text
-        )
-            : null
-})
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : text
+      )
+        : null
+  })
 
   /**
    * 
@@ -118,24 +118,24 @@ export const ItemsGrid = () => {
   const columnsSkelton: any = [
     {
       title: 'S No',
-      key: 'sno',align:'center',
+      key: 'sno', align: 'center',
       width: '50px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
     },
- 
-  
+
+
     {
-      title:'Item',
+      title: 'Item',
       dataIndex: 'item',
       width: '90px',
       align: 'left',
       sorter: (a, b) => a.item.localeCompare(b.item),
       sortDirections: ['ascend', 'descend'],
       ...getColumnSearchProps('item'),
-     
+
     },
-   
+
     {
       title: 'Consumption Required',
       dataIndex: 'consumptionrequired',
@@ -143,44 +143,44 @@ export const ItemsGrid = () => {
       align: 'left',
       sorter: (a, b) => a.consumptionrequired.localeCompare(b.consumptionrequired),
       sortDirections: ['ascend', 'descend'],
-      // ...getColumnSearchProps('consumptionrequired'),
-     
+      render: (v) => <Tag>{v ? 'YES' : 'NO'}</Tag>
+
     },
-    
-    {
-      title: 'Consumption ',
-      dataIndex: 'consumption',
-      width: '90px',
-      align: 'left',
-      sorter: (a, b) => a.consumption.localeCompare(b.consumption),
-      sortDirections: ['ascend', 'descend'],
-      // ...getColumnSearchProps('consumption'),
-     
-    },
-    
-    {
-      title: 'Wastage',
-      dataIndex: 'wastage',
-      width: '90px',
-      align: 'left',
-      sorter: (a, b) => a.wastage.localeCompare(b.wastage),
-      sortDirections: ['ascend', 'descend'],
-      // ...getColumnSearchProps('wastage'),
-     
-    },
-    
-    {
-      title: 'MOQ',
-      dataIndex: 'moq',
-      width: '90px',
-      align: 'left',
-      sorter: (a, b) => a.moq.localeCompare(b.moq),
-      sortDirections: ['ascend', 'descend'],
-      // ...getColumnSearchProps('moq'),
-     
-    },
-    
-   
+
+    // {
+    //   title: 'Consumption ',
+    //   dataIndex: 'consumption',
+    //   width: '90px',
+    //   align: 'left',
+    //   sorter: (a, b) => a.consumption.localeCompare(b.consumption),
+    //   sortDirections: ['ascend', 'descend'],
+    //   // ...getColumnSearchProps('consumption'),
+
+    // },
+
+    // {
+    //   title: 'Wastage',
+    //   dataIndex: 'wastage',
+    //   width: '90px',
+    //   align: 'left',
+    //   sorter: (a, b) => a.wastage.localeCompare(b.wastage),
+    //   sortDirections: ['ascend', 'descend'],
+    //   // ...getColumnSearchProps('wastage'),
+
+    // },
+
+    // {
+    //   title: 'MOQ',
+    //   dataIndex: 'moq',
+    //   width: '90px',
+    //   align: 'left',
+    //   sorter: (a, b) => a.moq.localeCompare(b.moq),
+    //   sortDirections: ['ascend', 'descend'],
+    //   // ...getColumnSearchProps('moq'),
+
+    // },
+
+
   ];
 
   /**
@@ -195,16 +195,16 @@ export const ItemsGrid = () => {
   }
 
 
-  const getAllItems= () => {
+  const getAllItems = () => {
     service.getAllItems().then(res => {
       if (res.status) {
         setVariantData(res.data)
       }
-  })
-}
+    })
+  }
 
 
- 
+
   const closeDrawer = () => {
     setDrawerVisible(false);
   }
@@ -241,25 +241,25 @@ export const ItemsGrid = () => {
 
 
   return (
-<Card title='Items' extra={<span><Button onClick={()=>navigate('/bom/items-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Items' extra={<span><Button onClick={() => navigate('/bom/items-form')} type={'primary'}>New</Button></span>}>
       <>
-     
-      <br></br>
-      <Card >
-        
-<Table className="custom-table-wrapper" 
-columns={columnsSkelton} dataSource={variantData} size='small'
+
+        <br></br>
+        <Card >
+
+          <Table className="custom-table-wrapper"
+            columns={columnsSkelton} dataSource={variantData} size='small'
             pagination={{
-                pageSize: 100, 
-                onChange(current, pageSize) {
-                    setPage(current);
-                    setPageSize(pageSize);
-                }
+              pageSize: 100,
+              onChange(current, pageSize) {
+                setPage(current);
+                setPageSize(pageSize);
+              }
             }}
-            />
+          />
         </Card>
       </>
-      </Card>
+    </Card>
   );
 }
 

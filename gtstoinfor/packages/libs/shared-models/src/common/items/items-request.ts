@@ -1,10 +1,10 @@
 export class ItemsDto{
     itemId:number;
     item:string;
-    consumptionrequired:string;
-    consumption:string;
-    wastage:string;
-    moq:string;
+    consumptionrequired:boolean;
+    consumption:number;
+    wastage:number;
+    moq:number;
     createdUser:string;
     updatedUser:string;
     isActive:boolean;
@@ -18,7 +18,7 @@ export class ItemsDto{
      * @param isActive This is a boolean
      */
     
-    constructor(itemId:number,item:string,consumptionrequired:string, consumption:string,wastage:string, moq:string,createdUser:string,updatedUser:string,isActive:boolean){
+    constructor(itemId:number,item:string,consumptionrequired:boolean, consumption:number,wastage:number, moq:number,createdUser:string,updatedUser:string,isActive:boolean){
         this.itemId = itemId;
         this.item = item;
         this.consumptionrequired=consumptionrequired;
@@ -27,7 +27,6 @@ export class ItemsDto{
         this.wastage=wastage;
         this.createdUser = createdUser;
         this.updatedUser = updatedUser;
-
         this.isActive = isActive;
     }
 }

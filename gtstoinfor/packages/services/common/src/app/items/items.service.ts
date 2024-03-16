@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { Repository, Raw, getConnection } from 'typeorm';
 import { ItemsDTO } from './dto/items.dto';
-import { Items } from './items.entity';
 import { ItemsAdapter } from './dto/items.adapter';
 import { AllItemsResponseModel,CommonResponseModel,ItemsResponseModel } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ItemsRequest } from '@project-management-system/shared-models';
 import { ItemsRepository } from './items.repo';
+import { ItemEntity } from '../po-bom/entittes/item-entity';
 
 @Injectable()
 export class ItemsService {
   
     constructor(
       
-        @InjectRepository(Items)
+      
         private itemsRepository: ItemsRepository,
         private itemsAdapter: ItemsAdapter,
     ){}
 
-    async getItemDetailsWithoutRelations(item: string): Promise<Items> {
+    async getItemDetailsWithoutRelations(item: string): Promise<ItemEntity> {
         const itemResponse = await this.itemsRepository.findOne({
           where: {itemId: Raw(alias => `item = '${item}'`)},
         });
@@ -49,8 +49,8 @@ export class ItemsService {
               }
             }
           }
-          const convertedItemEntity: Items = this.itemsAdapter.convertDtoToEntity(ItemDto,isUpdate);
-          const savedItemEntity: Items = await this.itemsRepository.save( convertedItemEntity);
+          const convertedItemEntity: ItemEntity = this.itemsAdapter.convertDtoToEntity(ItemDto,isUpdate);
+          const savedItemEntity: ItemEntity = await this.itemsRepository.save( convertedItemEntity);
           const savedItemDto: ItemsDTO = this.itemsAdapter.convertEntityToDto(savedItemEntity);
           if (savedItemDto) {
             const presentValue = savedItemDto.item;
@@ -86,7 +86,7 @@ export class ItemsService {
         try {
             const ItemsDtos: ItemsDTO[] = [];
             //retrieves all companies
-            const itemEntities: Items[] = await this.itemsRepository.find({ order: { 'item': 'ASC' },where:{isActive:true}
+            const itemEntities: ItemEntity[] = await this.itemsRepository.find({ order: { 'item': 'ASC' },where:{isActive:true}
            });
         //  console.log(CurrenciesEntities)
             if (itemEntities) {
@@ -145,7 +145,7 @@ export class ItemsService {
       async getActiveItemsById(itemReq: ItemsRequest): Promise<ItemsResponseModel> {
         try {
             //retrieves all companies
-            const itemEntities: Items = await this.itemsRepository.findOne({
+            const itemEntities: ItemEntity = await this.itemsRepository.findOne({
               where:{itemId:itemReq.itemId}
               });
               
@@ -163,7 +163,7 @@ export class ItemsService {
         }
     }
 
-    async getItemById(itemId: number): Promise<Items> {
+    async getItemById(itemId: number): Promise<ItemEntity> {
         //  console.log(employeeId);
             const Response = await this.itemsRepository.findOne({
             where: {itemId: itemId},

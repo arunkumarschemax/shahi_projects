@@ -6,6 +6,8 @@ import { HTTP } from "../http";
 import React, { useEffect, useState } from "react";
 import { BomProposalReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -98,8 +100,15 @@ function handleBackingPaper(){
 
     return (
         <div  id='print'>
- <Card title={'BACKING PAPER'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
- {groupedData.map((group, groupIndex) => (
+ <Card title={'BACKING PAPER'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="something"
+                filename="tablexls"
+                sheet="sheet 1"
+                buttonText="Excel" />
+       </>}>
+       {groupedData.map((group, groupIndex) => (
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                <thead>                <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
