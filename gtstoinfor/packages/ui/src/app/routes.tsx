@@ -252,6 +252,8 @@ import ShapeForm from "./trim-master/shape/shape-form"
 import ShapeGrid from "./trim-master/shape/shape-view"
 import PartsForm from "./trim-master/parts/parts-form"
 import PartsGrid from "./trim-master/parts/parts-view"
+import ArticleForm from "./trim-master/article/article-form"
+import ArticleGrid from "./trim-master/article/article-view"
 
 
 
@@ -892,6 +894,12 @@ export const AppRoutes = () => {
                         updateData={(undefined) => { }} 
                         data={undefined} />} />
                     <Route path='size/size-view' element={<TrimSizeGrid />} />
+                    <Route path='article/article-form' element={<ArticleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='article/article-view' element={<ArticleGrid />} />
                     
                 </Route>
 

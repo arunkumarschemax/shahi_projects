@@ -41,11 +41,10 @@ export class TrimSizeService{
 
     async createTrimSize(dto: TrimSizeDto, isUpdate: boolean): Promise<CommonResponseModel>{
         try{
-            if(!isUpdate) {
-                const existing = await this.repo.findOne({ where: { trimSize: dto.trimSize }})
-                if(existing) {
-                    throw new Error('Size already exists');
-                }
+            const existing = await this.repo.findOne({ where: { trimSize: dto.trimSize }})
+
+            if (existing && (!isUpdate || (isUpdate && existing.trimSizeId !== dto.trimSizeId))) {
+                throw new Error('Size already exists');
             }
             const entityData = new TrimSizeEntity()
             entityData.trimSize = dto.trimSize

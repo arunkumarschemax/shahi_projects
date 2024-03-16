@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { ArticleEntity } from "../article/article.entity";
 
 @Entity('length')
 export class LengthEntity{
@@ -54,4 +55,7 @@ export class LengthEntity{
         name:'version_flag'
     })
     versionFlag: number
+
+    @OneToMany(()=>ArticleEntity,article=>article.lengthInfo,{cascade: true})
+    articleInfo: ArticleEntity[]
 }
