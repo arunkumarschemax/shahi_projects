@@ -474,17 +474,18 @@ export class BomService {
                     moqQty: 500
                 }
             ]
-
-            for (const reg of ["EMEA", "APA", "AAO", "NA"]) {
-                if (regionDataMap.has(reg)) {
-                    const moq = moqData.find((v) => v.region == reg)?.moqQty
-                    const regionTotal = regionDataMap.get(reg).totalQty
-                    if (regionTotal < moq) {
-                        for (const regPOObj of regionDataMap.get(reg).poData) {
-                            const div = moq / regionTotal
-                            const moqPoQty = regPOObj.qty * div
-                            if(poBomEntities.find((p) => p.dpom.id == regPOObj.id)){
-                                poBomEntities.find((p) => p.dpom.id == regPOObj.id).bomQty = moqPoQty
+            if(req.itemId == 1){
+                for (const reg of ["EMEA", "APA", "AAO", "NA"]) {
+                    if (regionDataMap.has(reg)) {
+                        const moq = moqData.find((v) => v.region == reg)?.moqQty
+                        const regionTotal = regionDataMap.get(reg).totalQty
+                        if (regionTotal < moq) {
+                            for (const regPOObj of regionDataMap.get(reg).poData) {
+                                const div = moq / regionTotal
+                                const moqPoQty = regPOObj.qty * div
+                                if(poBomEntities.find((p) => p.dpom.id == regPOObj.id)){
+                                    poBomEntities.find((p) => p.dpom.id == regPOObj.id).bomQty = moqPoQty
+                                }
                             }
                         }
                     }
