@@ -224,7 +224,6 @@ export class PoBomRepo extends Repository<PoBomEntity> {
             .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
             .andWhere(`pb.bom_id is not null`)
         const rawData = await query.getRawMany();
-        console.log(rawData)
         const mappedData: BomProposalDataModel[] = rawData.map((item) => {
             return new BomProposalDataModel({
                 id: item.id,
