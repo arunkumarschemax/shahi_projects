@@ -89,9 +89,17 @@ function handleBackingPaper(){
       return total + bomQty;
     }, 0);
   };
+  const groupedData: Array<Array<any>> = Object.values(bomInfo.reduce((acc, rec) => {
+    const itemNo = rec.itemNo || 'undefined';
+    acc[itemNo] = acc[itemNo] || [];
+    acc[itemNo].push(rec);
+    return acc;
+}, {}));
+
     return (
         <div  id='print'>
  <Card title={'BACKING PAPER'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+ {groupedData.map((group, groupIndex) => (
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                <thead>                <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
@@ -107,24 +115,28 @@ function handleBackingPaper(){
                   </thead>
 
                     <tbody>
-                        {bomInfo?.map((rec,index) =>{
-                      
-                        return(
-                            <tr>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >INTERLINING</td>
+                    {group.map((rec, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {rowIndex === 0 && (
+                                        <>
+                   
+                            <td style={{ textAlign: 'center',width:"3%" }}  rowSpan={group.length}>{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }}rowSpan={group.length} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            
+                            <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>INTERLINING</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.description !== null ? rec.description:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>{rec.description !== null ? rec.description:''}</td>
+                            </>
+                                    )}
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.use !== null ? rec.use:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
+                        
                          </tr>
-                        )
-                      
-                    })}
-                    </tbody>
+                        
+                         ))}
+                        </tbody>
 
                <tfoot>
           <tr>
@@ -135,6 +147,7 @@ function handleBackingPaper(){
           </tr>
         </tfoot>
             </table>
+            ))}
         </Card>
         </div>
        

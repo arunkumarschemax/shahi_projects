@@ -17,11 +17,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
   });
 };
 export interface MobilonTapeProps {
- itemId:any
+ itemId:any,
  poLines :string[]
 }
 export const  Mobilontape = (props: MobilonTapeProps) => {
-    // const data = props.bomInfo
 
     const { itemId, poLines } = props
     const service = new BomService();
