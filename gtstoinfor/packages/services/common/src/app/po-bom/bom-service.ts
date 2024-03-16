@@ -483,7 +483,9 @@ export class BomService {
                         for (const regPOObj of regionDataMap.get(reg).poData) {
                             const div = moq / regionTotal
                             const moqPoQty = regPOObj.qty * div
-                            poBomEntities.find((p) => p.dpom.id == regPOObj.id).bomQty = moqPoQty
+                            if(poBomEntities.find((p) => p.dpom.id == regPOObj.id)){
+                                poBomEntities.find((p) => p.dpom.id == regPOObj.id).bomQty = moqPoQty
+                            }
                         }
                     }
                 }
