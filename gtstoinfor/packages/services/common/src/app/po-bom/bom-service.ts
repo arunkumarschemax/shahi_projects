@@ -114,7 +114,7 @@ export class BomService {
                     stylesArray.push(new StyleDto(styleDetails.style, styleDetails.styleName, styleDetails.season, styleDetails.expNo, styleDetails.msc, styleDetails.factoryLo, styleDetails.status, styleDetails.fileData, bomdetailsArray))
                 }
             }
-            console.log(stylesArray, 'stylesarray')
+            // console.log(stylesArray, 'stylesarray')
             if (stylesArray) {
                 return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', stylesArray)
 
@@ -199,7 +199,7 @@ export class BomService {
     //created  for sample purpose for 100 records
 
     async getPpmPoLineData(req: PpmDateFilterRequest): Promise<CommonResponseModel> {
-        console.log(req)
+        // console.log(req)
         const details = await this.dpomRepo.getPoLineData(req);
         if (details.length < 0) {
             return new CommonResponseModel(false, 0, 'data not found');
@@ -248,7 +248,7 @@ export class BomService {
         const sizeDateMap = new Map<string, BomReportModel>();
         for (const rec of details) {
             let sizeData = sizeDateMap.get(rec.po_and_line);
-            console.log(rec, 'RECCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC')
+            // console.log(rec, 'RECCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC')
             if (!sizeData) {
                 sizeData = new BomReportModel(
                     rec.po_number,
@@ -1048,7 +1048,6 @@ export class BomService {
                 };
             }
             result[key].bomQty += bomQty;
-            console.log(bomQty, "poQty at 1036")
 
             return result
         }, {})
@@ -1425,7 +1424,6 @@ export class BomService {
 
     async updateItemid(req: updateItemId): Promise<CommonResponseModel> {
         try {
-            console.log(req, "reqqqqqq")
             const query = ` UPDATE bom 
                 SET item_id = '${req.itemId}'
                 WHERE im_code = '${req.imCode}' `;
@@ -1458,7 +1456,6 @@ export class BomService {
     async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
-        console.log(poBomData, "poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
