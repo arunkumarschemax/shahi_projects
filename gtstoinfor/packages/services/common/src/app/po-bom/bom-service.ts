@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, ShippingTypeEnum, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -349,10 +349,11 @@ export class BomService {
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
             const regionDataMap = new Map<string, { poData: PoDataForBomGenerationModel[], totalQty: number }>()
             // moq logic for wash care label
-            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
-                const wastageQty = (poQty * consumption) * (wastage / 100)
-                const bomQty = (poQty * consumption) + wastageQty
-                return bomQty
+            function calculateBomQty(poQty: number, consumption: number,shippingType : ShippingTypeEnum) {
+                const excessQty = shippingType == ShippingTypeEnum.DIRECT ? 1.02 : 1.03
+                const bomQty = poQty * consumption;
+                const bomQtyWithExcess = bomQty * excessQty; // Adding 3% excess
+                return bomQtyWithExcess;
             }
 
             function getUpdatedQty(poLine: string, poQty) {
@@ -388,28 +389,36 @@ export class BomService {
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
                 // console.log(styleData.length, 'style data -----')
-                if (!styleData.length) {
-                    return new CommonResponseModel(false, 11111, `Style data not found for selected style ${po.styleNumber}`)
-                }
+                // if (!styleData.length) {
+                //     await transactionManager.releaseTransaction()
+                //     return new CommonResponseModel(false, 11111, `Style data not found for selected style ${po.styleNumber}`)
+                // }
 
 
 
                 const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                 for (const styleBom of styleData) {
                     // console.log(styleBom)
-                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
+
                     // console.log(consumptions,styleBom.itemId)
-                    const { consumption, moq, wastage } = consumptions
-                    const bomQty = calculateBomQty(updatedQty, moq, consumption, wastage)
+
+                    const { consumption } = req.updatedConsumptions.length ? req.updatedConsumptions.find((v) => {
+                        if (v.consumptionAgainst == 'item') {
+                            return v.item == po.item
+                        } else {
+                            return v.style == po.styleNumber
+                        }
+                    }) : {consumption : 1}
+                    const bomQty = calculateBomQty(updatedQty, consumption,po.shippingType)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
 
                     bom.id = styleBom.bomId
                     poBomEntity.bom = bom
-                    poBomEntity.consumption = consumption ? consumption : 0
-                    poBomEntity.moq = moq ? moq : 0
-                    poBomEntity.wastage = wastage ? wastage : 0
-                    poBomEntity.bomQty = po.qty
+                    poBomEntity.consumption = consumption ? consumption : 1
+                    poBomEntity.moq = 1
+                    poBomEntity.wastage = 1.03
+                    poBomEntity.bomQty = bomQty
                     poBomEntity.poQty = po.qty
                     const dpom = new DpomEntity()
                     dpom.id = po.id
@@ -432,9 +441,10 @@ export class BomService {
                     // await transactionManager.getRepository(PoBomEntity).insert(poBomEntity)
 
                 }
-                const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd()
+                const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd(req.itemId)
                 for (const ab of zfactorsToAdd) {
                     if (po.destination == ab.destination || po.styleNumber == ab.style) {
+                        if(req.itemId == 1 && ab.plantCode.split(",").includes(po.plant) ) continue;
                         const poBomExtraITem = new PoBomEntity()
                         poBomExtraITem.consumption = 1
                         poBomExtraITem.moq = 1
@@ -457,7 +467,6 @@ export class BomService {
 
             for (const rec of poBomEntities) {
                 const isBomRecExist = await this.poBomRepo.checkIfBomGenerated(rec.dpom.id, rec.bom ? rec.bom.id : null, rec.zFactorBom ? rec.zFactorBom.id : null)
-                console.log(isBomRecExist)
                 if (isBomRecExist) continue
                 await transactionManager.getRepository(PoBomEntity).insert(rec)
 
@@ -1449,7 +1458,7 @@ export class BomService {
     async generateProposalForPOIDLabel(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
-        console.log(poBomData,"poBomData")
+        console.log(poBomData, "poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
             const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
@@ -1487,7 +1496,7 @@ export class BomService {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size,ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size, ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
@@ -1496,10 +1505,10 @@ export class BomService {
             }
             if (!result[key]) {
                 result[key] = {
-                    geoCode,styleNumber,
+                    geoCode, styleNumber,
                     poQty: 0, itemNo, bomQty: 0,
-                    itemId,poNumber,gender,primaryColor,
-                    season,year,color,itemColor,productCode,ogacDate
+                    itemId, poNumber, gender, primaryColor,
+                    season, year, color, itemColor, productCode, ogacDate
                 };
             }
             result[key].bomQty += bomQty;

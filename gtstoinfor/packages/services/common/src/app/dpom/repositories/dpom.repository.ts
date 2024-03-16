@@ -1134,7 +1134,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getPoDataForBomGeneration(req: { poLine: string[] }): Promise<PoDataForBomGenerationModel[]> {
         const query = await this.createQueryBuilder('d')
-            .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size,gender_age_desc as gender`)
+            .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size,gender_age_desc as gender,bom_item as bomItem,shipping_type as shippingType`)
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
         const data = await query.getRawMany()
         const mappedResult: PoDataForBomGenerationModel[] = data.map(item => ({
@@ -1151,7 +1151,9 @@ export class DpomRepository extends Repository<DpomEntity> {
             year: item.year,
             qty: item.qty,
             size: item.size,
-            gender: item.gender
+            gender: item.gender,
+            item : item.bomItem,
+            shippingType : item.shippingType
         }));
 
         return mappedResult

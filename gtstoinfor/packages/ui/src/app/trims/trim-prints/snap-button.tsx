@@ -3,7 +3,9 @@ import { Button, Card, Col, Row } from "antd";
 import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -17,12 +19,15 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface SnapButtonProps{
-bomInfo:any
+// bomInfo:any
+itemId: any,
+    poLines: string[]
 }
 export function SnapButton(props:SnapButtonProps) {
-console.log(props.bomInfo,"********************************")
-const data = props.bomInfo
-console.log(props.bomInfo.map((e)=> e.itemId));
+    const [bomInfo, setBomInfo] = useState([]);
+    const { itemId, poLines } = props
+    const service = new BomService();
+    
 const supplier = "supplier";
  const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -60,8 +65,22 @@ const supplier = "supplier";
             }, 1000); // Add a delay to ensure all content is loaded
         }
    }
-
-   const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
+   useEffect(() => {      
+    handleButtonTrim()
+    }, []);
+   function handleButtonTrim(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine =poLines
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
+   const groupedData: Array<Array<any>> = Object.values(bomInfo.reduce((acc, rec) => {
     const itemNo = rec.itemNo || 'undefined';
     acc[itemNo] = acc[itemNo] || [];
     acc[itemNo].push(rec);
