@@ -1,4 +1,8 @@
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
+import { useEffect, useState } from "react";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
@@ -14,6 +18,8 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 export interface JocktagProps{
 bomInfo:any
+itemId: number,
+poLines: string[]
 }
 export function Jocktag(props:JocktagProps){
     const datas=[
@@ -34,6 +40,25 @@ export function Jocktag(props:JocktagProps){
            qty:'6910'
         }
     ]
+  const [jocktageData, setJockTageData] = useState<any>([])
+  const service = new BomService();
+
+  
+  useEffect(() =>{
+    handleJockTage()
+},[])
+
+  function handleJockTage(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [props.itemId]
+    bomProposalReq.poLine = props.poLines
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setJockTageData(res.data)
+      }
+    })
+  }
+
     function handlePrint(){
         const invoiceContent = document.getElementById("print");
         if (invoiceContent) {
@@ -70,11 +95,20 @@ export function Jocktag(props:JocktagProps){
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
-    const data = props.bomInfo
+    const data = jocktageData
 return(
     <div  id='print'>
-    <Card title={'JockTage Label'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-    <table style={{width: '100%',  padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'>
+    <Card title={'JockTage Label'} extra={<><span style={{paddingRight:'5px'}}><Button onClick={handlePrint}>Print</Button></span><ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="download-table-xls-button"
+            table="something"
+            filename="tablexls"
+            sheet="sheet 1"
+            buttonText="Excel" /></>
+    }
+     
+  >
+    <table style={{width: '100%',  padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0' id='something'>
         <tr>
             <th>{'ITEM'}</th>
             <th>{'STYLE'}</th>

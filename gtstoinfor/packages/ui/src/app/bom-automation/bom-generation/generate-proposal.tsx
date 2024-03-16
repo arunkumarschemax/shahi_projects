@@ -70,12 +70,12 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     // "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
-    "BUTTON":<Button3Print bomInfo={buttonData}/>,
+    "BUTTON":<Button3Print bomInfo={buttonData} itemId={0} poLines={[]}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
-    "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
+    "Jocktage Label":<Jocktag bomInfo={jocktageData} itemId={0} poLines={[]}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     // "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
