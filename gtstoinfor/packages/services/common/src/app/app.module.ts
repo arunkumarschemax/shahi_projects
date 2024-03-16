@@ -41,7 +41,7 @@ import { ThreadsModule } from './threads/threads.module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       extra: {
         connectionLimit: 20
       },

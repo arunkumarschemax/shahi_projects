@@ -76,7 +76,7 @@ export default function GenerateProposal(props: Props) {
     // "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     // "Grommets": <Grommets bomInfo={buttonData}/>,
-    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
+    // "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     // "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     // "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
     // "Size Strip":<SizeStrip bomInfo={sizestripData}/>,

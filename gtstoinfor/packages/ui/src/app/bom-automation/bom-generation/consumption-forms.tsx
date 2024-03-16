@@ -81,10 +81,7 @@ export default function ConsumptionForms(props: Props) {
     console.log(consumptions)
     function onGenerateBom() {
         // Convert consumptions array to a Map for easier lookup
-
         generateBom()
-
-
     }
 
     function handleDynamicDataSource() {
@@ -107,9 +104,6 @@ export default function ConsumptionForms(props: Props) {
     function onCancel() {
         setModalOpen(false)
     }
-
-    // console.log(poLines,'po lines')
-
 
     return (
         <Row gutter={[24, 24]} justify={'center'}>
