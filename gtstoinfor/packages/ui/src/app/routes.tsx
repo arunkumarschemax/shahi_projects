@@ -45,7 +45,7 @@ import BomPdfUpload from "./bom-automation/bom-details-upload/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-automation/bom-details/bom-view"
 import BomPdfInfoDetailView from "./bom-automation/bom-pdf-extraction/deatiled-view"
-import Button3Print from "./trims/trim-prints/button"
+// import Button3Print from "./trims/trim-prints/button"
 import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
@@ -77,6 +77,7 @@ import ItemsForm from "./items/items-form"
 import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
 import Grommets from "./trims/trim-prints/grommets"
+import { Button3Print } from "./trims/trim-prints/button"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -217,7 +218,7 @@ export const AppRoutes = () => {
                     {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
                     {/* <Route path='drawcord' element={<Drawcord bomInfo={[]} />} /> */}
                     {/* <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} /> */}
-                    <Route path='elastic' element={<Elastic bomInfo={[]} />} />
+                    {/* <Route path='elastic' element={<Elastic bomInfo={[]} />} /> */}
                     {/* <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} /> */}
                     {/* <Route path='twilltape' element={<Twilltape bomInfo={[]} />} /> */}
                    {/* < Route path='grommets' element={<Grommets bomInfo={[]}/>} /> */}
@@ -251,6 +252,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
+                    <Route path='button3' element={<Button3Print bomInfo={''} itemId={0} poLines={[]}/>} />
                     {/* <Route path='button3' element={<Button3Print itemId = {null} poLines={[""]} />} /> */}
                     <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                 </Route>

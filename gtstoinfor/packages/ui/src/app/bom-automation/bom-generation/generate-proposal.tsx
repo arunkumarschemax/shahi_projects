@@ -5,6 +5,7 @@ import { Button, Card, Checkbox, Col, Modal, Row } from 'antd'
 import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
+
 import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import Elastic from '../../trims/trim-prints/elastic';
@@ -64,10 +65,10 @@ export default function GenerateProposal(props: Props) {
     // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     // "Neck Tape":<NecKType bomInfo={necktapeData} />,
-    "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
+    "Jocktage Label":<Jocktag bomInfo={jocktageData} itemId={0} poLines={[]}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     // "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
-    "Elastic" : <Elastic bomInfo={elasticData}/>,
+    // "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
     // "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
     // "Twill Tape":<Twilltape bomInfo={twilltape}/>,
@@ -79,7 +80,7 @@ export default function GenerateProposal(props: Props) {
     // "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     // "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
     "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
-    "Poid Label":<POIDLable bomInfo={poidData}/>,
+    // "Poid Label":<POIDLable bomInfo={poidData}/>,
   }
 
 
