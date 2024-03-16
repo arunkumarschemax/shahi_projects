@@ -2,6 +2,8 @@ import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
   Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -96,7 +98,14 @@ useEffect(() => {
 
   return (
     <div id="print">
-      <Card title={'INTERLINING'} extra={<Button onClick={handlePrint}>Print</Button>}>
+      <Card title={'INTERLINING'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="something"
+                filename="tablexls"
+                sheet="sheet 1"
+                buttonText="Excel" />
+       </>}>
         {groupedData.map((group, index) => (
           <div key={index} style={{ marginBottom: '20px' }}>
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">

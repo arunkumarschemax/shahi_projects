@@ -2,6 +2,8 @@ import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
   Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -16,7 +18,7 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 
 export interface TwilltapeProps {
-  itemId:any
+  itemId:any,
   poLines :string[]
 }
 export const  Twilltape = (props: TwilltapeProps) => {
@@ -30,6 +32,8 @@ export const  Twilltape = (props: TwilltapeProps) => {
 useEffect(() => {
   handleTwilltape()
 },[])
+
+
   
   function handleTwilltape(){
     const bomProposalReq = new BomProposalReq()
@@ -90,17 +94,25 @@ useEffect(() => {
   };
 
   const groupedData: Array<Array<any>> = Object.values(twilltape.reduce((acc, rec) => {
-    const itemNo = rec.itemNo || 'undefined';
-    acc[itemNo] = acc[itemNo] || [];
-    acc[itemNo].push(rec);
+    // const itemNo = rec.itemNo || 'undefined';
+    acc[rec.itemNo] = acc[rec.itemNo] || [];
+    acc[rec.itemNo].push(rec);
     return acc;
 }, {}));
 
   
   return (
     <div id='print'>
-    <Card title={'TWILL TAPE'} extra={<Button onClick={handlePrint}>Print</Button>}>
-    {groupedData.map((group, groupIndex) => (
+    <Card title={'TWILL TAPE'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="something"
+                filename="tablexls"
+                sheet="sheet 1"
+                buttonText="Excel" />
+       </>}>
+    {groupedData.map((group, index) => (
+       <div key={index} style={{ marginBottom: '20px' }}>
     <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%'}} border={1} cellSpacing="0" cellPadding='0'>
       <thead>
         <tr>
@@ -146,11 +158,12 @@ useEffect(() => {
         <tr>
           <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
           <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-            {calculateTotalBomQty(twilltape)}
+            {calculateTotalBomQty(group)}
           </td>
         </tr>
       </tfoot>
       </table>
+      </div>
             ))}
   </Card>
   </div>
