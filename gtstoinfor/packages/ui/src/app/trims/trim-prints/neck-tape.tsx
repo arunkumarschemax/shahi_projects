@@ -116,16 +116,11 @@ const NeckTape = (props: Props) => {
     // Grouping data by item number
     const groupedData = groupDataByItemNo();
   
-    // Check if groupedData exists
     if (groupedData) {
-      // Map through each item number
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px' }}>
-          {/* Container for table title and export button */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            {/* Table title */}
-            <h3>Item No: {itemNo}</h3>
-            {/* Export to Excel button */}
+            {/* <h3>Item No: {itemNo}</h3> */}
             <ReactHTMLTableToExcel
               id={`excel-button-${index}`}
               className={`excel-button-${index}`}

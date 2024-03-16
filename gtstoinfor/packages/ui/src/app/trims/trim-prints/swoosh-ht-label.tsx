@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
 import { BomService } from '@project-management-system/shared-services';
 import { BomProposalReq } from '@project-management-system/shared-models';
-
-
-
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 export interface SwooshHtLableProps {
   itemId: any,
   poLines: string[]
@@ -14,6 +12,8 @@ const SwooshHtLable: React.FC<SwooshHtLableProps> = (props) => {
   const [bomInfo, setBomInfo] = useState<any[]>([]);
   const { itemId, poLines } = props
   const service = new BomService();
+  const [tablesGenerated, setTablesGenerated] = useState(false);
+
 
    useEffect(() => {
     handleButtonTrim()
@@ -24,11 +24,12 @@ const SwooshHtLable: React.FC<SwooshHtLableProps> = (props) => {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = poLines
-    console.log(bomProposalReq,"requesttttttttt");
+    // console.log(bomProposalReq,"requesttttttttt");
     
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
         setBomInfo(v.data)
+        setTablesGenerated(true)
       }
     })
   }
@@ -88,12 +89,29 @@ const SwooshHtLable: React.FC<SwooshHtLableProps> = (props) => {
     return null;
   };
 
+  useEffect(() => {
+    if (!tablesGenerated) {
+      generateTables();
+    }
+  }, [tablesGenerated]); 
+
+
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px' }}>
-          <h3>Item No: {itemNo}</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            {/* <h3>Item No: {itemNo}</h3> */}
+            <ReactHTMLTableToExcel
+              id={`excel-button-${index}`}
+              className={`excel-button-${index}`}
+              table={`bom-table-${index}`}
+              filename={`BOM-Item-${itemNo}`}
+              sheet="Sheet 1"
+              buttonText={`Excel`}
+            />
+          </div>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}
