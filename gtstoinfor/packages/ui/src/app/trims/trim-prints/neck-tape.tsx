@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
 import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 type Props = {
   itemId: any,
@@ -105,20 +106,24 @@ const NeckTape = (props: Props) => {
     }
     return null;
   };
-
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
+  
     if (groupedData) {
-
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px' }}>
-          {/* <h3>Item No: {itemNo}</h3> */}
-          <table
-            style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
-            border={1}
-            cellSpacing="0"
-            cellPadding="0"
-          >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            {/* <h3>Item No: {itemNo}</h3> */}
+            <ReactHTMLTableToExcel
+              id={`excel-button-${index}`}
+              className={`excel-button-${index}`}
+              table={`bom-table-${index}`}
+              filename={`BOM-Item-${itemNo}`}
+              sheet="Sheet 1"
+              buttonText="Export to Excel"
+            />
+          </div>
+          <table id={`bom-table-${index}`} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
             <thead>
               <tr>
                 <th style={tableCellStyle}>ITEM</th>
@@ -131,7 +136,9 @@ const NeckTape = (props: Props) => {
                 <th style={tableCellStyle}>QTY IN YARDS</th>
               </tr>
             </thead>
+            {/* Table body */}
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
+            {/* Table footer */}
             <tfoot>
               <tr>
                 <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
@@ -146,6 +153,7 @@ const NeckTape = (props: Props) => {
     }
     return null;
   };
+
   const calculateTotalBomQty = (data) => {
 
     return data.reduce((total, item) => {
@@ -192,7 +200,7 @@ const NeckTape = (props: Props) => {
               </>
             )}
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0] && item.colors[0].itemColor ? item.colors[0].itemColor : '-'}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
