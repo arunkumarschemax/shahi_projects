@@ -438,7 +438,7 @@ export const WasCarelabel = (props: washCareprops) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {itemWiseGroup[itemNo].filter(rec => rec.displayInMainReq != false).map((row, index) => (
+                                        {itemWiseGroup[itemNo].filter((v) => !["110044","574080"].includes(v.imCode)).map((row, index) => (
                                             <>
                                                 <tr key={index}>
                                                     {index === 0 && (
@@ -464,8 +464,8 @@ export const WasCarelabel = (props: washCareprops) => {
                                                                 </>
                                                             )}
                                                         </> :
-                                                        <>
-                                                            <td style={{ textAlign: 'center' }}>{row.bomQty}</td>
+                                                        <>   {index === 0 && (
+                                                            <td rowSpan={itemWiseGroup[itemNo].length} style={{ textAlign: 'center' }}>{row.bomQty}</td> )}
                                                         </>
                                                     }
                                                 </tr>

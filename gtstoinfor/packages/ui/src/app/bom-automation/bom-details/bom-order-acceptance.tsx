@@ -452,7 +452,7 @@ req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
                         <Form.Item name='styleNumber' label='Style Number' >
                             <Select
                                 mode="multiple"
-                                onDropdownVisibleChange={getStyleNumber}
+                                onFocus={getStyleNumber}
                                 showSearch
                                 placeholder="Select Style Number"
                                 optionFilterProp="children"
@@ -469,7 +469,7 @@ req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
                         <Form.Item name='planningSeasonCode' label='Code' >
                             <Select
                                 showSearch
-                                onDropdownVisibleChange={getSesonCode}
+                                onFocus={getSesonCode}
                                 placeholder="Select Season Code"
                                 optionFilterProp="children"
                                 allowClear
@@ -485,7 +485,7 @@ req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
                         <Form.Item name='planningSeasonYear' label='Season Year' >
                             <Select
                                 showSearch
-                                onDropdownVisibleChange={ getSesonYear}
+                                onFocus={ getSesonYear}
                                 placeholder="Select Season Year"
                                 optionFilterProp="children"
                                 allowClear
