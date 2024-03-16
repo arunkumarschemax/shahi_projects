@@ -1,5 +1,5 @@
 import { BomGenerationReq, UOMEnum } from '@project-management-system/shared-models'
-import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Table, message } from 'antd'
+import { Button, Col, Form, Input, InputNumber, Modal, Row, Select, Table, Tag, message } from 'antd'
 import React, { Suspense, useState } from 'react'
 import UOMConversion from './uom-convserion-form'
 import { DownloadOutlined } from '@ant-design/icons'
@@ -18,16 +18,16 @@ type Props = {
 export default function ConsumptionForms(props: Props) {
 
     const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
-    const { itemId, printComponent, consumptionAgainst, uom } = itemDetails
+    const { itemId, printComponent, consumptionAgainst, uom, consumptionRequired } = itemDetails
     const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
     const bomService = new BomService()
 
-    const handleFieldChange = (value: any, style: string, field: string) => {
-        const existingIndex = consumptions.findIndex(item => item.style === style);
-        const newConsumption = {[consumptionAgainst] : style,consumptionAgainst, itemId, [field]: value, uom };
+    const handleFieldChange = (value: any, styleOrItem: string, field: string) => {
+        const existingIndex = consumptions.findIndex(item => item[consumptionAgainst] === styleOrItem);
+        const newConsumption = { [consumptionAgainst]: styleOrItem, consumptionAgainst, itemId, [field]: value, uom };
         if (existingIndex !== -1) {
             const updatedConsumptions = [...consumptions];
             updatedConsumptions[existingIndex][field] = value;
@@ -113,9 +113,12 @@ export default function ConsumptionForms(props: Props) {
 
     return (
         <Row gutter={[24, 24]} justify={'center'}>
-            <Col span={24}>
-                <Table rowKey={(row) => row.style} bordered pagination={false} columns={columns} dataSource={handleDynamicDataSource()} />
-            </Col>
+            <Col span={24} >
+                { consumptionRequired ?
+                    <Table rowKey={(row) => row.style} bordered pagination={false} columns={columns} dataSource={handleDynamicDataSource()} /> 
+                    : 
+                    <Tag>Consumption not required,Download the O/P</Tag>
+                }            </Col>
             {/* <Col span={4}>
                 <Button icon={<DownloadOutlined />} onClick={props.generateBom} type='primary'>Download BOM </Button>
             </Col> */}

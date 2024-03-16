@@ -1,3 +1,4 @@
+import { ShippingTypeEnum } from "../../Enum/shipping-type.enum"
 import { UOMEnum } from "../../Enum/uom-enum"
 
 export class BomCreationFiltersReq {
@@ -58,7 +59,8 @@ export class PoDataForBomGenerationModel {
     qty: number;
     size: string;
     gender: string;
-    item : string
+    item : string;
+    shippingType : ShippingTypeEnum
 }
 
 export class BomDataForStyleAndSeasonModel {

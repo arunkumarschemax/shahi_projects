@@ -73,7 +73,7 @@ export default function ConsumptionUpdate(props: Props) {
                         label: v.item,
                         key: id,
                         children: <>
-                        <Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link>
+                       { v.consumptionRequired ?<Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link> : <></>}
                         <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} /></>,
                     };
                 })}

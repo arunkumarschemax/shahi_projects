@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, ShippingTypeEnum, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -349,8 +349,11 @@ export class BomService {
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
             const regionDataMap = new Map<string, { poData: PoDataForBomGenerationModel[], totalQty: number }>()
             // moq logic for wash care label
-            function calculateBomQty(poQty: number, consumption: number) {
-                return poQty * consumption
+            function calculateBomQty(poQty: number, consumption: number,shippingType : ShippingTypeEnum) {
+                const excessQty = shippingType == ShippingTypeEnum.DIRECT ? 1.02 : 1.03
+                const bomQty = poQty * consumption;
+                const bomQtyWithExcess = bomQty * excessQty; // Adding 3% excess
+                return bomQtyWithExcess;
             }
 
             function getUpdatedQty(poLine: string, poQty) {
@@ -386,10 +389,10 @@ export class BomService {
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
                 // console.log(styleData.length, 'style data -----')
-                if (!styleData.length) {
-                    await transactionManager.releaseTransaction()
-                    return new CommonResponseModel(false, 11111, `Style data not found for selected style ${po.styleNumber}`)
-                }
+                // if (!styleData.length) {
+                //     await transactionManager.releaseTransaction()
+                //     return new CommonResponseModel(false, 11111, `Style data not found for selected style ${po.styleNumber}`)
+                // }
 
 
 
@@ -399,22 +402,22 @@ export class BomService {
 
                     // console.log(consumptions,styleBom.itemId)
 
-                    const { consumption, moq, wastage } = req.updatedConsumptions.find((v) => {
+                    const { consumption } = req.updatedConsumptions.length ? req.updatedConsumptions.find((v) => {
                         if (v.consumptionAgainst == 'item') {
                             return v.item == po.item
                         } else {
                             return v.style == po.styleNumber
                         }
-                    })
-                    const bomQty = calculateBomQty(updatedQty, consumption,)
+                    }) : {consumption : 1}
+                    const bomQty = calculateBomQty(updatedQty, consumption,po.shippingType)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
 
                     bom.id = styleBom.bomId
                     poBomEntity.bom = bom
                     poBomEntity.consumption = consumption ? consumption : 1
-                    poBomEntity.moq = moq ? moq : 0
-                    poBomEntity.wastage = wastage ? wastage : 0
+                    poBomEntity.moq = 1
+                    poBomEntity.wastage = 1.03
                     poBomEntity.bomQty = bomQty
                     poBomEntity.poQty = po.qty
                     const dpom = new DpomEntity()
@@ -441,6 +444,7 @@ export class BomService {
                 const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd(req.itemId)
                 for (const ab of zfactorsToAdd) {
                     if (po.destination == ab.destination || po.styleNumber == ab.style) {
+                        if(req.itemId == 1 && ab.plantCode.split(",").includes(po.plant) ) continue;
                         const poBomExtraITem = new PoBomEntity()
                         poBomExtraITem.consumption = 1
                         poBomExtraITem.moq = 1
@@ -463,7 +467,6 @@ export class BomService {
 
             for (const rec of poBomEntities) {
                 const isBomRecExist = await this.poBomRepo.checkIfBomGenerated(rec.dpom.id, rec.bom ? rec.bom.id : null, rec.zFactorBom ? rec.zFactorBom.id : null)
-                console.log(isBomRecExist)
                 if (isBomRecExist) continue
                 await transactionManager.getRepository(PoBomEntity).insert(rec)
 

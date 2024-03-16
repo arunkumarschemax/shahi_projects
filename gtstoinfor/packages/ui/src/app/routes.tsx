@@ -213,7 +213,7 @@ export const AppRoutes = () => {
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
                     <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
                     
-                    <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
+                    {/* <Route path='neck-type' element={<NecKType bomInfo={[]} />} /> */}
                     {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
                     {/* <Route path='drawcord' element={<Drawcord bomInfo={[]} />} /> */}
                     {/* <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} /> */}
