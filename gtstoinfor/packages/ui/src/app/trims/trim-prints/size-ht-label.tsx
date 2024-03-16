@@ -1,4 +1,7 @@
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 import { Card } from "antd";
+import { useEffect, useState } from "react";
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
@@ -14,9 +17,27 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 export interface SizehtLabelProps{
     bomInfo:any
+    itemId: number,
+    poLines: string[]
 }
 export function SizehtLabel(props:SizehtLabelProps){
+  const [htLabel, setHtlabel] = useState<any>([])
+
     let grandTotal=0
+    const service = new BomService();
+
+    function getSizeHtLabelData(){
+        const bomProposalReq = new BomProposalReq()
+        bomProposalReq.itemId = [props.itemId]
+        bomProposalReq.poLine = props.poLines
+        service.getSizeHtLabelData(bomProposalReq).then((v) =>{
+          setHtlabel(v.data)
+        })
+      }
+
+      useEffect(() =>{
+        getSizeHtLabelData()
+      },[])
  
     function handlePrint(){
         const invoiceContent = document.getElementById("print");
@@ -54,10 +75,12 @@ export function SizehtLabel(props:SizehtLabelProps){
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
-    const data =props.bomInfo
+
+    // const data =props.bomInfo
+    const data =htLabel
     console.log(data.teeStyle)
     console.log(data.poloStyle)
-
+    console.log(data)
 
 /////// polo style size wise data construction
     const allSizes = new Set();
@@ -143,7 +166,7 @@ return(
                                 <td>{rec.styleNumber?rec.styleNumber:''}</td>
                                 <td>{rec.season?rec.season:''}</td>
                                 <td>{'723459/' + rec.imCode?rec.imCode:''}</td>
-                                <td>{rec.fit?rec.fit:''}</td>
+                                <td>{rec.fit?rec.fit:'STANDARD'}</td>
                                 <td>{'GMT CODE-' + `${rec.combination}`}</td>
                                 <td>{rec.fabricCode?rec.fabricCode:''}</td>
 
