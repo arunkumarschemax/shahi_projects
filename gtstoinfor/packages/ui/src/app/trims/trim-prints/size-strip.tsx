@@ -2,6 +2,7 @@ import { BomProposalReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Row } from "antd";
 import { useEffect, useState } from "react";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
   Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -101,7 +102,15 @@ export function SizeStrip(props: SizeStripProps) {
 
   return (
     <div id="print">
-      <Card title={"Size Strip"} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+      <Card title={"Size Strip"} extra={<><span><Button onClick={handlePrint}>Print</Button></span>
+      <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="something"
+                filename="tablexls"
+                sheet="sheet 1"
+                buttonText="Excel" />
+      </>}>
       {groupedData.map((group, groupIndex) => (     
         <table
           style={{ borderCollapse: "collapse", width: "100%" }}
