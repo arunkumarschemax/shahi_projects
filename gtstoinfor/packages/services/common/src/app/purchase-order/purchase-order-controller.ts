@@ -125,6 +125,17 @@ export class PurchaseOrderController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+
+  @Post('/getQrCodeData')
+  @ApiBody({type:PoReq})
+  async getQrCodeData(@Body() req?: any ): Promise<CommonResponseModel> {
+    try {
+      return await this.purchasseOrdrSerivice.getQrCodeData(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
 }
 
 
