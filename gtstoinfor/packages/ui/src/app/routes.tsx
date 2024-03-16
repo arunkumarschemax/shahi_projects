@@ -188,7 +188,7 @@ export const AppRoutes = () => {
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
-                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
+                    {/* <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} /> */}
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns />} />
                     {/* <Route path='hang-tag' element={<HangTag />} /> */}
@@ -252,7 +252,7 @@ export const AppRoutes = () => {
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
                     <Route path='button3' element={<Button3Print bomInfo={''}/>} />
-                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
+                    {/* <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} /> */}
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
