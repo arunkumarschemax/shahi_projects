@@ -104,6 +104,11 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 poData.deliveryAddress = deliveryAddress.trim().replace(/^\d+\s*|\s*\d+$/g, "").replace(/\d+,/g, "");
 
+                const firstID = deliveryAddress.match(/\d+/)[0];
+                console.log(firstID,"firstID")
+                poData.firstID = firstID;
+
+
                 const poRemarksRegex = /PO REMARKS/;
                 const poRemarksMatchIndex = firstPageContent.findIndex(item => poRemarksRegex.test(item.str));
                 if (poRemarksMatchIndex !== -1) {
@@ -132,9 +137,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                     poData.splitPo = "-";
                 }
 
-                poData.totalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g,"");
-                poData.splitPoTotalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g,"");
-                
+                poData.totalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g, "");
+                poData.splitPoTotalQuantity = firstPageContent[totalQuantityIndex + 1].str.replace(/,/g, "");
+
                 // poData.transMode =
                 //     (firstPageContent[transModeLseIndex + 2].str + " " +
                 //         firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
@@ -597,14 +602,14 @@ export const extractDataFromPoPdf = async (pdf) => {
         if (rec.str.match(ITEM_NO_EXP1)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT1) && isFirstBomSummary) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
-            // if (isFirstBomSummary) {
-            //     isFirstBomSummary = false;
-            // }
-            // else if (isSecondBomSummary) {
-            //     isSecondBomSummary = true;
-            // }
+            if (isFirstBomSummary) {
+                isFirstBomSummary = false;
+            }
+            else if (isSecondBomSummary) {
+                isSecondBomSummary = true;
+            }
 
         }
         if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
@@ -661,13 +666,14 @@ export const extractDataFromPoPdf = async (pdf) => {
             // if (transModeIndex >= 0 && transModeIndex < filteredData.length) {
             //     itemDetailsObj.transMode = filteredData[transModeIndex].str;
             // }
-            const first6Characters = poData.deliveryAddress.slice(0, 8);
+            const first6Characters = poData.firstID;
+            console.log(first6Characters, "first6Characters")
             itemDetailsObj.plannedExFactoryDate = first6Characters;
 
             let first6CharactersIndex = filteredData.findIndex(item => item && item.str && item.str.startsWith(first6Characters));
 
             while (first6CharactersIndex !== -1) {
-                const plannedExFactoryDateString = filteredData[first6CharactersIndex - 3]?.str;
+                const plannedExFactoryDateString = filteredData[first6CharactersIndex - 2]?.str;
                 if (plannedExFactoryDateString) {
                     const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
                     const inputDate = new Date(year, month - 1, day);
