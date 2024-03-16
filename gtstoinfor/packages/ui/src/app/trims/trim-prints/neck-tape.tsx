@@ -13,7 +13,7 @@ type Props = {
 const NeckTape = (props: Props) => {
   const [bomInfo, setBomInfo] = useState([]);
   const service = new BomService();
-
+  const [tablesGenerated, setTablesGenerated] = useState(false);
   const tableCellStyle = {
     padding: '8px',
   };
@@ -24,6 +24,11 @@ const NeckTape = (props: Props) => {
     handleNeckTapeTrim()
   }, []);
 
+  useEffect(() => {
+    if (!tablesGenerated) {
+      generateTables();
+    }
+  }, [tablesGenerated]); 
 
   function handleNeckTapeTrim() {
     const bomProposalReq = new BomProposalReq()
@@ -32,6 +37,7 @@ const NeckTape = (props: Props) => {
     service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
         setBomInfo(v.data)
+        setTablesGenerated(true)
       }
     })
   }
@@ -107,13 +113,19 @@ const NeckTape = (props: Props) => {
     return null;
   };
   const generateTables = () => {
+    // Grouping data by item number
     const groupedData = groupDataByItemNo();
   
+    // Check if groupedData exists
     if (groupedData) {
+      // Map through each item number
       return Object.keys(groupedData).map((itemNo, index) => (
         <div key={index} style={{ marginBottom: '20px' }}>
+          {/* Container for table title and export button */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            {/* <h3>Item No: {itemNo}</h3> */}
+            {/* Table title */}
+            <h3>Item No: {itemNo}</h3>
+            {/* Export to Excel button */}
             <ReactHTMLTableToExcel
               id={`excel-button-${index}`}
               className={`excel-button-${index}`}
@@ -123,7 +135,9 @@ const NeckTape = (props: Props) => {
               buttonText="Export to Excel"
             />
           </div>
+          {/* Table */}
           <table id={`bom-table-${index}`} style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
+            {/* Table header */}
             <thead>
               <tr>
                 <th style={tableCellStyle}>ITEM</th>
@@ -153,7 +167,47 @@ const NeckTape = (props: Props) => {
     }
     return null;
   };
+  
+  // const generateTables = () => {
+  //   const groupedData = groupDataByItemNo();
+  //   if (groupedData) {
 
+  //     return Object.keys(groupedData).map((itemNo, index) => (
+  //       <div key={index} style={{ marginBottom: '20px' }}>
+  //         {/* <h3>Item No: {itemNo}</h3> */}
+  //         <table
+  //           style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
+  //           border={1}
+  //           cellSpacing="0"
+  //           cellPadding="0"
+  //         >
+  //           <thead>
+  //             <tr>
+  //               <th style={tableCellStyle}>ITEM</th>
+  //               <th style={tableCellStyle}>STYLE</th>
+  //               <th style={tableCellStyle}>SEASON</th>
+  //               <th style={tableCellStyle}>IM#</th>
+  //               <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
+  //               <th style={tableCellStyle}>GARMENT COLOR CODE</th>
+  //               <th style={tableCellStyle}>TAPE COLOR</th>
+  //               <th style={tableCellStyle}>QTY IN YARDS</th>
+  //             </tr>
+  //           </thead>
+  //           <tbody>{generateRows(groupedData[itemNo])}</tbody>
+  //           <tfoot>
+  //             <tr>
+  //               <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
+  //               <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
+  //                 {calculateTotalBomQty(groupedData[itemNo])}
+  //               </td>
+  //             </tr>
+  //           </tfoot>
+  //         </table>
+  //       </div>
+  //     ));
+  //   }
+  //   return null;
+  // };
   const calculateTotalBomQty = (data) => {
 
     return data.reduce((total, item) => {
