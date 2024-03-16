@@ -104,13 +104,13 @@ function handleBackingPaper(){
  <Card title={'BACKING PAPER'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="backing paper"
+                filename="Backing Paper"
                 sheet="sheet 1"
                 buttonText="Excel" />
        </>}>
             
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+            <table id ="backing paper"style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                <thead>                <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
                     <th style={{ width: '3%' }}>STYLE#</th>
