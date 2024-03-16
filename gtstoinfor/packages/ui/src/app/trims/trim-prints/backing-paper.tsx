@@ -137,7 +137,7 @@ function handleBackingPaper(){
                             <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>{rec.description !== null ? rec.description:''}</td>
                             </>
                                     )}
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.use !== null ? rec.use:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >BUTTON HOle</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
