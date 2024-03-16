@@ -45,7 +45,7 @@ import BomPdfUpload from "./bom-automation/bom-details-upload/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-automation/bom-details/bom-view"
 import BomPdfInfoDetailView from "./bom-automation/bom-pdf-extraction/deatiled-view"
-import Button3Print from "./trims/trim-prints/button"
+// import Button3Print from "./trims/trim-prints/button"
 import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
@@ -68,7 +68,7 @@ import Interlining from "./trims/trim-prints/interlining"
 import Drawcord from "./trims/trim-prints/drawcord"
 import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
 import Elastic from "./trims/trim-prints/elastic"
-import Mobilontape from "./trims/trim-prints/mobilon-tape"
+import Mobilontape from "./trims/trim-prints/mobilion-tape"
 import Twilltape from "./trims/trim-prints/twill-tape"
 import CountryStickerPrint from "./trims/trim-prints/country-sticker"
 import ItemMappingGrid from "./bom-automation/bom-details/item-mapping"
@@ -76,7 +76,8 @@ import ItemsGrid from "./items/items-grid"
 import ItemsForm from "./items/items-form"
 import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
-import Grommets from "./trims/trim-prints/groomets"
+import Grommets from "./trims/trim-prints/grommets"
+import { Button3Print } from "./trims/trim-prints/button"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -214,13 +215,13 @@ export const AppRoutes = () => {
                     <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
                     
                     <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
-                    <Route path='interlining' element={<Interlining bomInfo={[]} />} />
+                    {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
                     {/* <Route path='drawcord' element={<Drawcord bomInfo={[]} />} /> */}
                     {/* <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} /> */}
                     <Route path='elastic' element={<Elastic bomInfo={[]} />} />
-                    <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} />
-                    <Route path='twilltape' element={<Twilltape bomInfo={[]} />} />
-                   < Route path='grommets' element={<Grommets bomInfo={[]}/>} />
+                    {/* <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} /> */}
+                    {/* <Route path='twilltape' element={<Twilltape bomInfo={[]} />} /> */}
+                   {/* < Route path='grommets' element={<Grommets bomInfo={[]}/>} /> */}
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
                    <Route path='items-view'   element={<ItemsGrid />} />
@@ -251,7 +252,8 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
-                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
+                    <Route path='button3' element={<Button3Print bomInfo={''} itemId={0} poLines={[]}/>} />
+                    {/* <Route path='button3' element={<Button3Print itemId = {null} poLines={[""]} />} /> */}
                     <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

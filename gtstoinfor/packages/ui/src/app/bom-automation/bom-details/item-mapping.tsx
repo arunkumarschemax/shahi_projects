@@ -84,7 +84,6 @@ useEffect(() => {
                 <Col    xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                   <Form.Item name={'imCode'} label='Im Code'>
                     <Select  placeholder='Select Im Code' style={{textAlign:"center"}} onChange={imCodeHandler}
-                     dropdownStyle={{ textAlign: "center" }}
                     showSearch
                     >
                       {data.map((item) => (
@@ -98,7 +97,6 @@ useEffect(() => {
                   <Form.Item name={'itemId'} label='Item Name'>
                     <Select  placeholder='Select Item Name' style={{textAlign:"center"}} onChange={itemIdHandler}
                     showSearch
-                    dropdownStyle={{ textAlign: "center" }}
                      >
                       {item.map((item) => (
                         <Option key={item.itemId} value={item.itemId}>{item.itemName}</Option>

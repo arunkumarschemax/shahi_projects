@@ -6,7 +6,7 @@ import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
-import Button3Print from '../../trims/trim-prints/button';
+// import Button3Print from '../../trims/trim-prints/button';
 import NecKType from '../../trims/trim-prints/neck-tape';
 import Interlining from '../../trims/trim-prints/interlining';
 import Drawcord from '../../trims/trim-prints/drawcord';
@@ -16,7 +16,7 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic';
 import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
-import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import Mobilontape from '../../trims/trim-prints/mobilion-tape';
 import SnapButton from '../../trims/trim-prints/snap-button';
 import Twilltape from '../../trims/trim-prints/twill-tape';
 import CountryStickerPrint from '../../trims/trim-prints/country-sticker';
@@ -24,7 +24,7 @@ import TissuePaper from '../../trims/trim-prints/tissue-paper';
 import MainWovenLable from '../../trims/trim-prints/main-woven-lable';
 import SizeStrip from '../../trims/trim-prints/size-strip';
 import POIDLable from '../../trims/trim-prints/poid';
-import { Grommets } from '../../trims/trim-prints/groomets';
+import { Grommets } from '../../trims/trim-prints/grommets';
 type Props = {
   poLine: string[]
 }
@@ -70,22 +70,22 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     // "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
-    "BUTTON":<Button3Print bomInfo={buttonData}/>,
+    // "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
-    "Interlining":<Interlining bomInfo={interlining}/>,
+    // "Interlining":<Interlining bomInfo={interlining}/>,
     // "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
-    "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
+    "Jocktage Label":<Jocktag bomInfo={jocktageData} itemId={0} poLines={[]}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     // "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
-    "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
-    "Twill Tape":<Twilltape bomInfo={twilltape}/>,
+    // "Mobilon Tape":<Mobilontape bomInfo={mobilontape} />,
+    // "Twill Tape":<Twilltape bomInfo={twilltape}/>,
     // "Snap Button": <SnapButton bomInfo={buttonData}/>,
     // "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
     "Snap Button": <SnapButton bomInfo={buttonData}/>,
-    "Grommets": <Grommets bomInfo={buttonData}/>,
+    // "Grommets": <Grommets bomInfo={buttonData}/>,
     "Size Ht label":<SizehtLabel bomInfo={htLabel}/>,
     // "Tissue Paper":<TissuePaper bomInfo={tissueData}/>,
     // "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
