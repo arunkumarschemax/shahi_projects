@@ -127,7 +127,7 @@ const NeckTape = (props: Props) => {
               table={`bom-table-${index}`}
               filename={`BOM-Item-${itemNo}`}
               sheet="Sheet 1"
-              buttonText="Export to Excel"
+              buttonText={`Excel-${itemNo}`}
             />
           </div>
           {/* Table */}

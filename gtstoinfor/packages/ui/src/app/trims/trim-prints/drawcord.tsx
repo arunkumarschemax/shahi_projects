@@ -140,12 +140,13 @@ export const Drawcord = (props: DrawcordProps) => {
               id={`excel-button-${index}`}
               className={`excel-button-${index}`}
               table={`bom-table-${index}`}
-              filename={`BOM-Item-${itemNo}`}
+              filename={`DrawCord-${itemNo}`}
               sheet="Sheet 1"
-              buttonText={`${itemNo}-Export to Excel`}
+              buttonText={`Excel-${itemNo}`}
             />
           </div>
           <table
+          id={`bom-table-${index}`}
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
             border={1}
             cellSpacing="0"
