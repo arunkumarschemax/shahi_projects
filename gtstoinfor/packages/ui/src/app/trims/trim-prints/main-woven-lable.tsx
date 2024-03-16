@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
+import { BomProposalReq } from '@project-management-system/shared-models';
+import { BomService } from '@project-management-system/shared-services';
 
 const MainWovenLabel = (props) => {
   const [bomInfo, setBomInfo] = useState([]);
+  const { itemId, poLines } = props
+  const service = new BomService();
 
   const data = bomInfo
   const tableCellStyle = {
     padding: '8px',
   };
+
   useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+    handleMainWovenLable()
+  }, []);
+
+
+
+  function handleMainWovenLable(){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    // bomProposalReq.trimName = item
+    service.getMainWovenLableData(bomProposalReq).then((res) =>{
+      if(res.status){
+        setBomInfo(res.data)
+      }
+    })
+  }
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');

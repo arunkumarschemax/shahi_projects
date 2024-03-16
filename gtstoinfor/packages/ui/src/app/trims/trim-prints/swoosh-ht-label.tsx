@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'antd';
+import { BomService } from '@project-management-system/shared-services';
+import { BomProposalReq } from '@project-management-system/shared-models';
 
 
 
 export interface SwooshHtLableProps {
-  bomInfo: any[];
+  itemId: any,
+  poLines: string[]
 }
 
 const SwooshHtLable: React.FC<SwooshHtLableProps> = (props) => {
   const [bomInfo, setBomInfo] = useState<any[]>([]);
+  const { itemId, poLines } = props
+  const service = new BomService();
 
-  useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+   useEffect(() => {
+    handleButtonTrim()
+   }, []);
+
+
+  function handleButtonTrim(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');

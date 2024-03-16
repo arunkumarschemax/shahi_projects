@@ -16,12 +16,31 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
 };
 
 export interface TwilltapeProps {
-    bomInfo: any
+  itemId:any
+  poLines :string[]
 }
 export const  Twilltape = (props: TwilltapeProps) => {
-  const data = props.bomInfo
+  // const data = props.bomInfo
   
-  const bomservice=new BomService
+  const { itemId, poLines } = props
+  const service = new BomService();
+  const [twilltape, setTwilltape] = useState<any>([])
+
+  
+useEffect(() => {
+  handleTwilltape()
+},[])
+  
+  function handleTwilltape(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+      setTwilltape(v.data)
+      }
+    })
+  }
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -70,7 +89,7 @@ export const  Twilltape = (props: TwilltapeProps) => {
     }, 0);
   };
 
-  const groupedData: Array<Array<any>> = Object.values(data.reduce((acc, rec) => {
+  const groupedData: Array<Array<any>> = Object.values(twilltape.reduce((acc, rec) => {
     const itemNo = rec.itemNo || 'undefined';
     acc[itemNo] = acc[itemNo] || [];
     acc[itemNo].push(rec);
@@ -127,7 +146,7 @@ export const  Twilltape = (props: TwilltapeProps) => {
         <tr>
           <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
           <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-            {calculateTotalBomQty(data)}
+            {calculateTotalBomQty(twilltape)}
           </td>
         </tr>
       </tfoot>

@@ -4,5 +4,7 @@ export enum UOMEnum {
     CM = "CM",
     METER = "METER",
     YARD = 'YARD',
-    PCS = 'PCS'
+    PCS = 'PCS',
+    GROSS = 'GROSS',
+    SET = 'SET'
 }

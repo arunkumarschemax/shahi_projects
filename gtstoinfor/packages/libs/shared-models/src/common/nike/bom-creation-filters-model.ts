@@ -1,3 +1,6 @@
+import { ShippingTypeEnum } from "../../Enum/shipping-type.enum"
+import { UOMEnum } from "../../Enum/uom-enum"
+
 export class BomCreationFiltersReq {
     style: string[]
     item: string[]
@@ -21,13 +24,17 @@ export class UpdatedConsumptions {
     wastage: number;
     moq: number;
     consumption: number
+    style: string;
+    uom: UOMEnum;
+    item:string;
+    consumptionAgainst : string
 }
 
 export class BomGenerationReq {
     poLine: string[]
     updatedSizes: UpdatedSizes[]
     updatedConsumptions: UpdatedConsumptions[]
-    itemId : number
+    itemId: number
 }
 
 export class BomProposalReq {
@@ -51,7 +58,9 @@ export class PoDataForBomGenerationModel {
     year: string;
     qty: number;
     size: string;
-    gender: string
+    gender: string;
+    item : string;
+    shippingType : ShippingTypeEnum
 }
 
 export class BomDataForStyleAndSeasonModel {
@@ -142,18 +151,18 @@ export class BomExcelreq {
 }
 
 
-export class UpdateBomITemNoFilters{
-    styleNo : string[]
-    fromDate : any
-    toDate : any
-    poLine : string []
-    planningSeasonCode:string;
-    planningSeasonYear:string
-    itemStatus:string
+export class UpdateBomITemNoFilters {
+    styleNo: string[]
+    fromDate: any
+    toDate: any
+    poLine: string[]
+    planningSeasonCode: string;
+    planningSeasonYear: string
+    itemStatus: string
 }
 
-export class StyleNumReq{
-    styleNumber:string[]
+export class StyleNumReq {
+    styleNumber: string[]
     constructor(data?: Partial<StyleNumReq>) {
         Object.assign(this, data);
     }
@@ -161,6 +170,6 @@ export class StyleNumReq{
 
 
 export class updateItemId {
-   imCode:string
-   itemId:number
+    imCode: string
+    itemId: number
 }

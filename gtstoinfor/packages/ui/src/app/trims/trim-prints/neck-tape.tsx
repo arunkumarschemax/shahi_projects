@@ -1,28 +1,46 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
+import { BomProposalReq } from '@project-management-system/shared-models';
+import { BomService } from '@project-management-system/shared-services';
 
-const NeckType = (props) => {
+type Props = {
+  itemId: any,
+  poLines: string[]
+}
+
+const NeckTape = (props: Props) => {
   const [bomInfo, setBomInfo] = useState([]);
+  const service = new BomService();
 
   const tableCellStyle = {
-     padding: '8px',
+    padding: '8px',
   };
 
   const tableRef = useRef(null);
 
   useEffect(() => {
-    if (props.bomInfo) {
-      setBomInfo(props.bomInfo);
-    }
-  }, [props.bomInfo]);
+    handleNeckTapeTrim()
+  }, []);
+
+
+  function handleNeckTapeTrim() {
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [props.itemId]
+    bomProposalReq.poLine = props.poLines
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
 
   const handlePrint = () => {
     const invoiceContent = document.getElementById('print');
     if (invoiceContent) {
       const devContent = invoiceContent.innerHTML;
       const printWindow = window.open('', 'PRINT', 'height=900,width=1600');
-  
+
       printWindow.document.write(`
         <html>
           <head>
@@ -64,7 +82,7 @@ const NeckType = (props) => {
           <body>${devContent}</body>
         </html>
       `);
-  
+
       printWindow.document.close();
       setTimeout(function () {
         printWindow.print();
@@ -72,7 +90,7 @@ const NeckType = (props) => {
       }, 1000);
     }
   };
-  
+
 
   const groupDataByItemNo = () => {
     if (bomInfo && bomInfo.length > 0) {
@@ -91,9 +109,9 @@ const NeckType = (props) => {
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
-      
+
       return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20px'}}>
+        <div key={index} style={{ marginBottom: '20px' }}>
           {/* <h3>Item No: {itemNo}</h3> */}
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
@@ -116,7 +134,7 @@ const NeckType = (props) => {
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
             <tfoot>
               <tr>
-              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
+                <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
@@ -137,10 +155,10 @@ const NeckType = (props) => {
     }, 0);
   };
 
-  
+
   const generateRows = (data) => {
     const groupedData = {};
-  
+
     data.forEach((item) => {
       const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
       if (!groupedData[key]) {
@@ -148,7 +166,7 @@ const NeckType = (props) => {
       }
       groupedData[key].push(item);
     });
-  
+
     // Generate rows based on grouped data
     return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
       <React.Fragment key={groupIndex}>
@@ -181,24 +199,24 @@ const NeckType = (props) => {
       </React.Fragment>
     ));
   };
-  
+
   return (
     <Card title={'Neck Tape'} extra={<Button onClick={handlePrint}>Print</Button>}>
 
-    <div id="print">
+      <div id="print">
 
-      {bomInfo && bomInfo.length > 0 ? (
-        <>
-          {generateTables()}
+        {bomInfo && bomInfo.length > 0 ? (
+          <>
+            {generateTables()}
           </>
-      ) : (
-        <div>No data available</div>
-      )}
-    </div>
+        ) : (
+          <div>No data available</div>
+        )}
+      </div>
     </Card>
 
   );
 };
 
-export default NeckType;
+export default NeckTape;
 

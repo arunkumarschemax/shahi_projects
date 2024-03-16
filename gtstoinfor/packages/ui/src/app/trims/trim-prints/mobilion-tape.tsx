@@ -1,6 +1,7 @@
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { BomService } from '@project-management-system/shared-services';
+import { BomProposalReq } from '@project-management-system/shared-models';
 
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
@@ -16,13 +17,32 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
   });
 };
 export interface MobilonTapeProps {
-    bomInfo: any
+ itemId:any
+ poLines :string[]
 }
 export const  Mobilontape = (props: MobilonTapeProps) => {
-    const data = props.bomInfo
+    // const data = props.bomInfo
 
-    const bomservice=new BomService
+    const { itemId, poLines } = props
+    const service = new BomService();
+
     const [mobilontape, setMobilontape] = useState<any>([])
+  
+    useEffect(() => {
+    handleMobilontape()
+  },[])
+  
+    function handleMobilontape(){
+      const bomProposalReq = new BomProposalReq()
+      bomProposalReq.itemId = [itemId]
+      bomProposalReq.poLine = poLines
+      // bomProposalReq.trimName = item.item
+      service.generateProposalForTrims(bomProposalReq).then((res) =>{
+        if(res.status){
+          setMobilontape(res.data)
+        }
+      })
+    }
   
     const handlePrint = () => {
       const invoiceContent = document.getElementById("print");
@@ -88,7 +108,7 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((rec, index) => (
+          {mobilontape.map((rec, index) => (
             <tr key={index}>
               <td style={{ textAlign: 'center' }}>{"6MM Transparent Mobilon Tape" }</td>
               <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
@@ -104,7 +124,7 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
           <tr>
             <td colSpan={6} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
             <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-              {calculateTotalBomQty(data)}
+              {calculateTotalBomQty(mobilontape)}
             </td>
           </tr>
         </tfoot>
