@@ -60,6 +60,9 @@ export class PurchaseOrderservice extends CommonAxiosService{
       async getPoNum(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getPoNum')
       }
+      async getQrCodeData(req?:PoReq):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.URL + '/getQrCodeData',req)
+      }
 }
 
 

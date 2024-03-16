@@ -233,8 +233,8 @@ export function AirHoleGrid(props: AirHoleProps) {
             <Popconfirm onConfirm={e =>{saveAirHole(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate AirHole ?'
-                :  'Are you sure to Activate AirHole ?'
+                ? 'Are You Sure To Deactivate AirHole ?'
+                :  'Are You Sure To Activate AirHole ?'
             }
           >
             <Switch  size="default"

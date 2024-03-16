@@ -17,9 +17,9 @@ export class PartsService{
         try{
             const data = await this.repo.find({where:{isActive: true}, order:{parts:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -30,9 +30,9 @@ export class PartsService{
         try{
             const data = await this.repo.find({order:{parts:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -44,7 +44,7 @@ export class PartsService{
             if(!isUpdate) {
                 const existing = await this.repo.findOne({ where: { parts: dto.parts }})
                 if(existing) {
-                    throw new Error('Parts already exists');
+                    throw new Error('Parts Already Exists');
                 }
             }
             const entityData = new PartsEntity()
@@ -58,8 +58,8 @@ export class PartsService{
                 entityData.createdUser = dto.createdUser;
             }
             const data = await this.repo.save(entityData);
-            console.log(data,']]]]]]]]]]]]]]]]]]]]]]]]]]')
-            return new CommonResponseModel(true, 1, isUpdate ? 'Parts updated successfully' : 'Parts created successfully', data)
+            //console.log(data,']]]]]]]]]]]]]]]]]]]]]]]]]]')
+            return new CommonResponseModel(true, 1, isUpdate ? 'Parts Updated Successfully' : 'Parts Created Successfully', data)
         }catch(err){
             throw(err)
         }
@@ -79,17 +79,17 @@ export class PartsService{
                        
                         if (PartsExists.isActive) {
                             if (partStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Parts is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Parts Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Parts is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Parts Is Already Deactivated');
                             }
                         } else {
                             if (partStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Parts is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Parts Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Parts is already activated');
+                                throw new CommonResponseModel(false,10112, 'Parts Is Already Activated');
                             }
                       }
                 }
@@ -105,9 +105,9 @@ export class PartsService{
         try {
             const data = await this.repo.find({where:{partsId: req.partsId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Parts data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Parts Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;

@@ -233,8 +233,8 @@ export function InnerDiaGrid(props: InnerDiaFormProps) {
             <Popconfirm onConfirm={e =>{saveInnerDia(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate innerDia ?'
-                :  'Are you sure to Activate innerDia ?'
+                ? 'Are You Sure To Deactivate InnerDia ?'
+                :  'Are You Sure To Activate InnerDia ?'
             }
           >
             <Switch  size="default"

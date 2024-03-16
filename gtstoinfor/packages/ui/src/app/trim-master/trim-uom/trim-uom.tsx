@@ -70,7 +70,7 @@ export function TrimUomForm(props: TrimUomFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Uom is Required"
+                      message:"UOM IS Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,

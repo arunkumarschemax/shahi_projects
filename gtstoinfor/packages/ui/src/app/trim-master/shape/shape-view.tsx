@@ -233,8 +233,8 @@ export function ShapeGrid(props: ShapeProps) {
             <Popconfirm onConfirm={e =>{saveFunction(rowData);}}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate Shape ?'
-                :  'Are you sure to Activate Shape ?'
+                ? 'Are You Sure To Deactivate Shape ?'
+                :  'Are You Sure To Activate Shape ?'
             }
           >
             <Switch  size="default"

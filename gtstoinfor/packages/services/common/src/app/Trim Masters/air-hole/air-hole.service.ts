@@ -20,9 +20,9 @@ export class AirHoleService {
         try {
             const data = await this.airHoleRepo.find({order:{airHole:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'AirHole data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'AirHole Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -35,11 +35,11 @@ export class AirHoleService {
           const airHoleData = await this.airHoleRepo.findOne({ where: { airHole: req.airHole } });
 
           if (isUpdate && airHoleData && airHoleData.airHoleId !== req.airHoleId) {
-            return new CommonResponseModel(false, 1, 'Another AirHole already exists');
+            return new CommonResponseModel(false, 1, 'Another AirHole Already Exists');
           }
 
           if (!isUpdate && airHoleData) {
-            return new CommonResponseModel(false, 1, 'AirHole already exists');
+            return new CommonResponseModel(false, 1, 'AirHole Already Exists');
           }
           const entity = new AirHoleEntity();
           entity.airHole = req.airHole;
@@ -50,7 +50,7 @@ export class AirHoleService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.airHoleRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'AirHole updated successfully' : 'AirHole created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'AirHole Updated Successfully' : 'AirHole Created Successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -61,7 +61,7 @@ export class AirHoleService {
             const AirHoleExists = await this.airHoleRepo.findOne({where:{airHoleId: req.airHoleId}});
             if (AirHoleExists) {
                 if (!AirHoleExists) {
-                    throw new ErrorResponse(10113, 'Someone updated the current AirHole. Refresh and try again');
+                    throw new ErrorResponse(10113, 'Someone Updated the current AirHole. Refresh and try again');
                 } else {
                     
                         const airHoleStatus =  await this.airHoleRepo.update(
@@ -70,17 +70,17 @@ export class AirHoleService {
                        
                         if (AirHoleExists.isActive) {
                             if (airHoleStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'AirHole is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'AirHole Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'AirHole is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'AirHole Is Already Deactivated');
                             }
                         } else {
                             if (airHoleStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'AirHole is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'AirHole Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'AirHole is already activated');
+                                throw new CommonResponseModel(false,10112, 'AirHole Is Already Activated');
                             }
                       }
                 }
@@ -97,9 +97,9 @@ export class AirHoleService {
         try {
             const data = await this.airHoleRepo.find({where:{isActive: true},order:{airHole:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'AirHole data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'AirHole Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -110,9 +110,9 @@ export class AirHoleService {
         try {
             const data = await this.airHoleRepo.find({where:{airHoleId: req.airHoleId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'AirHole data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'AirHole Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;

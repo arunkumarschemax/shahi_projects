@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal, Upload, UploadProps, Card } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal, Upload, UploadProps, Card, Radio } from 'antd';
 import { DeleteOutlined, EyeOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { BuyerDestinationService, ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
@@ -28,6 +28,8 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [allocatedData, setAllocatedData] = useState<any[]>([])
   const [fileList, setFileList] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
+  const [value, setValue] = useState('woven');
+
   const [imageName, setImageName] = useState('');
   const [color, setColor] = useState<any[]>([])
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
@@ -91,7 +93,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   useEffect(() =>{
     if(props.buyerId != null){
-      fabricCode(props.buyerId)
+      fabricCode(props.buyerId, value)
     }
   },[props.buyerId])
   useEffect(() =>{
@@ -172,6 +174,7 @@ const FabricsForm = (props:FabricsFormProps) => {
      req.yarnType=request.yarnType
      req.weightValue=request.weightValue
      req.widthValue=request.widthValue
+     req.fabricType=value
      }
       m3ItemsService.getM3FabricsByBuyer(req).then(res => {
         if(res.status){
@@ -435,10 +438,13 @@ const FabricsForm = (props:FabricsFormProps) => {
     console.log(props.sizeDetails)
   },[props.sizeDetails])
 
-  const fabricCode = (buyerId) =>{
+  const fabricCode = (buyerId,  value) =>{
     console.log(buyerId)
+    console.log(value)
     const req= new m3FabricFiltersReq()
     req.buyerId=buyerId
+    req.fabricType=value
+
     m3ItemsService.getM3FabricsByBuyer(req).then(res =>{
       console.log(res)
       if(res.status){
@@ -590,6 +596,11 @@ const FabricsForm = (props:FabricsFormProps) => {
     
   };
 
+  const fabricCodeTypeSelect = (val) => {
+    setValue(val)
+    fabricCode(sourcingForm.getFieldValue("buyer"),val)
+  }
+
   const columns:any = [
     {
       title: 'S.No',
@@ -598,7 +609,18 @@ const FabricsForm = (props:FabricsFormProps) => {
       render: (_, record, index) => index + 1,
     },
     {
-      title: 'Fabric Code',
+      title: <div style={{textAlign:'left'}}>Fabric Code &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style={{textAlign:'right'}}>
+      <Radio.Group
+        name="type"
+        id="type"
+        style={{ marginTop: "25px" }}
+        onChange={(e) => fabricCodeTypeSelect(e?.target?.value)}  value={value} >
+        <Radio value="Knitted">Knitted</Radio>
+        <Radio value="woven">Woven</Radio>
+      </Radio.Group>
+      </span>
+      </div>,
       dataIndex: 'fabricCode',
       width:"100%",
       render: (_, record, index) => (

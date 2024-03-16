@@ -14,6 +14,8 @@ export class m3FabricFiltersReq{
     hsnCode?: string;
     content?:number
     m3Code?:string
+    fabricType?:string
+
     constructor(
         buyerId?:number,
         fabricTypeId?: number,
@@ -29,7 +31,8 @@ export class m3FabricFiltersReq{
         content?:number,
         weightValue?: number,
         widthValue?: any,
-        m3Code?:string
+        m3Code?:string,
+        fabricType?:string
 
     ){
         this.buyerId=buyerId
@@ -47,5 +50,6 @@ export class m3FabricFiltersReq{
         this.hsnCode=hsnCode
         this.content=content
         this.m3Code=m3Code
+        this.fabricType = fabricType
     }
 }

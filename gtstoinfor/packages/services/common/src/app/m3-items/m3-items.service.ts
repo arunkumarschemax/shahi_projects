@@ -120,7 +120,7 @@ export class M3ItemsService {
       from m3_items m3i
       LEFT JOIN m3_fabric_yarn m3fy ON m3fy.m3_items_id = m3i.m3_items_id
       LEFT JOIN m3_fabric_content m3fc ON m3fc.m3_items_id = m3i.m3_items_id
-      where m3i.m3_items_Id >0`
+      where m3i.m3_items_Id >0 and fabrics_type ='`+req.fabricType+`'`
       if(req.buyerId != undefined){
         query=query+' and m3i.buyer_id='+req.buyerId+''
       }

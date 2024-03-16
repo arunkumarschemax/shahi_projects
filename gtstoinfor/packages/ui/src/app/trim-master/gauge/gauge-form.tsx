@@ -70,14 +70,14 @@ export function GaugeForm(props: GaugeFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Gauge is Required"
+                      message:"Gauge Is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
                       message: `Should contain only alphabets and numbers.`
                     }
                   ]}>
-                  <Input placeholder='Enter Functiom'/>
+                  <Input placeholder='Enter Function'/>
                 </Form.Item>
         </Col>
       </Row>

@@ -555,27 +555,27 @@ export class PurchaseOrderService {
         if(poTypeRes[0].po_against == 'Sample Order' && poTypeRes[0].po_material_type == 'Fabric'){
             joinString = `LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
             LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
-            columns = `s.request_no as sample_req_no,s.expected_delivery_date as date ` 
+            columns = `,s.request_no as sample_req_no,s.expected_delivery_date as date ` 
         }else if(poTypeRes[0].po_against == 'Sample Order' && poTypeRes[0].po_material_type == 'Trim'){
             joinString = `LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
             LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id`
-            columns = `i.request_no,i.indent_date, sr.request_no as sample_req_no`
+            columns = `,i.request_no,i.indent_date, sr.request_no as sample_req_no`
         }
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
             concatString = ` 
             left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
-            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id ${joinString}
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id ${joinString != undefined ? joinString:""}
             `
-            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom,${columns}`
+            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom ${columns != undefined ? columns:""}`
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
             concatString = ` 
             left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
-            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id ${joinString}
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id ${joinString != undefined ? joinString:""}
             
             `
-            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom,${columns} `
+            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom ${columns != undefined ? columns:""} `
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
@@ -715,5 +715,20 @@ export class PurchaseOrderService {
             return new CommonResponseModel(false,0,'No data')
         }
         return 
+    }
+
+    async getQrCodeData(req?:PoReq):Promise<CommonResponseModel>{
+        try {
+            let PoType = `SELECT ii.xl_no AS xlNo FROM purchae_order_items p left join indent_fabric ii on ii.ifabric_id = p.indent_item_id where p.purchase_order_id = `+req.poId+` and item_type = 'FABRIC'`;
+            const res = await this.dataSource.query(PoType)
+            if(res.length > 0){
+                return new CommonResponseModel(true,1,'data retreived',res)
+            }
+            else{
+                return new CommonResponseModel(false,0,'no data found',)
+            }
+        }catch (err) {
+            throw (err)
+        }
     }
 }

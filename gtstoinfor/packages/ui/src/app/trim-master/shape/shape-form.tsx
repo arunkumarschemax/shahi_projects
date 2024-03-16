@@ -70,7 +70,7 @@ export function ShapeForm(props: ShapeFormProps) {
                   rules={[
                     {
                       required: true,
-                      message:"Shape is Required"
+                      message:"Shape Is Required"
                     },
                     {
                       pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,

@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { type } from 'os';
 import { ItemTypeEnumDisplay, PurchaseViewDto } from '@project-management-system/shared-models';
 import PoPrint from './po-print';
+import QrPrint from './qr-print';
 
 export interface PoDetailViewPagesProps {
   purchaseOrderId:number
@@ -15,6 +16,9 @@ export interface PoDetailViewPagesProps {
 export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   const [data, setData] = useState<any[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [value, setValue] = useState<string>("");
+  const [poId, setPoId] = useState<number>(0);
+
   const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const Service = new PurchaseOrderservice()
@@ -23,9 +27,10 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   const { Option } = Select
   const [drop, setDrop] = useState('')
   const location = useLocation()
-
-
   useEffect(() => {
+    console.log(props.purchaseOrderId)
+    setPoId(props.purchaseOrderId)
+
     getPo();
     // getMaterialTypeDate();
 
@@ -421,14 +426,16 @@ getCssFromComponent(document, element.document);
       }
     });
   }
-  const openPrint = () => {
+  const openPrint = (val) => {
+    console.log(val);
     setIsModalVisible(true);
+    setValue(val);
   }
 
   return (
     <div>
       <Card>
-        <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={()=>openPrint()}>Print</Button> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
+        <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={()=>openPrint("print")}>Print</Button><Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button><Button className='panel_button' onClick={()=>openPrint("QR")}>Print QR</Button> </span>} >
           <Descriptions size='small' >
 
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Number</span>}>{data[0]?.po_number}</DescriptionsItem>
@@ -504,7 +511,7 @@ getCssFromComponent(document, element.document);
             <Modal
               className='print-docket-modal'
               key={'modal'}
-              width={'90%'}
+              width={value === "print" ? '90%':'50%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>
@@ -514,8 +521,13 @@ getCssFromComponent(document, element.document);
 
               ]}
             >
-
+              {
+                value === "print" ? 
               <PoPrint poId={props.purchaseOrderId} printOrder={printOrder} />
+                : value === "QR" ? 
+                <QrPrint poId={props.purchaseOrderId}/>
+                : ""
+              }
             </Modal> : ""}
         </Card>
       </Card>

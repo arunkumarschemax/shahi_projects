@@ -17,9 +17,9 @@ export class ShapeService{
         try{
             const data = await this.repo.find({where:{isActive: true}, order:{shape:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -30,9 +30,9 @@ export class ShapeService{
         try{
             const data = await this.repo.find({order:{shape:'ASC'}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         }catch(err){
             throw(err)
@@ -44,7 +44,7 @@ export class ShapeService{
             if(!isUpdate) {
                 const existing = await this.repo.findOne({ where: { shape: dto.shape }})
                 if(existing) {
-                    throw new Error('Shape already exists');
+                    throw new Error('Shape Already Exists');
                 }
             }
             const entityData = new ShapeEntity()
@@ -58,7 +58,7 @@ export class ShapeService{
                 entityData.createdUser = dto.createdUser;
             }
             const data = await this.repo.save(entityData);
-            return new CommonResponseModel(true, 1, isUpdate ? 'Shape updated successfully' : 'Shape created successfully', data)
+            return new CommonResponseModel(true, 1, isUpdate ? 'Shape Updated Successfully' : 'Shape Created Successfully', data)
         }catch(err){
             throw(err)
         }
@@ -79,17 +79,17 @@ export class ShapeService{
                        
                         if (ShapeExists.isActive) {
                             if (shapeStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Shape is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Shape Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Shape is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'Shape Is Already Deactivated');
                             }
                         } else {
                             if (shapeStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Shape is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Shape Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'Shape is already activated');
+                                throw new CommonResponseModel(false,10112, 'Shape Is Already Activated');
                             }
                       }
                 }
@@ -105,9 +105,9 @@ export class ShapeService{
         try {
             const data = await this.repo.find({where:{shapeId: req.shapeId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'Shape data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'Shape Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;

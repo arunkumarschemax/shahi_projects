@@ -20,39 +20,27 @@ export class InnerDiaService {
         try {
             const data = await this.innerDiaRepo.find({order:{innerDia:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'innerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
         }
       }
 
-      // async getAllHolesForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
-      //   try {
-      //     console.log("&&&&&&&&&&&&&&&&&&&&&&&&&")
-      //       const data = await this.m3TrimsCategoryMappingRepo.getAllHolesByCategory(req.categoryId)
-      //       if(data.status){
-      //           return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data.data)
-      //       }else{
-      //           return new CommonResponseModel(false, 0, 'No data found',[])
-      //       }
-      //   } catch (err) {
-      //     return err;
-      //   }
-      // }
+     
 
       async createInnerDia(req: InnerDiaDTO, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
           const innerDiaData = await this.innerDiaRepo.findOne({ where: { innerDia: req.innerDia } });
 
           if (isUpdate && innerDiaData && innerDiaData.innerDiaId !== req.innerDiaId) {
-            return new CommonResponseModel(false, 1, 'Another innerDia already exists');
+            return new CommonResponseModel(false, 1, 'Another InnerDia Already Exists');
           }
 
           if (!isUpdate && innerDiaData) {
-            return new CommonResponseModel(false, 1, 'innerDia already exists');
+            return new CommonResponseModel(false, 1, 'InnerDia Already Exists');
           }
           const entity = new InnerDiaEntity();
           entity.innerDia = req.innerDia;
@@ -63,7 +51,7 @@ export class InnerDiaService {
             entity.createdUser = req.username;
           }
           const savedResult = await this.innerDiaRepo.save(entity)
-          return new CommonResponseModel(true, 0, isUpdate ? 'innerDia updated successfully' : 'innerDia created successfully', [savedResult])
+          return new CommonResponseModel(true, 0, isUpdate ? 'InnerDia Updated Successfully' : 'InnerDia Created Successfully', [savedResult])
         } catch (err) {
           throw err;
         }
@@ -83,17 +71,17 @@ export class InnerDiaService {
                        
                         if (innerDiaExists.isActive) {
                             if (innerDiaStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'innerDia is deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'InnerDia Is Deactivated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'innerDia is already deactivated');
+                                throw new CommonResponseModel(false,10111, 'InnerDia Is Already Deactivated');
                             }
                         } else {
                             if (innerDiaStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'innerDia is activated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'InnerDia Is Activated Successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10112, 'innerDia is already activated');
+                                throw new CommonResponseModel(false,10112, 'InnerDia Is Already Activated');
                             }
                       }
                 }
@@ -110,9 +98,9 @@ export class InnerDiaService {
         try {
             const data = await this.innerDiaRepo.find({where:{isActive: true},order:{innerDia:"ASC"}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'innerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
@@ -123,9 +111,9 @@ export class InnerDiaService {
         try {
             const data = await this.innerDiaRepo.find({where:{innerDiaId: req.innerDiaId,isActive: true}})
             if(data.length > 0){
-                return new CommonResponseModel(true, 1, 'innerDia data retrieved successfully',data)
+                return new CommonResponseModel(true, 1, 'InnerDia Data Retrieved Successfully',data)
             }else{
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No Data Found',[])
             }
         } catch (err) {
           return err;
