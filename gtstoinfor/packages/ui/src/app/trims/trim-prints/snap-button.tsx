@@ -96,13 +96,12 @@ const supplier = "supplier";
        <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="snap-button-table"
+                filename="Snap Button"
                 sheet="sheet 1"
                 buttonText="Excel" />
        </>}>
-       {groupedData.map((group, groupIndex) => (
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+            <table id="snap-button-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                  <thead>
                 <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
@@ -117,6 +116,7 @@ const supplier = "supplier";
                     <th style={{ width: '3%' }}>SUPPLIER</th>
                     </tr>
                     </thead>
+       {groupedData.map((group, groupIndex) => (
                     <tbody>
       {group.map((rec, rowIndex) => (
                                 <tr key={rowIndex}>
@@ -143,8 +143,8 @@ const supplier = "supplier";
                          ))}
                         </tbody>
                         
+                        ))}
                </table>
-            ))}
         </Card>
         </div>
        

@@ -106,17 +106,17 @@ export function SizeStrip(props: SizeStripProps) {
       <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="size strip"
+                filename="Size Strip"
                 sheet="sheet 1"
                 buttonText="Excel" />
       </>}>
-      {groupedData.map((group, groupIndex) => (     
         <table
-          style={{ borderCollapse: "collapse", width: "100%" }}
-          border={1}
-          cellSpacing="0"
-          cellPadding="0"
+        id="size strip"
+        style={{ borderCollapse: "collapse", width: "100%" }}
+        border={1}
+        cellSpacing="0"
+        cellPadding="0"
         >
           <thead>
             <tr>
@@ -126,13 +126,14 @@ export function SizeStrip(props: SizeStripProps) {
               <th style={{...tableCellStyle, width: "5%", border: "1px solid black" }}>STYLE#</th>
               <th style={{...tableCellStyle, width: "5%", border: "1px solid black" }}>DESTINATION/SIZES</th>
               {allSizes.map((size: string) => (
-  <th key={size.toString()} style={{ ...tableCellStyle, textAlign: "center" }}>
+                <th key={size.toString()} style={{ ...tableCellStyle, textAlign: "center" }}>
     {size}
   </th>
 ))}
 
             </tr>
           </thead>
+{groupedData.map((group, groupIndex) => (     
           <tbody>
        {group.map((rec, rowIndex) => (
            <tr key={rowIndex}>
@@ -171,8 +172,8 @@ export function SizeStrip(props: SizeStripProps) {
      </tr>
                             ))}
                         </tbody>
-                        </table>
             ))}
+                        </table>
       </Card>
     </div>
   );
