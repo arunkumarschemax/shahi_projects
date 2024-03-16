@@ -3,7 +3,9 @@ import { Button, Card, Col, Row } from "antd";
 import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { BomProposalReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -17,13 +19,29 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface BackingPaperProps{
-bomInfo:any
+    itemId: any,
+    poLines: string[]
 }
 export function BackingPaper(props:BackingPaperProps) {
-console.log(props.bomInfo,"********************************")
-const data = props.bomInfo
-console.log(props.bomInfo.map((e)=> e.itemId));
 
+    const [bomInfo, setBomInfo] = useState([]);
+    const { itemId, poLines } = props
+    const service = new BomService();
+    
+    useEffect(() => {      
+        handleBackingPaper()
+        }, []);
+        
+function handleBackingPaper(){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = poLines
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBomInfo(v.data)
+      }
+    })
+  }
 
  const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
@@ -89,8 +107,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                   </thead>
 
                     <tbody>
-                        {data?.map((rec,index) =>{
-                      console.log(data,"LLLLLLLLLLLLLL");
+                        {bomInfo?.map((rec,index) =>{
                       
                         return(
                             <tr>
@@ -113,7 +130,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
           <tr>
             <td colSpan={8} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
             <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-              {calculateTotalBomQty(data)}
+              {calculateTotalBomQty(bomInfo)}
             </td>
           </tr>
         </tfoot>

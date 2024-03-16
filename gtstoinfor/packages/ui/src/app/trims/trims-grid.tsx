@@ -157,7 +157,6 @@ const TrimsGrid = () => {
 
           ]}
         >
-          {selectedPrintId === 1 && <BackingPaper bomInfo={undefined} />}
           {/* {selectedPrintId === 4 && <Button3Print bomInfo={''} />} */}
 
         </Modal>

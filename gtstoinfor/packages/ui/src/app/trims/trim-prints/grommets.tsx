@@ -19,8 +19,8 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface GrommetsProps{
-itemId:any
-poLines:string[]
+    itemId: any,
+    poLines: string[]
 }
 export function Grommets(props:GrommetsProps) {
 
@@ -114,7 +114,6 @@ function handleButtonTrim(){
                                         <>
                             <td style={{ textAlign: 'center' }} rowSpan={group.length}>{rec.itemNo !== null ? rec.itemNo:''}</td>
                             <td style={{ textAlign: 'center' }} rowSpan={group.length}>{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                           
                             <td style={{ textAlign: 'center' }} rowSpan={group.length}>{rec.season !== null ? rec.season:''}</td>
                             <td style={{ textAlign: 'center' }} rowSpan={group.length}>{rec.trim !== null ? rec.trim:''}</td>
                             <td style={{ textAlign: 'center' }} rowSpan={group.length}>{rec.description !== null ? rec.description:''}</td>

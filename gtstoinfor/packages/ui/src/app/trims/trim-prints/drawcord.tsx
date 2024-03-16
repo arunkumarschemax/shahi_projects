@@ -24,6 +24,7 @@ export const Drawcord = (props: DrawcordProps) => {
   // console.log(props.bomInfo)
   const service = new BomService();
   const { itemId, poLines } = props
+  const [bomInfo, setBomInfo] = useState([]);
 
   useEffect(() => {
     console.log('drawcord component mounted')
@@ -86,7 +87,6 @@ export const Drawcord = (props: DrawcordProps) => {
     }
   };
 
-  const [bomInfo, setBomInfo] = useState([]);
 
 
   
