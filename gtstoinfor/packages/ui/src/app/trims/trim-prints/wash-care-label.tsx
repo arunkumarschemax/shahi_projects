@@ -244,6 +244,10 @@ export const WasCarelabel = (props: washCareprops) => {
         return acc;
     }, {});
 
+    const firstAPARow = bomInfo.find(item => item.geoCode === 'APA');
+    // console.log(firstAPARow?.sizeWiseQty)
+
+
     const groupedData: Array<Array<any>> = Object.values(sizeMatrixData.reduce((acc, rec) => {
         const styleNumber = rec.styleNumber || 'undefined';
         acc[styleNumber] = acc[styleNumber] || [];
@@ -256,6 +260,7 @@ export const WasCarelabel = (props: washCareprops) => {
 
     // for APA region need to display OGAG date wise size quantities
     function renderOgadDateWiseSizeQuantits(sizeWiseQty: any[],styleType:String) {
+        
         const maxSizeObject = sizeWiseQty.reduce((maxObj, obj) => {
             const sizeKeysCount = Object.keys(obj).filter(key => key !== 'ogacDate').length;
             return sizeKeysCount > Object.keys(maxObj).filter(key => key !== 'ogacDate').length ? obj : maxObj;
@@ -391,17 +396,21 @@ export const WasCarelabel = (props: washCareprops) => {
                             : <></>
                         }
                     </table>
-                    {Object.keys(itemWiseGroup).map((itemNo, index) => (
+                    {/* {Object.keys(itemWiseGroup).map((itemNo, index) => (
                         <>
+                        {console.log(itemNo,index)}
                             <div key={index} style={{ paddingTop: '10px' }}>
-                                {index == 0 && itemWiseGroup[itemNo].filter(rec => rec.displayInMainReq != false).map((row, index) => (
+                                { index == 1 && itemWiseGroup[itemNo].map((row, index) => (
                                     <>
-                                        {index === 0 && row?.geoCode === 'APA' && row?.sizeWiseQty?.length ? renderOgadDateWiseSizeQuantits(row?.sizeWiseQty,row?.gender) : <></>}
+                                        {index == 0 && row?.geoCode === 'APA' && row?.sizeWiseQty?.length ? renderOgadDateWiseSizeQuantits(row?.sizeWiseQty,row?.gender) : <></>}
                                     </>
                                 ))}
                             </div>
                         </>
-                    ))}
+                    ))} */}
+                    {firstAPARow? renderOgadDateWiseSizeQuantits(firstAPARow?.sizeWiseQty,firstAPARow?.gender)
+                                         :<></>
+                                         }
                     <br />
                     {Object.keys(itemWiseGroup).map((itemNo, index) => (
                         <div key={index}>
