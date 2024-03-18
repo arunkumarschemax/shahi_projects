@@ -423,7 +423,7 @@ export default function BomGeneration(props: Props) {
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
-        excel.addRow();
+        // excel.addRow();
         excel.addColumns(exportingColumns);
         excel.addDataSource(filterData);
         excel.saveAs(`Generate-proposal-${currentDate}.xlsx`);

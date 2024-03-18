@@ -122,7 +122,7 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
               <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
               <td style={{ textAlign: 'center' }}>{'U-26'}</td>
               <td style={{ textAlign: 'center' }}>{rec.poQty !== null ? rec.poQty : ''}</td>
-              <td style={{ textAlign: 'center' }}>{'0.46'}</td>
+              <td style={{ textAlign: 'center' }}>{rec.consumption} {rec.uom}</td>
               <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
             </tr>
           ))}

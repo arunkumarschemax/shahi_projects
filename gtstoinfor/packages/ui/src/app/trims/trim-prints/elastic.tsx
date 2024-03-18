@@ -160,7 +160,7 @@ export const Elastic = (props: Elasticprops) => {
                   </>
                 )}
                 
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}-{item.colors[0].combination}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}-{item.colors[0]?.combination}</td>
                 {/* <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td> */}
               <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
                 

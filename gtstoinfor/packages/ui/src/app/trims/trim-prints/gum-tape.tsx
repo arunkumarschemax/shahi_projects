@@ -83,16 +83,8 @@ export function GumTape(props:GumTapeProps) {
             }, 1000); // Add a delay to ensure all content is loaded
         }
    };
-   const tableCellStyle = {
-    padding: '8px',
- };
+
      
-   const calculateTotalBomQty = (data) => {
-    return data.reduce((total, item) => {
-      const bomQty = Number(item?.bomQty) || 0;
-      return total + bomQty;
-    }, 0);
-  };
   
   const groupedData: Array<Array<any>> = Object.values(bomInfo.reduce((acc, rec) => {
     const itemNo = rec.itemNo || 'undefined';
@@ -126,7 +118,7 @@ export function GumTape(props:GumTapeProps) {
                     <tbody>
                      {group.map((rec, rowIndex) => (
                                 <tr key={rowIndex}>
-                                    {rowIndex === 0 && (
+                                 
                                         <>
                             {/* <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length} >{rec.itemNo !== null ? rec.itemNo:''}</td> */}
                             <td style={{ textAlign: 'center',width:"3%" }}  >{rec.itemNo !== null ? rec.itemNo:''}</td>
@@ -136,7 +128,7 @@ export function GumTape(props:GumTapeProps) {
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.description !== null ? rec.description:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.imCode !== null ? rec.imCode:''}</td>
                             </>
-                                    )}
+                                   
                            
                             </tr>
                             ))}
@@ -145,10 +137,7 @@ export function GumTape(props:GumTapeProps) {
 
                <tfoot>
           <tr>
-            <td colSpan={8} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
-              {calculateTotalBomQty(bomInfo)}
-            </td>
+          
           </tr>
         </tfoot>
             </table>

@@ -23,7 +23,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsData(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,
-            b.use,d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,
+            b.use,b.uom,d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,
             d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,
             b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,
             TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber, b.sequence,ia.attribute,ia.attribute_value as attributeValue`)
@@ -62,7 +62,8 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 shipToNumber: item.shipToNumber,
                 attribute: item.attribute,
                 attributeValue: item.attributeValue,
-                sequence: item.sequence
+                sequence: item.sequence,
+                uom:item.uom
             });
         });
 
@@ -118,7 +119,8 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForButton(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty, SUBSTRING(d.ogac, 1, 7) as ogacDate`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty,DATE_FORMAT(d.ogac, '%d-%b') AS ogacDate `)
+            // SUBSTRING(d.ogac, 1, 7) as ogacDate , 
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id and  st.combination = RIGHT(d.product_code, 3)')
