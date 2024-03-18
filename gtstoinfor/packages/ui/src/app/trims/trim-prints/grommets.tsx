@@ -98,9 +98,9 @@ function handleButtonTrim(){
                 table="grommets-table"
                 filename="Grommets"
                 sheet="sheet 1"
-                buttonText="Excel" />
+                buttonText={<span><Button type="primary">Excel</Button></span>}/>
        </>}>
-       {groupedData.map((group, groupIndex) => (
+      
             <table id="grommets-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                  <thead>
                 <tr>
@@ -116,6 +116,7 @@ function handleButtonTrim(){
                     <th style={{ width: '3%' }}>SUPPLIER</th>
                     </tr>
                     </thead>
+        {groupedData.map((group, groupIndex) => (
                     <tbody>
       {group.map((rec, rowIndex) => (
                                 <tr key={rowIndex}>
@@ -137,10 +138,11 @@ function handleButtonTrim(){
                        
                          </tr>
                          ))}
+                         
                         </tbody>
+            ))}
                         
                </table>
-            ))}
         </Card>
         </div>
        
