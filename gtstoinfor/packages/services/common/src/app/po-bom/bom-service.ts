@@ -1522,10 +1522,8 @@ export class BomService {
             const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size, ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-            let key = `${styleNumber}-${imCode}-${itemNo}`;
-            if (req.trimName === 'Poid Label') {
-                key += `${styleNumber}-${ogacDate}`;
-            }
+            let key = `${styleNumber}-${itemNo}`;
+            
             if (!result[key]) {
                 result[key] = {
                     geoCode, styleNumber,
@@ -1542,6 +1540,7 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+    
 }
 
 

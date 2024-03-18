@@ -2,6 +2,8 @@ import { BomProposalReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 
 export interface poidProps {
   itemId: any,
@@ -26,9 +28,9 @@ useEffect(() => {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = poLines
-    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+    service.generateProposalForKimble(bomProposalReq).then((v) => {
       if (v.status) {
-        setBomInfo(v.data)
+         setBomInfo(v.data)
       }
     })
   }
@@ -68,13 +70,12 @@ useEffect(() => {
         }
     }
 
-    
-    
-
-    
     return (
         <div id='print'>
-                <Card  title="Poid Label" extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+                <Card  title="Kimble Label" 
+                // extra={<span><Button onClick={handlePrint}>Print</Button></span>}
+                >
+
                 <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
       <thead>
         <tr>
@@ -101,15 +102,18 @@ useEffect(() => {
                </tr>
         ))}
       </tbody>
-      {/* <tfoot>
+       {/* <tfoot>
         <tr>
           <td colSpan={5} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif' }}>Total</td>
           <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
             {calculateTotalBomQty(bomInfo)}
           </td>
         </tr>
-      </tfoot> */}
-    </table>
+       </tfoot > */}
+       </table> 
+
+
+ 
 
                 </Card>
         </div>
