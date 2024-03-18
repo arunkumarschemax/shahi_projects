@@ -29,4 +29,12 @@ export class HMStyleService {
       return new CommonResponseModel(false, 0, error)
     }
   }
+
+  async getHMStyle(): Promise<CommonResponseModel> {
+    const records = await this.repository.find();
+    if (records.length)
+      return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+    else
+      return new CommonResponseModel(false, 0, 'No data found')
+  }
 }
