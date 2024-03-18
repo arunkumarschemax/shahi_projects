@@ -11,6 +11,7 @@ import { StyleComboEntity } from "../entittes/style-combo-entity";
 import { groupBy } from "rxjs";
 import { ItemAttributesEntity } from "../entittes/item-attributes.entity";
 import { SizehtMatrixEntity } from "../entittes/size-ht-matrix-entity";
+import { HMStyleEntity } from "../entittes/hm-style-entity";
 
 @Injectable()
 export class PoBomRepo extends Repository<PoBomEntity> {
@@ -501,6 +502,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id and  st.combination = RIGHT(d.product_code, 3)')
+            .leftJoin(HMStyleEntity, 'hm', 'hm.style_number = d.style_number')
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
             .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
             .andWhere(`pb.bom_id is not null`)
