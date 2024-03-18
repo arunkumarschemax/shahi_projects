@@ -2,6 +2,8 @@ import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
   Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -96,10 +98,19 @@ useEffect(() => {
 
   return (
     <div id="print">
-      <Card title={'INTERLINING'} extra={<Button onClick={handlePrint}>Print</Button>}>
-        {groupedData.map((group, index) => (
+      <Card title={'INTERLINING'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> 
+       </>}>
+        {groupedData.map((group, index,itemNo) => (
           <div key={index} style={{ marginBottom: '20px' }}>
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
+             <ReactHTMLTableToExcel
+              id={`excel-button-${index}`}
+              className={`excel-button-${index}`}
+              table={`interlining-table-${index}`}
+              filename={`Interlining-${group[0].itemNo}`}
+              sheet="Sheet 1"
+              buttonText={`Excel-${group[0].itemNo}`}
+            />
+            <table id={`interlining-table-${index}` }style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
               <thead>
                 <tr>
                   <th style={{ width: '3%' }}>ITEM</th>

@@ -1329,7 +1329,7 @@ export class BomService {
             const { geoCode } = bomGeoCode
 
             let key = `${styleNumber}-${imCode}-${itemNo}-${season} `;
-
+// console.log(poBomData,"poBomData++++++++++++at 1332")
             if (!result[key]) {
                 result[key] = {
                     styleNumber, imCode, itemNo, bomQty: 0, itemId,

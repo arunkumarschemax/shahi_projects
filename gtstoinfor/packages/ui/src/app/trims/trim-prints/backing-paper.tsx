@@ -26,7 +26,7 @@ export interface BackingPaperProps{
 }
 export function BackingPaper(props:BackingPaperProps) {
 
-    const [bomInfo, setBomInfo] = useState([]);
+    const [bomInfo, setBomInfo] = useState<any>([]);
     const { itemId, poLines } = props
     const service = new BomService();
     
@@ -91,6 +91,7 @@ function handleBackingPaper(){
       return total + bomQty;
     }, 0);
   };
+  
   const groupedData: Array<Array<any>> = Object.values(bomInfo.reduce((acc, rec) => {
     const itemNo = rec.itemNo || 'undefined';
     acc[itemNo] = acc[itemNo] || [];
@@ -103,13 +104,13 @@ function handleBackingPaper(){
  <Card title={'BACKING PAPER'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="backing paper"
+                filename="Backing Paper"
                 sheet="sheet 1"
                 buttonText="Excel" />
        </>}>
-       {groupedData.map((group, groupIndex) => (
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+            
+            <table id ="backing paper"style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                <thead>                <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
                     <th style={{ width: '3%' }}>STYLE#</th>
@@ -122,30 +123,29 @@ function handleBackingPaper(){
                     <th style={{ width: '3%' }}>REQ</th>
                     </tr>
                   </thead>
+                  {groupedData.map((group, groupIndex) => (
 
                     <tbody>
-                    {group.map((rec, rowIndex) => (
+                     {group.map((rec, rowIndex) => (
                                 <tr key={rowIndex}>
                                     {rowIndex === 0 && (
                                         <>
-                   
-                            <td style={{ textAlign: 'center',width:"3%" }}  rowSpan={group.length}>{rec.itemNo !== null ? rec.itemNo:''}</td>
-                            <td style={{ textAlign: 'center',width:"3%" }}rowSpan={group.length} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length} >{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
                             
                             <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>INTERLINING</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.imCode !== null ? rec.imCode:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>{rec.imCode !== null ? rec.imCode:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} rowSpan={group.length}>{rec.description !== null ? rec.description:''}</td>
                             </>
                                     )}
-                            <td style={{ textAlign: 'center',width:"3%" }} >BUTTON HOle</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >BUTTON HOLE</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
-                        
-                         </tr>
-                        
-                         ))}
+                            </tr>
+                            ))}
                         </tbody>
+  ))}
 
                <tfoot>
           <tr>
@@ -156,7 +156,7 @@ function handleBackingPaper(){
           </tr>
         </tfoot>
             </table>
-            ))}
+
         </Card>
         </div>
        

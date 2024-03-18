@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { BomService } from '@project-management-system/shared-services';
 import { BomProposalReq } from '@project-management-system/shared-models';
 
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
@@ -92,8 +93,15 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
     
     return (
       <div id='print'>
-      <Card title={'MOBION TAPE'} extra={<Button onClick={handlePrint}>Print</Button>}>
-      <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+      <Card title={'MOBION TAPE'}  extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="mobilon-tape-table"
+                filename="Mobilon Tape"
+                sheet="sheet 1"
+                buttonText="Excel" />
+       </>}>
+      <table id="mobilon-tape-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
         <thead>
           <tr>
             <th style={{ width: '3%' }}>MATERIAL - MOBILON TAPE</th>
@@ -112,7 +120,7 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
               <td style={{ textAlign: 'center' }}>{"6MM Transparent Mobilon Tape" }</td>
               <td style={{ textAlign: 'center' }}>{rec.itemNo !== null ? rec.itemNo : ''}</td>
               <td style={{ textAlign: 'center' }}>{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
-              <td style={{ textAlign: 'center' }}>{''}</td>
+              <td style={{ textAlign: 'center' }}>{'U-26'}</td>
               <td style={{ textAlign: 'center' }}>{rec.poQty !== null ? rec.poQty : ''}</td>
               <td style={{ textAlign: 'center' }}>{'0.46'}</td>
               <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
