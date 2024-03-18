@@ -46,6 +46,7 @@ export default function GenerateProposal(props: Props) {
   const [htLabel, setHtlabel] = useState<any>([])
   const [tissueData,setTissueData]= useState<any>([])
   const [poidData,setPoidData] = useState<any>([])
+  const [GumTapeData, setGumTapeData] = useState<any>([]);
 
   useEffect(() => {
     getAllTrims();
@@ -306,7 +307,18 @@ export default function GenerateProposal(props: Props) {
   //     }
   //   })
   // }
-
+  function handleGumTapeTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.getProposalForGumtape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setGumTapeData(v.data)
+      }
+    })
+  }
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
     // const headerMapping = {
@@ -558,6 +570,9 @@ export default function GenerateProposal(props: Props) {
     
     if(val.item ===  "Poid Label"){
       handlePoidLable(val.itemId)
+    }
+    if(val.item ===  "Gum Tape"){
+      handleGumTapeTrim(val.itemId)
     }
   }
 

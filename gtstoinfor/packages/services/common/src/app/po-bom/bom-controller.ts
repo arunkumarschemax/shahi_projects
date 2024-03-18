@@ -422,4 +422,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getProposalForGumtape')
+    @ApiBody({ type: BomProposalReq })
+    async getProposalForGumtape(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getProposalForGumtape(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }
