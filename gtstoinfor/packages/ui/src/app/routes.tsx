@@ -78,6 +78,8 @@ import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
 import Grommets from "./trims/trim-prints/grommets"
 import { Button3Print } from "./trims/trim-prints/button"
+import HMStyleView from "./bom-automation/bom-details/bom-hm-master/hm-style-view"
+import HMStyleCreation from "./bom-automation/bom-details/bom-hm-master/hm-style-create"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -212,7 +214,8 @@ export const AppRoutes = () => {
                     {/* <Route path='country-sticker' element={<CountryStickerPrint  />} /> */}
                     <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
-                    <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
+                    <Route path='hm-style-view' element={<HMStyleView />} />
+                    <Route path='hm-style-creation' element={<HMStyleCreation />} />
                     
                     {/* <Route path='neck-type' element={<NecKType bomInfo={[]} />} /> */}
                     {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
