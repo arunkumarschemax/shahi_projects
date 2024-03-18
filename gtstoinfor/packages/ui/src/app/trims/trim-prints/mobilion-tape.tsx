@@ -96,12 +96,12 @@ export const  Mobilontape = (props: MobilonTapeProps) => {
       <Card title={'MOBION TAPE'}  extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="mobilon-tape-table"
+                filename="Mobilon Tape"
                 sheet="sheet 1"
                 buttonText="Excel" />
        </>}>
-      <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+      <table id="mobilon-tape-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
         <thead>
           <tr>
             <th style={{ width: '3%' }}>MATERIAL - MOBILON TAPE</th>

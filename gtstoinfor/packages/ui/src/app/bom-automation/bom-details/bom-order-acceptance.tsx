@@ -444,7 +444,7 @@ req.toDate = dayjs(form.getFieldValue('createdAt')[1]).format('YYYY-MM-DD')
                 layout='vertical'>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 5 }}  >
-                        <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
+                        <Form.Item name='createdAt' label='Document Date' rules={[{ required: true, message: 'Created Date is required' }]}>
                             <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} onChange={createdDateHandler} />
                         </Form.Item>
                     </Col>

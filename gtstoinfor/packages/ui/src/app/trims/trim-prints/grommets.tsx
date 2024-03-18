@@ -95,13 +95,13 @@ function handleButtonTrim(){
        <Card title={'GROOMETS'}  extra={<><span><Button onClick={handlePrint}>Print</Button></span> <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
-                table="something"
-                filename="tablexls"
+                table="grommets-table"
+                filename="Grommets"
                 sheet="sheet 1"
-                buttonText="Excel" />
+                buttonText={<span><Button type="primary">Excel</Button></span>}/>
        </>}>
-       {groupedData.map((group, groupIndex) => (
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+      
+            <table id="grommets-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                  <thead>
                 <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
@@ -116,6 +116,7 @@ function handleButtonTrim(){
                     <th style={{ width: '3%' }}>SUPPLIER</th>
                     </tr>
                     </thead>
+        {groupedData.map((group, groupIndex) => (
                     <tbody>
       {group.map((rec, rowIndex) => (
                                 <tr key={rowIndex}>
@@ -137,10 +138,11 @@ function handleButtonTrim(){
                        
                          </tr>
                          ))}
+                         
                         </tbody>
+            ))}
                         
                </table>
-            ))}
         </Card>
         </div>
        

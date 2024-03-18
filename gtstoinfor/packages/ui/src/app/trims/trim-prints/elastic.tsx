@@ -3,6 +3,7 @@ import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import React from "react";
 import { useEffect, useRef, useState } from "react"
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 export interface Elasticprops {
   itemId: any,
@@ -12,7 +13,13 @@ export const Elastic = (props: Elasticprops) => {
     const [bomInfo, setBomInfo] = useState<any>([]);
     const { itemId, poLines } = props
     const service = new BomService();
+    const [tablesGenerated, setTablesGenerated] = useState(false);
 
+    useEffect(() => {
+      if (!tablesGenerated) {
+        generateTables();
+      }
+    }, [tablesGenerated]); 
     useEffect(() => {
       handleElasticTrim()
     }, [])
@@ -29,6 +36,7 @@ export const Elastic = (props: Elasticprops) => {
         service.generateProposalForElasticTrim(bomProposalReq).then((v) => {
           if (v.status) {
             setBomInfo(v.data)
+            setTablesGenerated(true)
           }
         })
       }
@@ -53,6 +61,17 @@ export const Elastic = (props: Elasticprops) => {
         if (groupedData) {
           return Object.keys(groupedData).map((itemNo, index) => (
             <div key={index} style={{ marginBottom: '20px' }}>
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            {/* <h3>Item No: {itemNo}</h3> */}
+            <ReactHTMLTableToExcel
+              id={`excel-button-${index}`}
+              className={`excel-button-${index}`}
+              table={`bom-table-${index}`}
+              filename={`BOM-Item-${itemNo}`}
+              sheet="Sheet 1"
+              buttonText={`Excel`}
+            />
+          </div>
               <table
           style={{borderCollapse: 'collapse', borderBlockColor: 'black',width: '100%',  }}border={1}
           cellSpacing="0"cellPadding="0"
@@ -136,13 +155,15 @@ export const Elastic = (props: Elasticprops) => {
                     </td>
 
                     <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
-                      {item.consumption}
+                      {item.consumption} {item.uom}
                     </td>
                   </>
                 )}
                 
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}-{item.colors[0].combination}</td>
+                {/* <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td> */}
+              <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
+                
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{ item.colors[0]?.reqqty} </td>  
               </tr>

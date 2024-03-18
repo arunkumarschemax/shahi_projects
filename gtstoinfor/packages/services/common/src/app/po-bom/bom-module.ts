@@ -28,6 +28,11 @@ import { ItemAttributesEntity } from "./entittes/item-attributes.entity";
 import { SizehtMatrixEntity } from "./entittes/size-ht-matrix-entity";
 import { ApiSizeMatrixRepo } from "./repo/apasizematrix-repo";
 import { ApiSizeMatrix } from "./entittes/apa-size-matrix-entitys";
+import { HMStyleEntity } from "./entittes/hm-style-entity";
+import { HMStyleController } from "./hm-style-controller";
+import { HMStyleRepo } from "./repo/hm-style-repo";
+import { HMStyleService } from "./hm-style-service";
+import { HMStyleAdapter } from "./adapter/hm-style-adapter";
 
 @Module({
     imports:[
@@ -35,10 +40,10 @@ import { ApiSizeMatrix } from "./entittes/apa-size-matrix-entitys";
 
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity,SizehtMatrixEntity,ApiSizeMatrix
+            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity,SizehtMatrixEntity,ApiSizeMatrix,HMStyleEntity
         ]),
         DpomModule],
-    controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo,ApiSizeMatrixRepo]
+    controllers:[BomController,HMStyleController],
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo,ApiSizeMatrixRepo,HMStyleRepo,HMStyleService,HMStyleAdapter]
 })
 export class bomModule{ }

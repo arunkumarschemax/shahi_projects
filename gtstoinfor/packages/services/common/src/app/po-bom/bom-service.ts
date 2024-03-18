@@ -1084,17 +1084,18 @@ export class BomService {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, combination,itemId,uom, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
             if (!result[key]) {
                 result[key] = {
                     styleNumber, description, use, imCode, itemNo, bomQty: 0,
-                    itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
+                    itemId, poNumber, gender, season, year, color, itemColor, productCode,uom, consumption, colors: [],
                 };
             }
+            const reqqty = bomQty * consumption;
 
-            const reqqty = totalGarmentQty * consumption;
+            // const reqqty = totalGarmentQty * consumption;
             const key2 = `${color}-${itemColor}-${totalGarmentQty}`;
             if (!result[key].colors.find((c: any) => c.key === key2)) {
                 result[key].colors.push({
@@ -1102,7 +1103,7 @@ export class BomService {
                     color,
                     itemColor,
                     reqqty,
-                    totalGarmentQty
+                    totalGarmentQty,bomQty,combination
                 });
             }
 
@@ -1329,7 +1330,7 @@ export class BomService {
             const { geoCode } = bomGeoCode
 
             let key = `${styleNumber}-${imCode}-${itemNo}-${season} `;
-
+// console.log(poBomData,"poBomData++++++++++++at 1332")
             if (!result[key]) {
                 result[key] = {
                     styleNumber, imCode, itemNo, bomQty: 0, itemId,
@@ -1541,7 +1542,29 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+    async generateProposalForHmSheet(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
 
+        const poBomData = await this.poBomRepo.generateProposalForHmSheet(req)
+
+        let data = [...poBomData]
+        const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, teflonSheetSize,description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+            // console.log(season)
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            const key = `${itemNo}`;
+
+            if (!result[key]) {
+                result[key] = {geoCode,styleNumber,description,use,imCode,teflonSheetSize,
+                    itemNo,bomQty: 0,destination,itemId,poNumber,gender, season,year, color,itemColor,productCode,};
+            }
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    }
 
     async getProposalForGumtape(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
@@ -1597,6 +1620,8 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
+
+
 }
 
 
