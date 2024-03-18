@@ -119,7 +119,7 @@ export class TrimService {
     async getItemDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select LEFT(bom_item,4) as item from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and item is not null group by LEFT(item,4)`
+            const query = `select LEFT(bom_item,4) as item from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and bom_item is not null group by LEFT(bom_item,4)`
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
