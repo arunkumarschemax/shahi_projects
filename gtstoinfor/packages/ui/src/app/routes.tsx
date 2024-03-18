@@ -78,6 +78,7 @@ import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
 import Grommets from "./trims/trim-prints/grommets"
 import { Button3Print } from "./trims/trim-prints/button"
+import HmSheet from "./trims/trim-prints/hm-sheet"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -221,7 +222,7 @@ export const AppRoutes = () => {
                     {/* <Route path='elastic' element={<Elastic bomInfo={[]} />} /> */}
                     {/* <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} /> */}
                     {/* <Route path='twilltape' element={<Twilltape bomInfo={[]} />} /> */}
-                   {/* < Route path='grommets' element={<Grommets bomInfo={[]}/>} /> */}
+                   {/* < Route path='hm-sheet' element={<HmSheet bomInfo={[]} />} /> */}
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
                    <Route path='items-view'   element={<ItemsGrid />} />

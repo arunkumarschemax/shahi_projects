@@ -1541,10 +1541,33 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+
+
+
+
+ async generateProposalForHmSheet(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+
+        const poBomData = await this.poBomRepo.generateProposalForHmSheet(req)
+
+        let data = [...poBomData]
+        const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, teflonSheetSize,description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+            // console.log(season)
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            const key = `${itemNo}`;
+
+            if (!result[key]) {
+                result[key] = {geoCode,styleNumber,description,use,imCode,teflonSheetSize,
+                    itemNo,bomQty: 0,destination,itemId,poNumber,gender, season,year, color,itemColor,productCode,};
+            }
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    }
+
+
 }
-
-
-
-
-
-

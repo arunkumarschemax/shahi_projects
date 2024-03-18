@@ -120,6 +120,7 @@ export class BomProposalDataModel {
     fabricCombination?: string
     fit?: string
     sequence?: number
+    teflonSheetSize:string    // HM teflon sheet -size
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
