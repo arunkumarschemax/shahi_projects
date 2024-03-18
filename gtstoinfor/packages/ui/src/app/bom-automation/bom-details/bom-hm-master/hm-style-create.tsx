@@ -1,11 +1,20 @@
 import { HMStyleSharedService } from '@project-management-system/shared-services'
 import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AlertMessages from '../../../common/common-functions/alert-messages'
 import { HMStylesModelDto } from '@project-management-system/shared-models'
 
-const HMStyleCreation = () => {
+export interface hmStyleProps {
+    hmStyleData: any;
+    updateHmStyle: (hmStyle: any) => void;
+    isUpdate: boolean;
+    closeForm: () => void;
+    setDrawerVisible: any;
+    getHmStyle?: () => void;
+  }
+
+const HMStyleCreation = (props: hmStyleProps) => {
 
     const navigate=useNavigate()
     const service = new HMStyleSharedService();
@@ -13,9 +22,41 @@ const HMStyleCreation = () => {
     const {Option} = Select
     const [style,setStyle] =useState<any[]>([]);
     
+    const [initialValues, setInitialValues] = useState();
+
+    useEffect(() => {
+        if (props.hmStyleData) {
+          const valuesToSet = { ...props.hmStyleData };
+    
+          if (props.hmStyleData) {
+            form.setFieldsValue({
+              hmId: props.hmStyleData.hmId,
+              styleNumber: props.hmStyleData.styleNumber,
+              teflonSheetSize: props.hmStyleData.teflonSheetSize,
+              consumption: props.hmStyleData.consumption,
+              
+                    });
+          } else {
+            form.setFieldsValue({
+              hmId: props.hmStyleData.hmId,
+              styleNumber: props.hmStyleData.styleNumber,
+              teflonSheetSize: props.hmStyleData.teflonSheetSize,
+              consumption: props.hmStyleData.consumption,
+ 
+            });
+          }
+    
+          setInitialValues(valuesToSet);
+        }
+    
+      }, [props.hmStyleData]);
+    
+
     const onFinish = (hmDto: HMStylesModelDto) => {  
-        console.log(hmDto,"staaaaaaaatussss");    
-        service.createHMStyle(hmDto).then(res => {
+        if (props.isUpdate) {
+            props.updateHmStyle(hmDto)
+          }  else
+       { service.createHMStyle(hmDto).then(res => {
             if (res.status) {
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 setTimeout(() => {
@@ -25,7 +66,7 @@ const HMStyleCreation = () => {
             }
         }).catch(err => {
             AlertMessages.getErrorMessage(err.message);
-        })
+        })}
     }
 
     
@@ -48,20 +89,50 @@ useEffect(() => {
           })
         
       };
+      let createdUser = "";
+
+      if (!props.isUpdate) {
+        createdUser = localStorage.getItem("createdUser");
+      }
+
+
+
   return (
     <div>
         <Card
-            extra={<span><Button type='primary' onClick={() => navigate('/bom/hm-style-view')}>View</Button></span>} headStyle={{  height: '40px' }}
-            bodyStyle={{ paddingTop: '2px', paddingBottom: '12px' }}
-            title={<h4 style={{ textAlign: 'left', padding: '20px' }}>HM STYLES</h4>}>
-           <Form layout="vertical" form={form} onFinish={onFinish}>
+      title={
+        <span style={{ color: 'white', fontSize: 18 }}> HM STYLE</span>
+      }
+      style={{ textAlign: 'center' }}
+      headStyle={{
+        backgroundColor: '#45c8f6',
+        border: 0,
+        paddingTop: '1%',
+        paddingBottom: '1%',
+      }}
+      extra={
+        props.isUpdate == true ? (
+          ''
+        ) : (
+          <Link to="/bom/hm-style-view">
+            <Button className="panel_button">View </Button>
+          </Link>
+        )
+      }
+    >
+           <Form layout="vertical" form={form} onFinish={onFinish} initialValues={initialValues}>
            <Row gutter={24}>
                     <Form.Item name="hmId" 
                     hidden={true} 
                     >
                         <Input />
                     </Form.Item>
-                    
+                    <Form.Item name="versionFlag" hidden  >
+          <Input />
+        </Form.Item>
+        <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
+          <Input hidden />
+        </Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="styleNumber" label="Style Number"
                         >

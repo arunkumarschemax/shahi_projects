@@ -14,4 +14,7 @@ export class HMStyleSharedService extends CommonAxiosService{
   async getAllStyles(): Promise<AllHMStyleResponseModel> {
     return this.axiosPostCall(this.URL + '/getAllStyles')
   }
+  async updateHMStyle(hmStyle: HMStylesModelDto): Promise<AllHMStyleResponseModel> {
+    return this.axiosPostCall(this.URL + '/updateHMStyle', hmStyle)
+}
 }
