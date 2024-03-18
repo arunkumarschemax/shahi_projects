@@ -89,25 +89,52 @@ const MainWovenLabel = (props) => {
   };
   
 
-  const groupDataBySize = () => {
-    if (bomInfo && bomInfo.length > 0) {
-      const groupedData = {
-        sizeWiseQty: [],
-        TsizeWiseqty: [],
-        SsizeWiseqty: [],
-      };
+  // const groupDataBySize = () => {
+  //   if (bomInfo && bomInfo.length > 0) {
+  //     const groupedData = {
+  //       sizeWiseQty: [],
+  //       TsizeWiseqty: [],
+  //       SsizeWiseqty: [],
+  //     };
 
-      bomInfo.forEach((item) => {
-        groupedData.sizeWiseQty.push(...item.sizeWiseQty);
-        groupedData.TsizeWiseqty.push(...item.TsizeWiseqty);
-        groupedData.SsizeWiseqty.push(...item.SsizeWiseqty);
+  //     bomInfo.forEach((item) => {
+  //       groupedData.sizeWiseQty.push(...item.sizeWiseQty);
+  //       groupedData.TsizeWiseqty.push(...item.TsizeWiseqty);
+  //       groupedData.SsizeWiseqty.push(...item.SsizeWiseqty);
+  //     });
+
+  //     return groupedData;
+  //   }
+
+  //   return null;
+  // };
+
+  const groupDataBySize = () => {
+  if (bomInfo && bomInfo.length > 0) {
+    const groupedData = {
+      sizeWiseQty: [],
+      TsizeWiseqty: [],
+      SsizeWiseqty: [],
+    };
+
+    bomInfo.forEach((item) => {
+      // Sort the sizeWiseQty array based on the desired order
+      const sizeWiseQty = item.sizeWiseQty.sort((a, b) => {
+        const order = ['S', 'M', 'L', 'XS', 'XL'];
+        return order.indexOf(a.size) - order.indexOf(b.size);
       });
 
-      return groupedData;
-    }
+      groupedData.sizeWiseQty.push(...sizeWiseQty);
+      groupedData.TsizeWiseqty.push(...item.TsizeWiseqty);
+      groupedData.SsizeWiseqty.push(...item.SsizeWiseqty);
+    });
 
-    return null;
-  };
+    return groupedData;
+  }
+
+  return null;
+};
+
 
   const removeDuplicateItems = (data) => {
     const uniqueItems = [];
