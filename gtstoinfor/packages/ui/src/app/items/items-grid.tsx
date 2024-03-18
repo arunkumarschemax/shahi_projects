@@ -141,8 +141,10 @@ export const ItemsGrid = () => {
       dataIndex: 'consumptionrequired',
       width: '90px',
       align: 'left',
-      sorter: (a, b) => a.consumptionrequired.localeCompare(b.consumptionrequired),
-      sortDirections: ['ascend', 'descend'],
+      // ...getColumnSearchProps('consumptionrequired'),
+
+      // sorter: (a, b) => a.consumptionrequired.localeCompare(b.consumptionrequired),
+      // sortDirections: ['ascend', 'descend'],
       render: (v) => <Tag>{v ? 'YES' : 'NO'}</Tag>
 
     },

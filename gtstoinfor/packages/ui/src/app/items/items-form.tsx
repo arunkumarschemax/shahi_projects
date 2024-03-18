@@ -141,8 +141,8 @@ export const ItemsForm = (props:ItemsFormProps) => {
               message:'Consumption  Is Required'
             },
             {
-              pattern: /^[0-9]+$/,
-              message: 'Should contain only numbers.'
+              // pattern: /^[0-9]+$/,
+              // message: 'Should contain only numbers.'
             }
           ]}
         >

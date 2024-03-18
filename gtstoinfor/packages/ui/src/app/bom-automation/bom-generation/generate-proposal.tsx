@@ -49,6 +49,7 @@ export default function GenerateProposal(props: Props) {
   const [poidData,setPoidData] = useState<any>([])
   const [hmsheet,setHmsheet] = useState<any>([])
 
+  const [GumTapeData, setGumTapeData] = useState<any>([]);
 
   useEffect(() => {
     getAllTrims();
@@ -322,7 +323,18 @@ export default function GenerateProposal(props: Props) {
   //     }
   //   })
   // }
-
+  function handleGumTapeTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.getProposalForGumtape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setGumTapeData(v.data)
+      }
+    })
+  }
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
     // const headerMapping = {
@@ -579,6 +591,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'HM/ Teflon Sheet'){
       handleHmsheet(val)
     } 
+    if(val.item ===  "Gum Tape"){
+      handleGumTapeTrim(val.itemId)
+    }
   }
 
 
