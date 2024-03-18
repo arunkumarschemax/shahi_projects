@@ -139,7 +139,7 @@ function handleBackingPaper(){
                             </>
                                     )}
                             <td style={{ textAlign: 'center',width:"3%" }} >BUTTON HOLE</td>
-                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}</td>
+                            <td style={{ textAlign: 'center',width:"3%" }} >{rec.color !== null ? rec.color:''}-{rec.combination !== null ?rec.combination:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
                             <td style={{ textAlign: 'center',width:"3%" }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
                             </tr>

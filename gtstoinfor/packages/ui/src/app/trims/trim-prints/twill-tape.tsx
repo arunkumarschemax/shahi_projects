@@ -153,7 +153,7 @@ useEffect(() => {
                                             </td>
                                         </>
                                     )}
-            <td style={{ textAlign: 'center' }}>GMT CODE - {rec.itemColor !== null ? rec.itemColor : ''}</td>
+            <td style={{ textAlign: 'center' }}>GMT CODE - {rec.itemColor !== null ? rec.itemColor : ''}-{rec.combination !== null ? rec. combination:''}</td>
             <td style={{ textAlign: 'center' }}>{rec.color !== null ? rec.color : ''}</td>
             <td style={{ textAlign: 'center' }}>{rec.bomQty !== null ? rec.bomQty : ''}</td>
             </tr>

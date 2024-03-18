@@ -436,6 +436,8 @@ export class BomController {
     @Post('/getProposalForGumtape')
     @ApiBody({ type: BomProposalReq })
     async getProposalForGumtape(@Body() req: any): Promise<CommonResponseModel> {
+        console.log(req,"lllllllllllllllllllllll");
+        
         try {
             return this.bomService.getProposalForGumtape(req)
         } catch (err) {
