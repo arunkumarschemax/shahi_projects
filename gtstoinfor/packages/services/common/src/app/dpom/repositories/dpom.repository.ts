@@ -794,7 +794,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
         }
         if (req.fromDate !== undefined) {
-            query.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+            query.andWhere(`dpom.document_date BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
         }
         if (req.itemStatus !== undefined) {
             if (req.itemStatus === "null") {
@@ -1085,6 +1085,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
 
         const distinctSizes = await distinctSizesQuery.getRawMany();
+        console.log(distinctSizes,'distinct sizes')
 
         // Generate conditional aggregations for each distinct size
         const columnsQuery = distinctSizes

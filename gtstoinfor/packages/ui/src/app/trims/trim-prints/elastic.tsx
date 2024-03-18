@@ -155,13 +155,15 @@ export const Elastic = (props: Elasticprops) => {
                     </td>
 
                     <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
-                      {item.consumption}
+                      {item.consumption} {item.uom}
                     </td>
                   </>
                 )}
                 
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}-{item.colors[0].combination}</td>
+                {/* <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.totalGarmentQty}</td> */}
+              <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
+                
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }}>{ item.colors[0]?.reqqty} </td>  
               </tr>
