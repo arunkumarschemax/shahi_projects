@@ -227,7 +227,7 @@ export const Drawcord = (props: DrawcordProps) => {
                 </td>
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}-{item.colors[0]?.combination}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
             <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>

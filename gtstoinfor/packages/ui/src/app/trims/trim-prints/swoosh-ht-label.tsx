@@ -172,7 +172,7 @@ const generateRows = (data) => {
               </td>
             </>
           )}
-          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.color}</td>
+          <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.color}-{item.combination}</td>
           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemColor}</td>
           <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.bomQty}</td>
           {/* <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.destination}</td> */}

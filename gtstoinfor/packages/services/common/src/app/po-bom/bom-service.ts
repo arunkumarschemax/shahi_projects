@@ -858,10 +858,10 @@ export class BomService {
 
         const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
         // const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        // console.log(poBomZfactorData, '---po bom zfactord data')
+        // console.log(poBomData, '---po bom  data')
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty ,combination} = currentItem;
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
@@ -892,6 +892,7 @@ export class BomService {
                     poQty,
                     attribute,
                     attributeValue,
+                    combination,
                     sizeWiseQty: [],
                     // colorData: []
                 };
@@ -941,7 +942,7 @@ export class BomService {
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
 
 
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, combination,bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination === destination);
             const { geoCode } = bomGeoCode;
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
@@ -967,7 +968,9 @@ export class BomService {
                     key: key2,
                     color,
                     itemColor,
-                    bomQty
+                    bomQty,
+                    combination,
+                    
                 });
             }
             return result;
@@ -1039,7 +1042,7 @@ export class BomService {
         const poBomData = await this.poBomRepo.getProposalsData(req)
 
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty, poQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode,uom } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
@@ -1070,6 +1073,7 @@ export class BomService {
                     color,
                     itemColor,
                     productCode,
+                    uom
                 };
             }
             result[key].bomQty += bomQty;
@@ -1541,6 +1545,86 @@ export class BomService {
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
     
+    async generateProposalForHmSheet(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+
+        const poBomData = await this.poBomRepo.generateProposalForHmSheet(req)
+
+        let data = [...poBomData]
+        const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, teflonSheetSize,description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+            // console.log(season)
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            const key = `${itemNo}`;
+
+            if (!result[key]) {
+                result[key] = {geoCode,styleNumber,description,use,imCode,teflonSheetSize,
+                    itemNo,bomQty: 0,destination,itemId,poNumber,gender, season,year, color,itemColor,productCode,};
+            }
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    }
+
+    async getProposalForGumtape(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+
+        
+        const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+        console.log(poBomZfactorData, '---po bom zfactord data')
+        let data = [...poBomZfactorData]
+        const groupedData: any = poBomZfactorData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty } = currentItem;
+            // console.log(season)
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+
+            let key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+           
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    use,
+                    imCode,
+                    itemNo,
+                    bomQty: 0,
+                    destination,
+                    itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
+                    color,
+                    itemColor,
+                    productCode,
+                    bQty,
+                    poQty,
+                    attribute,
+                    attributeValue,
+                    sizeWiseQty: [],
+                    // colorData: []
+                };
+            }
+            const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+            if (sizeIndex >= 0) {
+                result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+            } else {
+                result[key].sizeWiseQty.push({ size, qty: bomQty });
+            }
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        // console.log(groupedData,'@@@@@@@@@@@@@@@')
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    }
+
+
 }
 
 
