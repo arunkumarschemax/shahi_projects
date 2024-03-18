@@ -37,4 +37,19 @@ export class HMStyleService {
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
+
+
+  async getAllStyles(): Promise<CommonResponseModel> {
+    const records = await this.repository;
+    const query = `SELECT s.id ,s.style as styleNumber
+    FROM styles s`
+    const result = await this.repository.query(query)
+    if (result) {
+        return new CommonResponseModel(true, 1, 'Data Retrived', result)
+    } else {
+        return new CommonResponseModel(false, 0, 'No Data', [])
+
+    }
+}
+    
 }

@@ -1,6 +1,6 @@
 import { HMStyleSharedService } from '@project-management-system/shared-services'
-import { Button, Card, Col, Form, Input, Row, message } from 'antd'
-import React from 'react'
+import { Button, Card, Col, Form, Input, Row, Select, message } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AlertMessages from '../../../common/common-functions/alert-messages'
 import { HMStylesModelDto } from '@project-management-system/shared-models'
@@ -10,7 +10,9 @@ const HMStyleCreation = () => {
     const navigate=useNavigate()
     const service = new HMStyleSharedService();
     const [form] = Form.useForm();
-
+    const {Option} = Select
+    const [style,setStyle] =useState<any[]>([]);
+    
     const onFinish = (hmDto: HMStylesModelDto) => {  
         console.log(hmDto,"staaaaaaaatussss");    
         service.createHMStyle(hmDto).then(res => {
@@ -18,7 +20,6 @@ const HMStyleCreation = () => {
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 setTimeout(() => {
                     message.success('Submitted successfully');
-                    window.location.reload();
                     navigate("/bom/hm-style-view")
                 }, 500);;
             }
@@ -27,12 +28,26 @@ const HMStyleCreation = () => {
         })
     }
 
+    
+useEffect(() => {
+    getAllStyles();
+},[])
+
     const clearData = () => {
         form.resetFields()
       }
 
-
-
+      const getAllStyles = () => {
+        service
+          .getAllStyles().then((res) => {
+            if (res.status) {
+              setStyle(res.data);
+            } else {
+              setStyle([]);
+            }
+          })
+        
+      };
   return (
     <div>
         <Card
@@ -50,7 +65,11 @@ const HMStyleCreation = () => {
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name="styleNumber" label="Style Number"
                         >
-                            <Input placeholder='Enter Style Number' />
+                  <Select  placeholder='Select Style Number' style={{textAlign:"center"}}  showSearch >
+                      {style.map((item) => (
+                        <Option key={item.id} value={item.styleNumber}>{item.styleNumber}</Option>
+                      ))}
+                    </Select>
                         </Form.Item>
 
                     </Col>

@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
 import { HMStyleService } from './hm-style-service';
 import { HMStyleDto } from './dto/hm-style-dto';
-import { AllHMStyleResponseModel, HMStylesModelDto } from '@project-management-system/shared-models';
+import { AllHMStyleResponseModel, CommonResponseModel, HMStylesModelDto } from '@project-management-system/shared-models';
 
 
 @ApiTags('hm-style')
@@ -27,6 +27,18 @@ export class HMStyleController {
     async getHMStyle(): Promise<AllHMStyleResponseModel> {
       const data=await this.hmStyleService.getHMStyle()
       return  data
+  }
+
+
+  
+  @Post('/getAllStyles')
+  async getAllStyles():Promise<CommonResponseModel>{
+      try{
+          return this.hmStyleService.getAllStyles()
+      }
+      catch(err){
+          return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+      }
   }
 
 }
