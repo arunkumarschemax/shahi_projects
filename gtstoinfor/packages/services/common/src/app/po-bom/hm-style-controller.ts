@@ -3,7 +3,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
 import { HMStyleService } from './hm-style-service';
 import { HMStyleDto } from './dto/hm-style-dto';
-import { AllHMStyleResponseModel } from '@project-management-system/shared-models';
+import { AllHMStyleResponseModel, CommonResponseModel, HMStylesModelDto } from '@project-management-system/shared-models';
 
 
 @ApiTags('hm-style')
@@ -14,11 +14,41 @@ export class HMStyleController {
     private readonly applicationExceptionHandler: ApplicationExceptionHandler) { }
 
   @Post('/createHMStyle')
-  async createHMStyle(@Body() HMStylesModelDto: any): Promise<AllHMStyleResponseModel> {
+  @ApiBody({type:HMStylesModelDto})
+  async createHMStyle(@Body() hMStylesModelDto: any): Promise<AllHMStyleResponseModel> {
     try {
-      return await this.hmStyleService.createHMStyle(HMStylesModelDto);
+      return await this.hmStyleService.createHMStyle(hMStylesModelDto);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllHMStyleResponseModel, error);
     }
   }
+
+  @Post('/getHMStyle')
+    async getHMStyle(): Promise<AllHMStyleResponseModel> {
+      const data=await this.hmStyleService.getHMStyle()
+      return  data
+  }
+
+
+  
+  @Post('/getAllStyles')
+  async getAllStyles():Promise<CommonResponseModel>{
+      try{
+          return this.hmStyleService.getAllStyles()
+      }
+      catch(err){
+          return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+      }
+    }
+  
+  @Post('/updateHMStyle')
+  @ApiBody({ type: HMStyleDto })
+  async updateHMStyle(@Body() hmStyleTypeDto: any, isUpdate: boolean = false): Promise<AllHMStyleResponseModel> {
+    try {
+      return await this.hmStyleService.updateHMStyle(hmStyleTypeDto);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllHMStyleResponseModel, error)
+    }
+
+}
 }

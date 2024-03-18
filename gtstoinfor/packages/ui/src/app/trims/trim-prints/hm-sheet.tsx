@@ -89,18 +89,16 @@ function handleHmsheet(){
   return (
     <div id="print">
       <Card title={'HM SHEET'} extra={<><span><Button onClick={handlePrint}>Print</Button></span> 
-       </>}>
-        {groupedData.map((group, index,itemNo) => (
-          <div key={index} style={{ marginBottom: '20px' }}>
-             <ReactHTMLTableToExcel
+      <ReactHTMLTableToExcel
                 id="test-table-xls-button"
                 className="download-table-xls-button"
                 table="Hm-table"
                 filename="HM-Sheet"
                 sheet="sheet 1"
-                buttonText={<span><Button type="primary">Excel</Button></span>}/>
-       
-            <table id={`Hm-table-${index}` }style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
+                buttonText={<span><Button >Excel</Button></span>}/>
+       </>}>
+        
+            <table id="Hm-table" style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding="0">
               <thead>
                 <tr>
                   <th style={{ width: '3%' }}>ITEM</th>
@@ -110,6 +108,8 @@ function handleHmsheet(){
                   <th style={{ width: '3%' }}>SIZE</th>
                 </tr>
               </thead>
+        {groupedData.map((group, index,itemNo) => (
+
               <tbody>
                 {group.map((rec, idx) => (
                   <tr key={idx}>
@@ -121,10 +121,9 @@ function handleHmsheet(){
                   </tr>
                 ))}
               </tbody>
+        ))}
             
             </table>
-          </div>
-        ))}
       </Card>
     </div>
   );
