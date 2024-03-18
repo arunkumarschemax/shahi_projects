@@ -412,50 +412,14 @@ export default function BomGeneration(props: Props) {
             .join("/");
 
         let exportingColumns: IExcelColumn[] = []
-        exportingColumns = [
+        exportingColumns = Object.keys(filterData[0]).map((key) => {
+            return {
+                title: bomGenerationColumnsMapping[key] ? bomGenerationColumnsMapping[key] : key,
+                dataIndex: key,
 
-            {
-                title: 'PO + Line',
-                dataIndex: 'poLine',
-
-            },
-            {
-                title: 'Bom Item',
-                dataIndex: 'item',
-            },
-            {
-                title: 'Style',
-                dataIndex: 'styleNumber',
-            },
-
-            {
-                title: 'Geo Code',
-                dataIndex: 'geoCode',
-            },
-            {
-                title: 'Destination Country',
-                dataIndex: 'destinationCountry'
-            },
-
-            {
-                title: ' Season Code',
-                dataIndex: 'planningSeasonCode',
-
-            },
-            {
-                title: ' Season Year',
-                dataIndex: 'planningSeasonYear'
-            },
-            {
-                title: "Product Code",
-                dataIndex: 'productCode'
-            },
-            {
-                title: "Color Desc",
-                dataIndex: 'colorDesc'
-            },
-        ]
-
+            }
+        }
+        )
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
