@@ -99,27 +99,17 @@ useEffect(() => {
 
   return (
     <div>
-        <Card
-      title={
-        <span style={{ color: 'white', fontSize: 18 }}> HM STYLE</span>
-      }
-      style={{ textAlign: 'center' }}
-      headStyle={{
-        backgroundColor: '#45c8f6',
-        border: 0,
-        paddingTop: '1%',
-        paddingBottom: '1%',
-      }}
-      extra={
-        props.isUpdate == true ? (
-          ''
-        ) : (
-          <Link to="/bom/hm-style-view">
-            <Button className="panel_button">View </Button>
-          </Link>
-        )
-      }
-    >
+        <Card   title={<span style={{fontWeight: "bold"}}>HM Styles</span>}
+                 extra={
+                   props.isUpdate == true ? (
+                     ''
+                   ) : (
+                     <Link to="/bom/hm-style-view">
+                       <Button className="panel_button" type='primary'>View </Button>
+                     </Link>
+                   )
+                 }
+               >
            <Form layout="vertical" form={form} onFinish={onFinish} initialValues={initialValues}>
            <Row gutter={24}>
                     <Form.Item name="hmId" 
@@ -133,48 +123,42 @@ useEffect(() => {
         <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
           <Input hidden />
         </Form.Item>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="styleNumber" label="Style Number"
-                        >
-                  <Select  placeholder='Select Style Number' style={{textAlign:"center"}}  showSearch >
-                      {style.map((item) => (
-                        <Option key={item.id} value={item.styleNumber}>{item.styleNumber}</Option>
-                      ))}
-                    </Select>
-                        </Form.Item>
+                    
+                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
+                    <Form.Item name="styleNumber" label="Style Number" >
+                         <Select  placeholder='Select Style Number' style={{textAlign:"center"}}  showSearch >
+                         {style.map((item) => (
+                           <Option key={item.id} value={item.styleNumber}>{item.styleNumber}</Option>
+                         ))}
+                       </Select>
+                    </Form.Item>
+                </Col>
 
-                    </Col>
-
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="teflonSheetSize" label="Teflon Sheet Size"
-                        
-                        >
+                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
+                    <Form.Item name="teflonSheetSize" label="Teflon Sheet Size">
                             <Input placeholder='Enter Teflon Sheet Size' />
-                        </Form.Item>
-
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name="consumption" label="Consumption"
-                          
-                        >
-                            <Input placeholder='Enter Color Consumption ' />
-
-                        </Form.Item>
-                    </Col>
+                    </Form.Item>
+                </Col>
+                    
+                <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
+                    <Form.Item name="consumption" label="Consumption" >
+                            <Input placeholder='Enter Consumption ' />
+                    </Form.Item>
+                </Col>
                     
                 </Row>
+                
                 <Row>
                         <Col span={24} style={{ textAlign: 'right' }}>
-                            <Button type="primary" htmlType="submit">
+                            <Button type="primary" htmlType="submit" style={{backgroundColor:"green"}}>
                                 Submit
                             </Button>
                             <Button htmlType="button" style={{ margin: '0 14px' }}
-                                onClick={clearData}
-                            >
+                                onClick={clearData} >
                                 Reset
                             </Button>
                         </Col>
-                    </Row>
+                </Row>
 
             </Form> 
         </Card>
