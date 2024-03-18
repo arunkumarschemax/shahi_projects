@@ -1093,8 +1093,9 @@ export class BomService {
                     itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
                 };
             }
+            const reqqty = bomQty * consumption;
 
-            const reqqty = totalGarmentQty * consumption;
+            // const reqqty = totalGarmentQty * consumption;
             const key2 = `${color}-${itemColor}-${totalGarmentQty}`;
             if (!result[key].colors.find((c: any) => c.key === key2)) {
                 result[key].colors.push({
@@ -1102,7 +1103,7 @@ export class BomService {
                     color,
                     itemColor,
                     reqqty,
-                    totalGarmentQty
+                    totalGarmentQty,bomQty
                 });
             }
 
