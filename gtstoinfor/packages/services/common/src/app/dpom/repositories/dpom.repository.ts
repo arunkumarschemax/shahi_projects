@@ -1110,7 +1110,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`LEFT(d.bom_item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
-            query.andWhere(`DATE(d.created_at) BETWEEN DATE('${req.fromDate}') AND DATE('${req.toDate}')`)
+            query.andWhere(`DATE(d.document_date) BETWEEN DATE('${req.fromDate}') AND DATE('${req.toDate}')`)
         }
         if (req.poLine !== undefined) {
             query.andWhere(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })

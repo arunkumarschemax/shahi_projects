@@ -54,7 +54,6 @@ export default function BomGeneration(props: Props) {
     }, [])
 
     const createdDateHandler = (val) => {
-        console.log(val)
         if (val) {
             setItemDisable(false)
         }
@@ -322,7 +321,8 @@ export default function BomGeneration(props: Props) {
                             return value
                         }
                         else {
-                            return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
+                            return value
+                            // return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
                         }
                     }
                     // bomGenerationColumnsMapping[key] && bomGenerationColumnsMapping[key] !='Item' ?
@@ -350,8 +350,13 @@ export default function BomGeneration(props: Props) {
         setSearchText('');
     };
 
-
+    let selectAllClicked = false;
     const onSelectChange = (newSelectedRowKeys: any, selectedRows: any[]) => {
+        console.log('1')
+        if (selectAllClicked) {
+            selectAllClicked = false; // Reset the flag
+            return; // Return early if "Select All" was clicked
+        }
         const isItemNoNull = selectedRows.find((v) => v.item == null)
         if (isItemNoNull) {
             notification.info({ message: `Please update ItemNo for all the selected PO's`, placement: 'topRight' })
@@ -364,35 +369,36 @@ export default function BomGeneration(props: Props) {
 
     };
 
-    const onSelectAllChange = (e) => {
-        const checked = e.target.checked;
-        const allRowKeys = filterData.map((v) => v.poLine)
-        setSelectedRowKeys(checked ? allRowKeys : []);
+    const onSelectAllChange = (selected, selectedRows, changeRows) => {
+        console.log('2')
+        if (selected) {
+            selectAllClicked=true
+            const isItemNoNull = filterData.find((v) => v.item == null)
+            if (isItemNoNull) {
+                notification.info({ message: `Please update ItemNo for all the selected PO: ${isItemNoNull.poLine}`, placement: 'topRight' })
+                return
+            }
+            console.log('item is nujll')
+            const allKeys = filterData.map(row => row.poLine);
+            setSelectedRowKeys(allKeys);
+            setSelectedData(allKeys)
+            props.sendSelectedData(filterData)
+            props.sendSelectedKeys(allKeys)
+        } else {
+            setSelectedRowKeys([]);
+            setSelectedData([])
+            props.sendSelectedData([])
+            props.sendSelectedKeys([])
+        }
     };
 
     const rowSelection = {
         selectedRowKeys,
         selectedData,
         onChange: onSelectChange,
-        // onSelectAll: onSelectAllChange,
+        onSelectAll: onSelectAllChange,
     };
 
-
-    const changedSizesColumns = [
-        {
-            title: 'Po+Line',
-            dataIndex: 'poLine',
-
-        },
-        {
-            title: 'Size',
-            dataIndex: 'size',
-        },
-        {
-            title: 'Qty',
-            dataIndex: 'qty',
-        }
-    ]
 
     function onReset() {
         setFilterData([])
