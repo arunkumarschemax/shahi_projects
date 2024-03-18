@@ -1085,6 +1085,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
 
         const distinctSizes = await distinctSizesQuery.getRawMany();
+        console.log(distinctSizes,'distinct sizes')
 
         // Generate conditional aggregations for each distinct size
         const columnsQuery = distinctSizes

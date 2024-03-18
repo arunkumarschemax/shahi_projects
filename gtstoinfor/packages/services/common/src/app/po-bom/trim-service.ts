@@ -119,7 +119,7 @@ export class TrimService {
     async getItemDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select LEFT(item,4) as item from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and item is not null group by LEFT(item,4)`
+            const query = `select LEFT(bom_item,4) as item from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and item is not null group by LEFT(item,4)`
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
@@ -221,7 +221,7 @@ export class TrimService {
     async getProductCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select id ,product_code from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and product_code is not null group by product_code `
+            const query = `select id ,product_code from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and product_code is not null group by product_code `
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
@@ -235,7 +235,7 @@ export class TrimService {
     async getSeasonCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select id ,planning_season_code from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_code is not null group by planning_season_code `
+            const query = `select id ,planning_season_code from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_code is not null group by planning_season_code `
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
@@ -249,7 +249,7 @@ export class TrimService {
     async getSeasonYearDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
-            const query = `select id ,planning_season_year from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_year is not null group by planning_season_year `
+            const query = `select id ,planning_season_year from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and planning_season_year is not null group by planning_season_year `
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
@@ -263,7 +263,7 @@ export class TrimService {
     
     async getPpmStyleNumberByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
-            const query = `select id ,style_number from dpom where DATE(created_at) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and style_number is not null group by style_number `
+            const query = `select id ,style_number from dpom where DATE(document_date) between DATE('${req.fromDate}') and DATE('${req.toDate}') and doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' and style_number is not null group by style_number `
             const data = await this.dataSource.query(query)
             if (data) {
                 return new CommonResponseModel(true, 1, 'Data retreived', data)
