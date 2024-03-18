@@ -29,4 +29,15 @@ export class HMStyleController {
       return  data
   }
 
+  
+  @Post('/updateHMStyle')
+  @ApiBody({ type: HMStyleDto })
+  async updateHMStyle(@Body() hmStyleTypeDto: any, isUpdate: boolean = false): Promise<AllHMStyleResponseModel> {
+    try {
+      return await this.hmStyleService.updateHMStyle(hmStyleTypeDto);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllHMStyleResponseModel, error)
+    }
+  }
+
 }

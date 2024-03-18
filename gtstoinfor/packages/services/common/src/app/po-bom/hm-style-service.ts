@@ -37,4 +37,40 @@ export class HMStyleService {
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
+
+  async updateHMStyle(hmStyleDto: HMStyleDto): Promise<CommonResponseModel> {
+    try {
+      const hmStyles = await this.gethmStyleById(hmStyleDto.hmId);
+
+      if (hmStyles) {
+
+        await this.repository.update({ hmId: hmStyles.hmId }, {
+          ...hmStyleDto,
+        });
+
+        const updatedDto: HMStyleDto = this.adapter.convertEntityToDto({
+          ...hmStyles,
+          ...hmStyleDto,
+        });
+
+        return new CommonResponseModel(true, 10115, 'Pensioner record is updated successfully', updatedDto);
+      } else {
+        throw new ErrorResponse(99998, 'No Records Found');
+      }
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async gethmStyleById(hmId: number): Promise<HMStyleEntity> {
+    const Response = await this.repository.findOne({
+      where: { hmId: hmId }
+    });
+    if (Response) {
+      return Response;
+    } else {
+      return null;
+    }
+  }
+
 }
