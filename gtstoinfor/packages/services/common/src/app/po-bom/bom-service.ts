@@ -1084,13 +1084,13 @@ export class BomService {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, combination,itemId,uom, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
             if (!result[key]) {
                 result[key] = {
                     styleNumber, description, use, imCode, itemNo, bomQty: 0,
-                    itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
+                    itemId, poNumber, gender, season, year, color, itemColor, productCode,uom, consumption, colors: [],
                 };
             }
             const reqqty = bomQty * consumption;
@@ -1103,7 +1103,7 @@ export class BomService {
                     color,
                     itemColor,
                     reqqty,
-                    totalGarmentQty,bomQty
+                    totalGarmentQty,bomQty,combination
                 });
             }
 

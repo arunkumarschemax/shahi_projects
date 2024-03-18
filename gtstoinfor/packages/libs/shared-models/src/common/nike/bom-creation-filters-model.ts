@@ -120,6 +120,7 @@ export class BomProposalDataModel {
     fabricCombination?: string
     fit?: string
     sequence?: number
+    uom?:number
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
