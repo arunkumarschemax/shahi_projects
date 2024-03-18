@@ -2,15 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LogoEntity } from "./logo-entity";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { LogoDto } from "./logo.dto";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class LogoService{
     constructor(
         @InjectRepository(LogoEntity)
         private repo : Repository<LogoEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActiveLogo():Promise<CommonResponseModel>{
@@ -97,6 +99,19 @@ export class LogoService{
             }
         } catch (err) {
             return err;
+        }
+      }
+      async getAllLogosForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+        try {
+          console.log("&&&&&&&&&&&&&&&&&&&&&&&&&")
+            const data = await this.m3TrimsCategoryMappingRepo.getAllLogoByCategory(req.categoryId)
+            if(data.status){
+                return new CommonResponseModel(true, 1, 'Hole data retrieved successfully',data.data)
+            }else{
+                return new CommonResponseModel(false, 0, 'No data found',[])
+            }
+        } catch (err) {
+          return err;
         }
       } 
 

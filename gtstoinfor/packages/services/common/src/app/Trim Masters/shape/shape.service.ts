@@ -1,16 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { ShapeEntity } from "./shape-entity";
 import { ShapeDto } from "./shape-dto";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class ShapeService{
     constructor(
         @InjectRepository(ShapeEntity)
         private repo : Repository<ShapeEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActiveShape():Promise<CommonResponseModel>{
@@ -114,5 +116,17 @@ export class ShapeService{
         }
       }
 
+      async getAllShapeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            let data = await this.m3TrimsCategoryMappingRepo.getAllShapeByCategory(req.categoryId)
+            if(data.status){
+              return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+            }else{
+              return new CommonResponseModel(false, 1, 'No data found',[])
+            }
+          }catch(err){
+            throw(err)
+          }
+      }
 
 }

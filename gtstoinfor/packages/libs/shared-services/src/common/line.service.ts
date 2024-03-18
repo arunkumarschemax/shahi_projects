@@ -1,4 +1,4 @@
-import { CommonResponseModel, LineDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, LineDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class LineService extends CommonAxiosService{
@@ -26,4 +26,10 @@ export class LineService extends CommonAxiosService{
   async  getLineById(req: LineDto): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + '/getLineById',req)
 }
+
+async getAllTrimLineForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+  return this.axiosPostCall(this.URL + '/getAllTrimLineForCategory',req)
+}
+
+
 }

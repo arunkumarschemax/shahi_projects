@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { PartsService } from "./parts.service";
 import { PartsDto } from "./parts.dto";
 
@@ -70,5 +70,14 @@ export class PartsController{
               return this.applicationHandler.returnException(CommonResponseModel,error)
           }
       }
+      @Post('/getAllPartsForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllPartsForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllPartsForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
+            }
+        }
 
 }

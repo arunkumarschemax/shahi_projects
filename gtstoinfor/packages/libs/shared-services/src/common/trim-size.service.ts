@@ -1,4 +1,4 @@
-import { CommonResponseModel, TrimSizeDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, TrimSizeDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class TrimSizeService extends CommonAxiosService{
@@ -23,4 +23,8 @@ export class TrimSizeService extends CommonAxiosService{
     async activateOrDeactivateSize(req: TrimSizeDto): Promise<CommonResponseModel> {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateSize",req)
     }
+    async getAllTrimSizeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+      return this.axiosPostCall(this.URL + "/getAllTrimSizeForCategory",req)
+    }
+
 }

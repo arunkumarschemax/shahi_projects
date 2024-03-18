@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { SliderService } from "./slider-service";
 import { SliderDto } from "./slider-dto";
 
@@ -48,6 +48,15 @@ export class SliderController{
                 return await this.service.createSlider(req,true)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+        @Post('/getAllSlidersForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllSlidersForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllSlidersForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

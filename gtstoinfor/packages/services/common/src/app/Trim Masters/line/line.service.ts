@@ -1,16 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { LineEntity } from "./line-entity";
 import { LineDto } from "./line-dto";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class LineService{
     constructor(
         @InjectRepository(LineEntity)
         private repo : Repository<LineEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActiveLines():Promise<CommonResponseModel>{
@@ -111,6 +113,18 @@ export class LineService{
         } catch (err) {
           return err;
         }
+      }
+      async getAllTrimLineForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            let data = await this.m3TrimsCategoryMappingRepo.getAllTrimLineByCategory(req.categoryId)
+            if(data.status){
+              return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+            }else{
+              return new CommonResponseModel(false, 1, 'No data found',[])
+            }
+          }catch(err){
+            throw(err)
+          }
       }
 
 }

@@ -1,4 +1,4 @@
-import { CommissionResponseModel, LengthDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommissionResponseModel, CommonResponseModel, LengthDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class LengthService extends CommonAxiosService{
@@ -19,4 +19,8 @@ export class LengthService extends CommonAxiosService{
     async getAllActiveLengths(): Promise<CommissionResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllActiveLengths")
     }
+    async getAllTrimLengthForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+      return this.axiosPostCall(this.URL + "/getAllTrimLengthForCategory",req)
+    }
+
 }

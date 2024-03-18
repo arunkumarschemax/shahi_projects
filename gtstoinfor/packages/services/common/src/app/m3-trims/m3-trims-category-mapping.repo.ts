@@ -246,4 +246,192 @@ export class M3TrimsCategoryMappingRepo extends Repository<CategoryMappingEntity
           }
     }
 
+    async getAllLogoByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.logo_id AS uomId, f.logo AS logo from category_mapping cm left join logo f on f.logo_id = cm.logo_id where trim_category =`+req+` and cm.logo_id IS NOT NULL order by f.logo ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllTrimBuyersByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.buyer_id AS buyerId, f.trim_buyer AS buyer from category_mapping cm left join trim_buyer f on f.trim_buyer_id = cm.buyer_id where trim_category =`+req+` and cm.buyer_id IS NOT NULL order by f.trim_buyer ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllTrimSizeByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.size_id AS sizeId, f.trim_size AS size from category_mapping cm left join trim_size f on f.trim_size_id = cm.size_id where trim_category =`+req+` and cm.size_id IS NOT NULL order by f.trim_size ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllTrimLengthByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.length_id AS lengthId, f.length AS length from category_mapping cm left join length f on f.length_id = cm.length_id where trim_category =`+req+` and cm.length_id IS NOT NULL order by f.length ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllTrimLineByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.line_id AS lineId, f.line AS line from category_mapping cm left join line f on f.line_id = cm.line_id where trim_category =`+req+` and cm.line_id IS NOT NULL order by f.line ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+    async getAllPartsByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.parts_id AS partsId, f.parts AS parts from category_mapping cm left join parts f on f.parts_id = cm.parts_id where trim_category =`+req+` and cm.parts_id IS NOT NULL order by f.parts ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllPlyByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.ply_id AS plyId, f.ply AS ply from category_mapping cm left join ply f on f.ply_id = cm.ply_id where trim_category =`+req+` and cm.ply_id IS NOT NULL order by f.ply ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllShapeByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.shape_id AS shapeId, f.shape AS shape from category_mapping cm left join shape f on f.shape_id = cm.shape_id where trim_category =`+req+` and cm.shape_id IS NOT NULL order by f.shape ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
+    async getAllSlidersByCategory(req:number): Promise<CommonResponseModel> {
+        try{
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+
+            let query = `Select cm.slider_id AS sliderId, f.slider AS slider from category_mapping cm left join slider f on f.slider_id = cm.slider_id where trim_category =`+req+` and cm.slider_id IS NOT NULL order by f.slider ASC`;
+            console.log(query);
+
+            const data = await this.dataSource.query(query)
+            console.log(data);
+            if(data.length > 0){
+                return new CommonResponseModel(true,1001,"Data retrived successfully. ",data);
+            }
+            else{
+                return new CommonResponseModel(false,1010,"No data found. ",);
+            }
+        }   
+        catch (err) {
+            return err;
+          }
+    }
+
 }

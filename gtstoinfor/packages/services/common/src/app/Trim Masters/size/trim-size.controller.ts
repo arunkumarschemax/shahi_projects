@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { TrimSizeService } from "./trim-size.service";
 import { TrimSizeDto } from "./trim-size.dto";
 
@@ -58,6 +58,15 @@ export class TrimSizeController{
                 return await this.service.activateOrDeactivateSize(req)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+        @Post('/getAllTrimSizeForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllTrimSizeForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllTrimSizeForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { LogoService } from "./logo.service";
 import { LogoDto } from "./logo.dto";
 
@@ -58,6 +58,15 @@ export class LogoController{
                 return await this.service.activateOrDeactivateLogo(req)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+        @Post('/getAllLogosForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllLogosForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllLogosForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

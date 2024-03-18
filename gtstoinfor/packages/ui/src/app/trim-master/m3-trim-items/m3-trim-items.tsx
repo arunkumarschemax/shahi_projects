@@ -1,4 +1,4 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualityService,QualitysService,ShapeService,SizeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,LogoService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualityService,QualitysService,ShapeService,SizeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, Upload, UploadProps, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -14,6 +14,7 @@ const { Option } = Select;
 export function M3TrimItemsForm({props}) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const logoService = new LogoService();
   const structureService = new StructureService();
   const categoryService = new CategoryService();
   const contentService = new ContentService();
@@ -60,6 +61,7 @@ export function M3TrimItemsForm({props}) {
   const [mapDataId, setMapDataId] = useState<any[]>([])
   const [buyerCode, setBuyerCode] = useState<any[]>([])
   const [trimBuyerData, setTrimBuyerData] = useState<any[]>([])
+  const [logoData, setLogoData] = useState<any[]>([])
   const [partsData, setPartsData] = useState<any[]>([]);
   const [plyData, setPlyData] = useState<any[]>([]);
   const [lengthData, setLengthData] = useState<any[]>([]);
@@ -123,6 +125,9 @@ export function M3TrimItemsForm({props}) {
     if (mapData[0]?.structure === true) {
       getStructures(mapData[0].trimId);
     }
+    if (mapData[0]?.logo === true) {
+      getLogo(mapData[0].trimId);
+    }
     if (mapData[0]?.category === true) {
       getCategories(mapData[0].trimId);
     }
@@ -154,28 +159,28 @@ export function M3TrimItemsForm({props}) {
       getColors(mapData[0].trimId);
     }
     if (mapData[0]?.buyer === true) {
-      getAllTrimBuyers();
+      getAllTrimBuyers(mapData[0].trimId);
     }
     if (mapData[0]?.length === true) {
-      getAllLength();
+      getAllLength(mapData[0].trimId);
     }
     if (mapData[0]?.line === true) {
-      getAllLine();
+      getAllLine(mapData[0].trimId);
     }
     if (mapData[0]?.parts === true) {
-      getAllParts();
+      getAllParts(mapData[0].trimId);
     }
     if (mapData[0]?.ply === true) {
-      getAllPly();
+      getAllPly(mapData[0].trimId);
     }
     if (mapData[0]?.shape === true) {
-      getAllShape();
+      getAllShape(mapData[0].trimId);
     }
     if (mapData[0]?.slider === true) {
-      getAllSlider();
+      getAllSlider(mapData[0].trimId);
     }
     if (mapData[0]?.size === true) {
-      getAllTrimSize();
+      getAllTrimSize(mapData[0].trimId);
     }
     getTrims();
     getBuyers();
@@ -185,6 +190,14 @@ export function M3TrimItemsForm({props}) {
     structureService.getAllActiveStructureForCategory({categoryId:val}).then((res) => {
       if (res.status) {
         setStructureData(res.data);
+      }
+    });
+  };
+
+  const getLogo = (val) => {
+    logoService.getAllLogosForCategory({categoryId:val}).then((res) => {
+      if (res.status) {
+        setLogoData(res.data);
       }
     });
   };
@@ -285,50 +298,50 @@ export function M3TrimItemsForm({props}) {
     });
   };
 
-  const getAllTrimBuyers = ()=>{
-    trimBuyerService.getAllActiveTrimBuyers().then((res)=>{
+  const getAllTrimBuyers = (val)=>{
+    trimBuyerService.getAllBuyersForCategory({categoryId:val}).then((res)=>{
       setTrimBuyerData(res.data)
     })
   }
 
-  const getAllLength = ()=>{
-    lengthService.getAllActiveLengths().then((res)=>{
+  const getAllLength = (val)=>{
+    lengthService.getAllTrimLengthForCategory({categoryId:val}).then((res)=>{
       setLengthData(res.data)
     })
   }
 
-  const getAllLine = ()=>{
-    lineService.getAllActiveLines().then((res)=>{
+  const getAllLine = (val)=>{
+    lineService.getAllTrimLineForCategory({categoryId:val}).then((res)=>{
       setLineData(res.data)
     })
   }
 
-  const getAllParts = ()=>{
-    partsService.getAllActiveParts().then((res)=>{
+  const getAllParts = (val)=>{
+    partsService.getAllPartsForCategory({categoryId:val}).then((res)=>{
       setPartsData(res.data)
     })
   }
 
-  const getAllPly = ()=>{
-    plyService.getAllActivePly().then((res)=>{
+  const getAllPly = (val)=>{
+    plyService.getAllPlyForCategory({categoryId:val}).then((res)=>{
       setPlyData(res.data)
     })
   }
 
-  const getAllShape = ()=>{
-    shapeService.getAllActiveShape().then((res)=>{
+  const getAllShape = (val)=>{
+    shapeService.getAllShapeForCategory({categoryId:val}).then((res)=>{
       setShapeData(res.data)
     })
   }
 
-  const getAllSlider = ()=>{
-    sliderService.getAllSliders().then((res)=>{
+  const getAllSlider = (val)=>{
+    sliderService.getAllSlidersForCategory({categoryId:val}).then((res)=>{
       setSliderData(res.data)
     })
   }
 
-  const getAllTrimSize = ()=>{
-    trimSizeService.getAllActiveTrimSizes().then((res)=>{
+  const getAllTrimSize = (val)=>{
+    trimSizeService.getAllTrimSizeForCategory({categoryId:val}).then((res)=>{
       setTrimSizeData(res.data)
     })
   }
@@ -1003,8 +1016,12 @@ export function M3TrimItemsForm({props}) {
                     placeholder="Select Logo"
                     onChange={generateItemCode} disabled={props?.logo != null?true:false}
                     >
-                        {Object.values(LogoEnum).map((val) => {
-                            return <Option key={val} value={val}>{LogoEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                      {logoData.map((e) => {
+                            return (
+                            <Option key={e.logoId} value={e.logoId}>
+                                {e.logo}
+                            </Option>
+                            );
                         })}
                     </Select>
                 </Form.Item>

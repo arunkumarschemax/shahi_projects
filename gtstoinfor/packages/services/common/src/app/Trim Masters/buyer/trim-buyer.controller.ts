@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { TrimBuyerService } from "./trim-buyer.service";
 import { TrimBuyerDto } from "./trim-buyer.dto";
 
@@ -58,6 +58,15 @@ export class TrimBuyerController{
                 return await this.service.activateOrDeactivateBuyer(req)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+        @Post('/getAllBuyersForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllBuyersForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllBuyersForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

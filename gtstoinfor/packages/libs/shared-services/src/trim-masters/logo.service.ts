@@ -1,5 +1,5 @@
 
-import { CommonResponseModel, LogoDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, LogoDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class LogoService extends CommonAxiosService{
@@ -23,5 +23,9 @@ export class LogoService extends CommonAxiosService{
 
     async activateOrDeactivateLogo(req: LogoDto): Promise<CommonResponseModel> {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateLogo",req)
+    }
+
+    async getAllLogosForCategory(req: CategoryIdRequest): Promise<CommonResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllLogosForCategory",req)
     }
 }
