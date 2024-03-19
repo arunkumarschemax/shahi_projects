@@ -218,7 +218,7 @@ const XMLParser: React.FC = () => {
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
                         formData.append('poNumber', poPdfData?.poNumber);
-                        formData.append('jsonData', poPdfData)
+                        formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
                     pvhService.fileUpload(formData).then((res) => {
@@ -246,6 +246,7 @@ const XMLParser: React.FC = () => {
 
     return (
         <Card title='PVH Order Upload'>
+            {!poPdfData && (
             <Row gutter={24}>
                 <Col span={24}>
                     <Dragger {...uploadProps}>
@@ -257,18 +258,12 @@ const XMLParser: React.FC = () => {
                     </Dragger>
                 </Col>
             </Row>
+        )}
             {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
             <br />
             {poPdfData && (
                 <Card>
-                    <Row>
-                        <Col span={2}>
-                            <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
-                        </Col>
-                        <Col span={2}>
-                            <Button onClick={onReset} >Reset</Button>
-                        </Col>
-                    </Row>
+                    
                     <br />
                     <div className="table-container">
                         <table className='ta-b' style={{ width: '100%' }} >
@@ -317,6 +312,14 @@ const XMLParser: React.FC = () => {
                             ))}
                         </table>
                     </div>
+                    <Row gutter={24} justify={'center'}>
+                        <Col span={2}>
+                            <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
+                        </Col>
+                        <Col span={2}>
+                            <Button onClick={onReset} >Reset</Button>
+                        </Col>
+                    </Row>
                 </Card>
             )}
 
