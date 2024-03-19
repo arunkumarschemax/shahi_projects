@@ -255,7 +255,7 @@ const PvhPdfUpload: React.FC = () => {
 
 
     return (
-        <Card title='PVH Order Upload'>
+        <Card title='Order Upload'>
             {!poPdfData && (
             <Row gutter={24}>
                 <Col span={24}>
