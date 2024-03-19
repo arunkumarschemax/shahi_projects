@@ -240,8 +240,17 @@ import {
         {
           title: "PO Number",
           dataIndex: "poNumber",
-          width: 90,
+          width: 130,
          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+         sortDirections: ["ascend", "descend"],
+         render: (text) => text ? text : "-",
+
+        },
+        {
+          title: "Buyer Name",
+          dataIndex: "buyerName",
+          width: 120,
+         sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
          sortDirections: ["ascend", "descend"],
          render: (text) => text ? text : "-",
 
@@ -272,7 +281,7 @@ import {
         {
           title: "Transport Mode",
           dataIndex: "transMode",
-          width: 90,
+          width: 140,
            sorter: (a, b) => a.transMode.localeCompare(b.transMode),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
@@ -699,6 +708,16 @@ import {
                 dataIndex: "poNumber",
                 width: 130,
                sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+               sortDirections: ["ascend", "descend"],
+               render: (text) => text ? text : "-",
+      
+              },
+
+              {
+                title: "Buyer Name",
+                dataIndex: "buyerName",
+                width: 130,
+               sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
                sortDirections: ["ascend", "descend"],
                render: (text) => text ? text : "-",
       
