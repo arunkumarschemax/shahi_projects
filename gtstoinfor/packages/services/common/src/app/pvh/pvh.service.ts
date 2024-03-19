@@ -8,7 +8,7 @@ import * as puppeteer from 'puppeteer';
 import { Cron } from "@nestjs/schedule";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { PVHOrdersRepository } from "./repositories/pvh-orders.repo";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, PvhOrderDataModel, PvhOrderFilter, PvhSizeWiseModel } from "@project-management-system/shared-models";
 import { PvhOrdersChildRepository } from "./repositories/pvh-orders-child.repo";
 import { PvhOrderschildEntity } from "./entities/pvh-orders-child.entity";
 import { PVHOrdersEntity } from "./entities/pvh-orders.entity";
@@ -169,7 +169,39 @@ export class PVHService {
   }
 
 
+  async getorderDataForInfo(req?: PvhOrderFilter): Promise<CommonResponseModel> {
+    console.log(req, "servvv")
+    try {
+      const details = await this.PvhOrdersRepo.getorderDataForInfo(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, PvhOrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
+          sizeDateMap.set(
+            `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
+            new PvhOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date)
+          );
 
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new PvhSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no));
+        }
+      }
+      const dataModelArray: PvhOrderDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
 
 
 

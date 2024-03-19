@@ -5,7 +5,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { diskStorage } from 'multer'
 import * as fs from 'fs';
 import { PVHService } from "./pvh.service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, PvhOrderFilter } from "@project-management-system/shared-models";
 import { extname, join } from "path";
 import { FilesInterceptor } from "@nestjs/platform-express";
 
@@ -93,6 +93,16 @@ export class PVHController {
     }
   
 
+    @Post('/getorderDataForInfo')
+    @ApiBody({ type: PvhOrderFilter })
+    async getorderDataForInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderDataForInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
 
 
