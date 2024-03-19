@@ -34,7 +34,7 @@ export default function VerifyQuantities(props: Props) {
 
             // Loop through each size key and add it to the grouped data if it doesn't exist
             Object.keys(currentItem).forEach(sizeKey => {
-                if (!['poNumber', 'poLineItemNumber', 'poLine', 'item', 'styleNumber', 'planningSeasonCode', 'planningSeasonYear', 'geoCode', 'destinationCountryCode', 'genderAgeDesc', 'destinationCountry', 'plant','productCode','colorDesc'].includes(sizeKey)) {
+                if (!['id','poNumber', 'poLineItemNumber', 'poLine', 'item', 'styleNumber', 'planningSeasonCode', 'planningSeasonYear', 'geoCode', 'destinationCountryCode', 'genderAgeDesc', 'destinationCountry', 'plant','productCode','colorDesc'].includes(sizeKey)) {
                     // If the size key doesn't exist in the grouped data, initialize it to 0
                     if (!result[key].hasOwnProperty(sizeKey)) {
                         result[key][sizeKey] = 0;
@@ -56,7 +56,7 @@ export default function VerifyQuantities(props: Props) {
         });
 
     }
-    console.log(clubbedData,selectedData)
+    // console.log(clubbedData,selectedData)
 
     function renderColumns(): any {
 
