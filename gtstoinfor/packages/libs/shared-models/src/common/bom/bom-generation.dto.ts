@@ -31,6 +31,9 @@ export const bomGenerationColumnsMapping= {
     plant : 'Plant',
     productCode : 'Product Code',
     colorDesc :'Color Desc',
-    totalSizeQty :'Total Qty'
+    totalSizeQty :'Total Qty',
+    ogac :'OGAC',
+    shippingType :'Shipping Type'
+
 
 }

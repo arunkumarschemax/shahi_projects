@@ -304,7 +304,8 @@ export default function BomGeneration(props: Props) {
         },
         {
             title:"Total Size Qty",
-            dataIndex:'totalSizeQty'
+            dataIndex:'totalSizeQty',
+            align:'right'
         }
 
 
