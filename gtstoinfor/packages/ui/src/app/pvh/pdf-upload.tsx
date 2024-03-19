@@ -166,6 +166,7 @@ const XMLParser: React.FC = () => {
             const currency = parsedXML.DOC.ePM_VerContent.CurrencyCode._text;
             const buyerName = parsedXML.DOC.ePM_VerContent.BuyerName._text;
             const deliveryDate = parsedXML.DOC.ePM_VerContent.Shipments.Shipment.ShipmentDeliveryDate._text;
+            const transMode = parsedXML.DOC.ePM_VerContent.Shipments.Shipment.ShipmentShipMode._text;
             const items = Array.isArray(parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item)
                 ? parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item
                 : [parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item];
@@ -175,6 +176,7 @@ const XMLParser: React.FC = () => {
                 currency: currency,
                 buyerName: buyerName,
                 deliveryDate: deliveryDate,
+                transMode:transMode,
                 PvhpoItemDetails: items.map((item: any) => {
                     return {
                         poLine: item.ItemSeq._text,
@@ -272,6 +274,7 @@ const XMLParser: React.FC = () => {
                                 <th className='ta-b'>CURRENCY</th>
                                 <th className='ta-b'>BUYER NAME</th>
                                 <th className='ta-b'>DELIVERY DATE</th>
+                                <th className='ta-b'>TRANS MODE</th>
 
                             </tr>
                             <tr className='ta-b'>
@@ -279,6 +282,7 @@ const XMLParser: React.FC = () => {
                                 <td className='ta-b'>{poPdfData?.currency}</td>
                                 <td className='ta-b'>{poPdfData?.buyerName}</td>
                                 <td className='ta-b'>{poPdfData?.deliveryDate}</td>
+                                <td className='ta-b'>{poPdfData?.transMode}</td>
                             </tr>
                             {poPdfData?.PvhpoItemDetails?.map((i) => (
                                 <>

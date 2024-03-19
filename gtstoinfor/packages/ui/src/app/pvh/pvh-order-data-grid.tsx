@@ -301,8 +301,8 @@ import {
           ...getColumnSearchProps('material')
         },
         {
-          title: "Ex Factory Date",
-          dataIndex: "exFactoryDate",
+          title: "Delivery Date",
+          dataIndex: "deliverDate",
           width: 120,
           // sorter: (a, b) => a.material.localeCompare(b.material),
           // sortDirections: ["ascend", "descend"],
@@ -743,8 +743,8 @@ import {
         
               },
               {
-                title: "Ex Factory Date",
-                dataIndex: "exFactoryDate",
+                title: "Delivery Date",
+                dataIndex: "deliverDate",
                 width: 110,
                 render: (text) => text ? text : "-",
                

@@ -43,6 +43,7 @@ export class PVHService {
           entity.poNumber = req.poNumber
           entity.currency = req.currency
           entity.buyerName = req.buyerName
+          entity.transMode = req.transMode
           entity.deliveryDate = req.deliveryDate
 
           entity.poLine = item.poLine
@@ -61,6 +62,7 @@ export class PVHService {
               {
                 currency: req.currency,
                 buyerName: req.buyerName,
+                transMode: req.transMode,
                 deliveryDate: req.deliveryDate,
                 color: variant.color,
                 upc: variant.upc,
@@ -76,6 +78,7 @@ export class PVHService {
             entitys.poNumber = req.poNumber
             entitys.currency = req.currency
             entitys.buyerName = req.buyerName
+            entitys.transMode = req.transMode
             entitys.deliveryDate = req.deliveryDate
 
 
@@ -104,6 +107,7 @@ export class PVHService {
             entitys.poNumber = req.poNumber
             entitys.currency = req.currency
             entitys.buyerName = req.buyerName
+            entitys.transMode = req.transMode
             entitys.deliveryDate = req.deliveryDate
 
 

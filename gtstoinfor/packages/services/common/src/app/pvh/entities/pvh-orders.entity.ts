@@ -23,6 +23,13 @@ export class PVHOrdersEntity {
     })
     buyerName: string
 
+    @Column("varchar", {
+        name: "trans_mode",
+    })
+    transMode: string
+
+
+
 
     
     @Column("varchar", {
