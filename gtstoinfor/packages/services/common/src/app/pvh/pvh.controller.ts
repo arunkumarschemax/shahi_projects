@@ -104,6 +104,16 @@ export class PVHController {
         }
     }
 
+    @Post('/pvhBot')
+    async pvhBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.pvhBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
 
 
 
