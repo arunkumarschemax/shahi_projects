@@ -208,7 +208,7 @@ import {
   
     const setMoreData = (record) => {
       
-      navigate("/levis/levis-order-data-detail-view", {
+      navigate("/pvh/pvh-order-data-detail-view", {
         state: { data: record },
         
       });
