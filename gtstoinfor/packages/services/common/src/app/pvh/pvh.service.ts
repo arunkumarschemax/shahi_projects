@@ -21,6 +21,7 @@ export class PVHService {
     private dataSource: DataSource,
     private PvhOrdersRepo: PVHOrdersRepository,
     private PvhOrdersChildRepo: PvhOrdersChildRepository,
+    private pvhPdfRepo: PvhPdfRepo,
 
 
   ) { }
@@ -156,7 +157,7 @@ export class PVHService {
         entity.uploadStatus = "SUCCESS";
         entities.push(entity);
       }
-      const uploadDoc = await this.PvhOrdersRepo.save(entities);
+      const uploadDoc = await this.pvhPdfRepo.save(entities);
       if (!uploadDoc) {
         flag = false;
       }

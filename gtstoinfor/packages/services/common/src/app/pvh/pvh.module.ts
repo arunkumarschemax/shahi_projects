@@ -15,6 +15,7 @@ import { CkAddressEntity } from "../Entites@Shahi/ck-address/ck-address-entity";
 import { PvhOrdersChildRepository } from "./repositories/pvh-orders-child.repo";
 import { PvhOrderschildEntity } from "./entities/pvh-orders-child.entity";
 import { PvhPdfInfoEntity } from "./entities/pvh-pdf.entity";
+import { PvhPdfRepo } from "./repositories/pvh-pdf.repo";
 
 
 @Module({
@@ -28,6 +29,6 @@ import { PvhPdfInfoEntity } from "./entities/pvh-pdf.entity";
         PvhPdfInfoEntity
     ])],
   controllers: [PVHController],
-  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository,CkAddressService,CkAddressRepository,PvhOrdersChildRepository]
+  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository,CkAddressService,CkAddressRepository,PvhOrdersChildRepository,PvhPdfRepo]
 })
 export class PVHModule { }
