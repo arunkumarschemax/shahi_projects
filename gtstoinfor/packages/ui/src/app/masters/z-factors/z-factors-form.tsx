@@ -1,4 +1,4 @@
-import { BomService, ItemsService } from '@project-management-system/shared-services';
+import { BomService, ItemsService, ZFactoryService } from '@project-management-system/shared-services';
 import { Card, Col, Form, Input, Radio, Row, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 
@@ -6,15 +6,43 @@ const ZFactors = () => {
   const [items,setItems] =useState<any[]>([]);
   const [imCode,setImCode]=useState<any[]>([]);
   const [style,setStyle]=useState<any[]>([]);
+  const [geoCode,setGeoCode]=useState<any[]>([]);
+  const [plantCode,setPlantCode]=useState<any[]>([]);
   const service1=new BomService();
   const service= new ItemsService();
+  const service2= new ZFactoryService();
   const {Option} = Select
 
   useEffect(() => {
     getAllItems();
     getImCode();
     getStyles();
+    getGeoCode();
 },[])
+
+const getPlantCode= () => {
+  service2
+    .getPlantCode().then((res) => {
+      if (res.status) {
+        setPlantCode(res.data);
+      } else {
+        setPlantCode([]);
+      }
+    })
+  
+};
+
+const getGeoCode= () => {
+  service2
+    .getGeoCode().then((res) => {
+      if (res.status) {
+        setGeoCode(res.data);
+      } else {
+        setGeoCode([]);
+      }
+    })
+  
+};
 
 const getImCode= () => {
   service1
@@ -205,7 +233,11 @@ const getStyles= () => {
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="geoCode" label="Geo Code" >
-                    
+                    <Select  placeholder='Select Geo Code' style={{textAlign:"center"}}  showSearch >
+                         {geoCode.map((map) => (
+                           <Option key={map.destinationId} value={map.geoCode}>{map.geoCode}</Option>
+                         ))}
+                       </Select>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
@@ -230,7 +262,11 @@ const getStyles= () => {
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="plantCode" label="Plant code" >
-                    
+                    <Select  placeholder='Select Geo Code' style={{textAlign:"center"}}  showSearch >
+                         {plantCode.map((map) => (
+                           <Option key={map.id} value={map.plant}>{map.plant}</Option>
+                         ))}
+                       </Select>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >

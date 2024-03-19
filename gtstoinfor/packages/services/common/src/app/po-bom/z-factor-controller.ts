@@ -16,14 +16,26 @@ export class ZfactorsController {
     private readonly applicationExceptionHandler: ApplicationExceptionHandler) { }
    
    
-    @Post('/createZfactors')
-    async createZfactors(@Body() req: zFactorsDto): Promise<CommonResponseModel> {
-        try {
-            return this.zFactorService.createZfactors(req)
+
+
+    @Post('/getGeoCode')
+    async getGeoCode():Promise<CommonResponseModel>{
+        try{
+            return this.zFactorService.getGeoCode()
         }
-        catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
         }
-    }
+      }
+
+      @Post('/getPlantCode')
+    async getPlantCode():Promise<CommonResponseModel>{
+        try{
+            return this.zFactorService.getPlantCode()
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+      }
  
 }

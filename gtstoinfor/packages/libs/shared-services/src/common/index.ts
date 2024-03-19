@@ -12,4 +12,5 @@ export * from './trims.services';
 export * from './item-service-master'
 export * from './thread-supplier-service';
 export * from './threads.services';
-export * from './hm-style-services'
+export * from './hm-style-services';
+export * from './z-factors-service';
