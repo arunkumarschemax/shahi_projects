@@ -15,6 +15,7 @@ import SnapButton from '../../trims/trim-prints/snap-button';
 
 import SizeStrip from '../../trims/trim-prints/size-strip';
 import POIDLable from '../../trims/trim-prints/poid';
+import HmSheet from '../../trims/trim-prints/hm-sheet';
 type Props = {
   poLine: string[]
 }
@@ -46,6 +47,9 @@ export default function GenerateProposal(props: Props) {
   const [htLabel, setHtlabel] = useState<any>([])
   const [tissueData,setTissueData]= useState<any>([])
   const [poidData,setPoidData] = useState<any>([])
+  const [hmsheet,setHmsheet] = useState<any>([])
+
+  const [GumTapeData, setGumTapeData] = useState<any>([]);
 
   useEffect(() => {
     getAllTrims();
@@ -81,6 +85,8 @@ export default function GenerateProposal(props: Props) {
     // "Main Woven labels":<MainWovenLable bomInfo={tissueData}/>,
     // "Size Strip":<SizeStrip bomInfo={sizestripData}/>,
     // "Poid Label":<POIDLable bomInfo={poidData}/>,
+    // "HM/ Teflon Sheet":<HmSheet bomInfo={hmsheet} />,
+
   }
 
 
@@ -296,6 +302,17 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
+  function handleHmsheet(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForHmSheet(bomProposalReq).then((v) => {
+      if (v.status) {
+        setHmsheet(v.data)
+      }
+    })
+  }
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -306,7 +323,18 @@ export default function GenerateProposal(props: Props) {
   //     }
   //   })
   // }
-
+  function handleGumTapeTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.getProposalForGumtape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setGumTapeData(v.data)
+      }
+    })
+  }
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
     // const headerMapping = {
@@ -558,6 +586,13 @@ export default function GenerateProposal(props: Props) {
     
     if(val.item ===  "Poid Label"){
       handlePoidLable(val.itemId)
+    }
+
+    if(val.item === 'HM/ Teflon Sheet'){
+      handleHmsheet(val)
+    } 
+    if(val.item ===  "Gum Tape"){
+      handleGumTapeTrim(val.itemId)
     }
   }
 

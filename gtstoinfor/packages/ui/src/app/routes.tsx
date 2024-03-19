@@ -7,7 +7,7 @@ const UserCreationForm = lazy(() => import("./user-management/users/users-form")
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FabricContentdto, FactoryDto, Fobdto, ItemsDto, SupplierCreateDto, ThreadsDto } from "@project-management-system/shared-models"
+import { FabricContentdto, FactoryDto, Fobdto, HMStylesModelDto, ItemsDto, SupplierCreateDto, ThreadsDto } from "@project-management-system/shared-models"
 import PdfUpload from "./nike/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
@@ -78,6 +78,10 @@ import ThreadView from "./masters/thread/thread-view"
 import ThreadForm from "./masters/thread/thread-form"
 import Grommets from "./trims/trim-prints/grommets"
 import { Button3Print } from "./trims/trim-prints/button"
+import HmSheet from "./trims/trim-prints/hm-sheet"
+import HMStyleView from "./bom-automation/bom-details/bom-hm-master/hm-style-view"
+import HMStyleCreation from "./bom-automation/bom-details/bom-hm-master/hm-style-create"
+import ZFactors from "./masters/z-factors/z-factors-form"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -212,7 +216,12 @@ export const AppRoutes = () => {
                     {/* <Route path='country-sticker' element={<CountryStickerPrint  />} /> */}
                     <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
-                    <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
+                    <Route path='hm-style-view' element={<HMStyleView />} />
+                    <Route path='hm-style-creation' element={<HMStyleCreation hmStyleData={undefined} updateHmStyle={function (hmStyle: HMStylesModelDto): void {
+                        throw new Error("Function not implemented.");
+                    }} isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.");
+                    }} setDrawerVisible={undefined}/>} />
                     
                     {/* <Route path='neck-type' element={<NecKType bomInfo={[]} />} /> */}
                     {/* <Route path='interlining' element={<Interlining bomInfo={[]} />} /> */}
@@ -221,7 +230,7 @@ export const AppRoutes = () => {
                     {/* <Route path='elastic' element={<Elastic bomInfo={[]} />} /> */}
                     {/* <Route path='mobilontape' element={<Mobilontape bomInfo={[]} />} /> */}
                     {/* <Route path='twilltape' element={<Twilltape bomInfo={[]} />} /> */}
-                   {/* < Route path='grommets' element={<Grommets bomInfo={[]}/>} /> */}
+                   {/* < Route path='hm-sheet' element={<HmSheet bomInfo={[]} />} /> */}
                    < Route path='itemMapping' element={<ItemMappingGrid />} />
 
                    <Route path='items-view'   element={<ItemsGrid />} />
@@ -234,6 +243,7 @@ export const AppRoutes = () => {
 
                              <Route path='thread-view' element={<ThreadView />} />
                              <Route path="thread-form" element={<ThreadForm Data={[]} />}></Route>
+                             <Route path='z-factors' element={<ZFactors />} />
 
                 </Route>
 

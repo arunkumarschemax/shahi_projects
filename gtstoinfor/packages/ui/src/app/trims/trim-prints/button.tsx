@@ -197,7 +197,7 @@ export function Button3Print(props: Button3PrintProps) {
                                         </>
                                     )}
                                     <td style={{ textAlign: 'center', width: '5%' }} >{'18L'}</td>
-                                    <td style={{ textAlign: 'center', width: '5%' }} >{rec.color !== null ? rec.color : ''}</td>
+                                    <td style={{ textAlign: 'center', width: '5%' }} >{rec.color !== null ? rec.color : ''}-{rec.combination !== null ? rec.combination:''}</td>
                                     <td style={{ textAlign: 'center', width: '5%' }} >{rec.itemColor !== null ? rec.itemColor : ''}</td>
                                     <td style={{ textAlign: 'center', width: '5%' }} >{rec.bomQty !== null ? rec.bomQty : ''}</td>
                                 </tr>

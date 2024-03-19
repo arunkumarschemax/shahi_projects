@@ -312,14 +312,7 @@ export class BomController {
         }
     }
 
-    @Post('/getAllConsumptionRequiredTrims')
-    async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
-        try {
-            return this.trimService.getAllConsumptionRequiredTrims()
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
-        }
-    }
+   
     
     @Post('/getSizeStrip')
     async getSizeStrip(@Body() req: any): Promise<CommonResponseModel> {
@@ -420,6 +413,36 @@ export class BomController {
         }
         catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/generateProposalForHmSheet')
+    async generateProposalForHmSheet(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForHmSheet(req)
+        }
+        catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getProposalForGumtape')
+    @ApiBody({ type: BomProposalReq })
+    async getProposalForGumtape(@Body() req: any): Promise<CommonResponseModel> {
+        
+        try {
+            return this.bomService.getProposalForGumtape(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
+    @Post('/getAllConsumptionRequiredTrims')
+    async getAllConsumptionRequiredTrims(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return this.trimService.getAllConsumptionRequiredTrims(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
 }

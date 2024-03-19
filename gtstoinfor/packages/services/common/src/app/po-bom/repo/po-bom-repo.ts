@@ -11,6 +11,7 @@ import { StyleComboEntity } from "../entittes/style-combo-entity";
 import { groupBy } from "rxjs";
 import { ItemAttributesEntity } from "../entittes/item-attributes.entity";
 import { SizehtMatrixEntity } from "../entittes/size-ht-matrix-entity";
+import { HMStyleEntity } from "../entittes/hm-style-entity";
 
 @Injectable()
 export class PoBomRepo extends Repository<PoBomEntity> {
@@ -22,7 +23,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsData(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,
-            b.use,d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,
+            b.use,b.uom,d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,
             d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,
             b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,
             TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber, b.sequence,ia.attribute,ia.attribute_value as attributeValue`)
@@ -61,7 +62,8 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 shipToNumber: item.shipToNumber,
                 attribute: item.attribute,
                 attributeValue: item.attributeValue,
-                sequence: item.sequence
+                sequence: item.sequence,
+                uom:item.uom
             });
         });
 
@@ -117,7 +119,8 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForButton(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty, SUBSTRING(d.ogac, 1, 7) as ogacDate`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.bom_item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty,DATE_FORMAT(d.ogac, '%d-%b') AS ogacDate `)
+            // SUBSTRING(d.ogac, 1, 7) as ogacDate , 
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id and  st.combination = RIGHT(d.product_code, 3)')
@@ -482,6 +485,61 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 attribute: item.attribute,
                 attributeValue: item.attributeValue,
                 bQty: item.bBomQty
+            });
+        });
+        return mappedData;
+    }
+
+
+
+    async generateProposalForHmSheet(req: BomProposalReq): Promise<BomProposalDataModel[]> {
+        const query = this.createQueryBuilder('pb')
+            .select(`SUBSTRING(d.bom_item, 1, 4) AS itemNo, d.style_number AS styleNumber,pb.bom_qty AS bomQty,hm.teflon_sheet_size AS teflonSheetSize,
+            pb.id,pb.po_qty AS poQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code AS imCode,b.use,
+            d.color_desc AS color,d.destination_country AS destination,d.geo_code AS geoCode,
+            d.plant,d.planning_season_code AS season,d.planning_season_year AS YEAR,d.size_description AS size,
+            b.item_id AS itemId,d.po_number AS poNumber,d.gender_age_desc AS gender,
+             st.combination,st.primary_color AS primaryColor,st.secondary_color AS secondaryColor,st.item_color AS itemColor,
+             product_code AS productCode,b.id AS bomId, st.id AS stcomboId`)
+            .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
+            .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
+            .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id and  st.combination = RIGHT(d.product_code, 3)')
+            .leftJoin(HMStyleEntity, 'hm', 'hm.style_number = d.style_number')
+            .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
+            .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
+            .andWhere(`pb.bom_id is not null`)
+        const rawData = await query.getRawMany();
+        const mappedData: BomProposalDataModel[] = rawData.map((item) => {
+            return new BomProposalDataModel({
+                id: item.id,
+                poQty: item.poQty,
+                bomQty: item.bomQty,
+                consumption: item.consumption,
+                wastage: item.wastage,
+                moq: item.moq,
+                description: item.description,
+                imCode: item.imCode,
+                use: item.use,
+                styleNumber: item.styleNumber,
+                color: item.color,
+                destination: item.destination,
+                geoCode: item.geoCode,
+                plant: item.plant,
+                season: item.season,
+                year: item.year,
+                size: item.size,
+                itemNo: item.itemNo,
+                itemId: item.itemId,
+                gender: item.gender,
+                poNumber: item.poNumber,
+                combination: item.combination,
+                primaryColor: item.primaryColor,
+                secondaryColor: item.secondaryColor,
+                itemColor: item.itemColor,
+                productCode: item.productCode,
+                styleCombo: item.stcomboId,
+                bomId: item.bomId,
+                teflonSheetSize:item.teflonSheetSize
             });
         });
         return mappedData;
