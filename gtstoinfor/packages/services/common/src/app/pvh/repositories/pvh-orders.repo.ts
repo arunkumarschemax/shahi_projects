@@ -27,7 +27,7 @@ export class PVHOrdersRepository extends Repository<PVHOrdersEntity> {
         // if (req.deliveryDateStartDate !== undefined) {
         //     query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
         // }
-        query.andWhere(`o.status != 'ACCEPTED'`);
+       query.andWhere(`o.status != 'ACCEPTED'`);
 
         return await query.getRawMany()
     }

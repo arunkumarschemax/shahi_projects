@@ -188,7 +188,7 @@ export class PVHService {
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new PvhSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no));
+          sizeWiseData.push(new PvhSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no,rec.color));
         }
       }
       const dataModelArray: PvhOrderDataModel[] = Array.from(sizeDateMap.values());
