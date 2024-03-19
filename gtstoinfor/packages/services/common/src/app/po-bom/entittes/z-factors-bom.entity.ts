@@ -6,6 +6,7 @@ import { PoBomEntity } from "./po-bom.entity";
 
 @Entity('z_factors_bom')
 export class ZFactorsBomEntity {
+ 
     @PrimaryGeneratedColumn('increment', {
         name: 'id'
     })
@@ -13,17 +14,17 @@ export class ZFactorsBomEntity {
 
     @Column('varchar', {
         nullable: true,
-        name: 'im_code',
-        length: 50,
-    })
-    imCode: string
-
-    @Column('varchar', {
-        nullable: true,
         name: 'item_name',
         length: 50,
     })
     itemName: string
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'im_code',
+        length: 50,
+    })
+    imCode: string
 
     @Column('varchar', {
         nullable: true,
@@ -54,6 +55,18 @@ export class ZFactorsBomEntity {
         name: 'style',
     })
     style: string
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'gender',
+    })
+    gender: string
+
+    @Column('varchar', {
+        nullable: true,
+        name: 'plant_code',
+    })
+    plant: string
 
     @CreateDateColumn({
         name: 'created_at',
