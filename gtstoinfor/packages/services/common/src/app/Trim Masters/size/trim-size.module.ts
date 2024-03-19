@@ -4,10 +4,12 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { TrimSizeEntity } from "./trim-size-entity";
 import { TrimSizeController } from "./trim-size.controller";
 import { TrimSizeService } from "./trim-size.service";
+import { CategoryMappingEntity } from "../../m3-trims/m3-trims-category-mapping.entity";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Module({
-    imports:[TypeOrmModule.forFeature([TrimSizeEntity])],
+    imports:[TypeOrmModule.forFeature([TrimSizeEntity,CategoryMappingEntity])],
     controllers:[TrimSizeController],
-    providers:[TrimSizeService,ApplicationExceptionHandler]
+    providers:[TrimSizeService,ApplicationExceptionHandler,M3TrimsCategoryMappingRepo]
 })
 export class TrimSizeModule{}

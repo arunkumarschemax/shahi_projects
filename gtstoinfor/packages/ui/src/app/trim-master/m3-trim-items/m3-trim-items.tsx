@@ -995,7 +995,7 @@ export function M3TrimItemsForm({props}) {
                     >
                         {colorData.map((e) => {
                             return (
-                            <Option key={e.colourId} value={e.colourId}>
+                            <Option key={e.colorId} value={e.colorId}>
                                 {e.colour}
                             </Option>
                             );
