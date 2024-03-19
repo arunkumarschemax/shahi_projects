@@ -39,7 +39,7 @@ const XMLParser: React.FC = () => {
             handleUpload(file);
             return false;
         },
-        showUploadList: true
+        // showUploadList: true
     };
 
     interface ParsedXML {
@@ -231,7 +231,9 @@ const XMLParser: React.FC = () => {
     console.log(poPdfData?.poNumber, "poNumber")
 
     function onReset() {
-     window.location.reload()
+        setFileList([]);
+        setPoPdfData(undefined)
+
     }
 
 

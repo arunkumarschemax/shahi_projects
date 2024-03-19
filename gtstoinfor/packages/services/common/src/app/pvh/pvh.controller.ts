@@ -76,8 +76,8 @@ export class PVHController {
         },
       }),
       fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
-          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF|xml|XML)$/)) {
+          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc,xml,XML jpeg files are allowed!'), false);
         }
         callback(null, true);
       },
