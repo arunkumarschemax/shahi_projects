@@ -910,6 +910,10 @@ export class RLOrdersService {
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
+          } else{
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: "Destination Not Match",isActive:false });
+            await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
+            return new CommonResponseModel(false, 0, "Destination Not Match")
           }
           }
         }
