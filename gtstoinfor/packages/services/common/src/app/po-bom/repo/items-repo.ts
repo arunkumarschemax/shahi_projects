@@ -21,7 +21,7 @@ export class ItemsRepo extends Repository<ItemEntity> {
             .leftJoin(BomEntity, 'b', 'b.item_id = i.item_id')
             .leftJoin(StyleEntity, 's', 's.id = b.style_id')
             .where(`s.style IN (:...style)`, { style: styleReq })
-            .andWhere(`i.isActive = true AND i.consumptionRequired = "DESC"`)
+            .andWhere(`i.isActive = true`)
             .groupBy('i.item');
         return await queryBuilder.getRawMany();
     }
