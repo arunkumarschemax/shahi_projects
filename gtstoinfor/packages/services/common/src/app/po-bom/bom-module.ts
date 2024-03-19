@@ -33,6 +33,8 @@ import { HMStyleController } from "./hm-style-controller";
 import { HMStyleRepo } from "./repo/hm-style-repo";
 import { HMStyleService } from "./hm-style-service";
 import { HMStyleAdapter } from "./adapter/hm-style-adapter";
+import { ZfactorsController } from "./z-factor-controller";
+import { ZFactorServices } from "./z-factors-service";
 
 @Module({
     imports:[
@@ -43,7 +45,7 @@ import { HMStyleAdapter } from "./adapter/hm-style-adapter";
             StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity,ItemAttributesEntity,SizehtMatrixEntity,ApiSizeMatrix,HMStyleEntity
         ]),
         DpomModule],
-    controllers:[BomController,HMStyleController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo,ApiSizeMatrixRepo,HMStyleRepo,HMStyleService,HMStyleAdapter]
+    controllers:[BomController,HMStyleController,ZfactorsController],
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo,ApiSizeMatrixRepo,HMStyleRepo,HMStyleService,HMStyleAdapter,ZFactorServices]
 })
 export class bomModule{ }
