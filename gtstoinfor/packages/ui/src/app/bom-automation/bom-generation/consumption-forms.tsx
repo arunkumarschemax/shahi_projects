@@ -15,6 +15,7 @@ type Props = {
     updatedSizes: any[]
 
 }
+
 export default function ConsumptionForms(props: Props) {
 
     const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
@@ -24,7 +25,6 @@ export default function ConsumptionForms(props: Props) {
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
     const bomService = new BomService()
-
     const handleFieldChange = (value: any, styleOrItem: string, field: string) => {
         const existingIndex = consumptions.findIndex(item => item[consumptionAgainst] === styleOrItem);
         const newConsumption = { [consumptionAgainst]: styleOrItem, consumptionAgainst, itemId, [field]: value, uom };
@@ -39,16 +39,26 @@ export default function ConsumptionForms(props: Props) {
     };
 
 
+    // function UOMDropdown(record) {
+    //     console.log(record,"record")
+    //     return <Select defaultValue={uom} key={record.id} disabled style={{ width: '100px' }} placeholder='Select UOM' >
+    //         {
+    //             Object.values(UOMEnum).map((v) => {
+    //                 return <Select.Option key={v} value={v}>{v}</Select.Option>
+    //             })
+    //         }
+    //     </Select>
+    // }
     function UOMDropdown(record) {
-        return <Select defaultValue={uom} key={record.id} disabled style={{ width: '100px' }} placeholder='Select UOM' >
-            {
-                Object.values(UOMEnum).map((v) => {
-                    return <Select.Option key={v} value={v}>{v}</Select.Option>
-                })
-            }
-        </Select>
+        return (
+            <Select defaultValue={uom} style={{ width: '100px' }} placeholder='Select UOM'>
+                {Object.values(UOMEnum).map((v, index) => ( 
+                    <Select.Option key={index} value={v}>{v}</Select.Option>
+                ))}
+            </Select>
+        );
     }
-
+    
     const columns = [
         {
             title: consumptionAgainst,
@@ -78,7 +88,7 @@ export default function ConsumptionForms(props: Props) {
             }
         })
     }
-    console.log(consumptions)
+    // console.log(consumptions)
     function onGenerateBom() {
         // Convert consumptions array to a Map for easier lookup
         generateBom()
@@ -94,7 +104,7 @@ export default function ConsumptionForms(props: Props) {
 
     const onView = () => {
         setDynamiComponent(null)
-        // console.log(printComponent,"at 103")
+        //  console.log(printComponent,"at 103")
         const Comp = React.lazy(() => import(`../../trims/trim-prints/${printComponent}`))
         // console.log(Comp," at 105")
         setDynamiComponent(Comp)
@@ -104,7 +114,6 @@ export default function ConsumptionForms(props: Props) {
     function onCancel() {
         setModalOpen(false)
     }
-
     return (
         <Row gutter={[24, 24]} justify={'center'}>
             <Col span={24} >
