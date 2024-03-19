@@ -19,7 +19,7 @@ interface ColorSize {
     quantity: string;
 }
 
-const XMLParser: React.FC = () => {
+const PvhPdfUpload: React.FC = () => {
     const [colorSizes, setColorSizes] = useState<ColorSize[]>([]);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [poPdfData, setPoPdfData] = useState<any>()
@@ -340,4 +340,4 @@ const XMLParser: React.FC = () => {
 };
 
 
-export default XMLParser;
+export default PvhPdfUpload;
