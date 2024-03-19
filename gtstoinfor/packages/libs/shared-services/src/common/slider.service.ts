@@ -1,4 +1,4 @@
-import { CommissionResponseModel, SliderDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommissionResponseModel, CommonResponseModel, SliderDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SliderService extends CommonAxiosService{
@@ -18,5 +18,9 @@ export class SliderService extends CommonAxiosService{
 
     async getAllActiveSliders(): Promise<CommissionResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllActiveSliders")
+    }
+
+    async getAllSlidersForCategory(req:CategoryIdRequest): Promise<CommonResponseModel> {
+      return this.axiosPostCall(this.URL + "/getAllSlidersForCategory",req)
     }
 }

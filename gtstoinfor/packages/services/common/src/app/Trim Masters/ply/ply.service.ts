@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { PlyEntity } from "./ply.entity";
 import { PlyDto } from "./ply.dto";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class PlyService{
     constructor(
         @InjectRepository(PlyEntity)
         private repo : Repository<PlyEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActivePly():Promise<CommonResponseModel>{
@@ -62,4 +64,18 @@ export class PlyService{
             throw(err)
         }
     }
+
+    async getAllPlyForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            let data = await this.m3TrimsCategoryMappingRepo.getAllPlyByCategory(req.categoryId)
+            if(data.status){
+              return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+            }else{
+              return new CommonResponseModel(false, 1, 'No data found',[])
+            }
+          }catch(err){
+            throw(err)
+          }
+      }
+
 }

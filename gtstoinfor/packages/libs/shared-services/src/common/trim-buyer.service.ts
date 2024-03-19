@@ -1,4 +1,4 @@
-import { CommonResponseModel, TrimBuyerDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel, TrimBuyerDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class TrimBuyerService extends CommonAxiosService{
@@ -22,5 +22,9 @@ export class TrimBuyerService extends CommonAxiosService{
 
     async activateOrDeactivateBuyer(req: TrimBuyerDto): Promise<CommonResponseModel> {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateBuyer",req)
+    }
+
+    async getAllBuyersForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+      return this.axiosPostCall(this.URL + "/getAllBuyersForCategory",req)
     }
 }

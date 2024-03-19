@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { SliderEntity } from "./slider-entity";
 import { SliderDto } from "./slider-dto";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class SliderService{
     constructor(
         @InjectRepository(SliderEntity)
         private repo : Repository<SliderEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActiveSliders():Promise<CommonResponseModel>{
@@ -62,4 +64,16 @@ export class SliderService{
             throw(err)
         }
     }
+    async getAllSlidersForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            let data = await this.m3TrimsCategoryMappingRepo.getAllSlidersByCategory(req.categoryId)
+            if(data.status){
+              return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+            }else{
+              return new CommonResponseModel(false, 1, 'No data found',[])
+            }
+          }catch(err){
+            throw(err)
+          }
+      }
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { LineService } from "./line.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { LineDto } from "./line-dto";
 
 @ApiTags('line')
@@ -70,4 +70,13 @@ export class LineController{
               return this.applicationHandler.returnException(CommonResponseModel,error)
           }
       }
+      @Post('/getAllTrimLineForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllTrimLineForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllTrimLineForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
+            }
+        }
 }

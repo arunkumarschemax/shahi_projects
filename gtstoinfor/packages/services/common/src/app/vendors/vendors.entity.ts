@@ -2,6 +2,7 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 // import { Countries } from "../countries/countries.entity";
 import { Currencies } from "../currencies/currencies.entity";
 import { Countries } from "../countries/countries.entity";
+import { ArticleEntity } from "../Trim Masters/article/article.entity";
 // import { VendorsPriceList } from "../vendors-price-list/entities/vendor-price-list.entity";
 
 @Entity('vendors')
@@ -176,4 +177,7 @@ emailId:string;
   @ManyToOne(type=>Countries, country=>country.vendorInfo,{  nullable:false, })
   @JoinColumn({ name:"country_id"})
   countryInfo: Countries;
+
+  @OneToMany(()=>ArticleEntity,article=>article.VendorInfo,{cascade: true})
+  articleInfo: ArticleEntity[]
 }

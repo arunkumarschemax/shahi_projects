@@ -1,15 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { TrimSizeEntity } from "./trim-size-entity";
 import { TrimSizeDto } from "./trim-size.dto";
+import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Injectable()
 export class TrimSizeService{
     constructor(
         @InjectRepository(TrimSizeEntity)
         private repo : Repository<TrimSizeEntity>,
+        private m3TrimsCategoryMappingRepo:M3TrimsCategoryMappingRepo
     ) {}
 
     async getAllActiveTrimSizes():Promise<CommonResponseModel>{
@@ -40,14 +43,14 @@ export class TrimSizeService{
 
     async createTrimSize(dto: TrimSizeDto, isUpdate: boolean): Promise<CommonResponseModel>{
         try{
-            if(!isUpdate) {
-                const existing = await this.repo.findOne({ where: { trimSize: dto.trimSize }})
-                if(existing) {
-                    throw new Error('Size already exists');
-                }
+            const existing = await this.repo.findOne({ where: { trimSize: dto.trimSize }})
+
+            if (existing && (!isUpdate || (isUpdate && existing.trimSizeId !== dto.trimSizeId))) {
+                throw new Error('Size already exists');
             }
             const entityData = new TrimSizeEntity()
             entityData.trimSize = dto.trimSize
+            entityData.type = dto.type
             entityData.isActive = dto.isActive === undefined || dto.isActive === null ? true : dto.isActive;
             
             if (isUpdate) {
@@ -63,5 +66,52 @@ export class TrimSizeService{
         }
     }
 
+    async activateOrDeactivateSize(req: TrimSizeDto): Promise<CommonResponseModel> {
+        try {
+            const sizeExists = await this.repo.findOne({where:{trimSizeId: req.trimSizeId}});
+            if (sizeExists) {
+                if (!sizeExists) {
+                    throw new ErrorResponse(10113, 'Someone updated the current Size information. Refresh and try again');
+                } else {
+                    
+                        const sizeStatus =  await this.repo.update(
+                            { trimSizeId: req.trimSizeId },
+                            { isActive: req.isActive,updatedUser: req.updatedUser });
+                       
+                        if (sizeExists.isActive) {
+                            if (sizeStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Size is deactivated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10111, 'Size is already deactivated');
+                            }
+                        } else {
+                            if (sizeStatus.affected) {
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10114, 'Size is activated successfully');
+                                return response;
+                            } else {
+                                throw new CommonResponseModel(false,10112, 'Size is already activated');
+                            }
+                      }
+                }
+            } else {
+                throw new CommonResponseModel(false,99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+      } 
+      async getAllTrimSizeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+        try{
+            let data = await this.m3TrimsCategoryMappingRepo.getAllTrimSizeByCategory(req.categoryId)
+            if(data.status){
+              return new CommonResponseModel(true, 0, 'Data retrieved successfully',data.data)
+            }else{
+              return new CommonResponseModel(false, 1, 'No data found',[])
+            }
+          }catch(err){
+            throw(err)
+          }
+      }
 
 }

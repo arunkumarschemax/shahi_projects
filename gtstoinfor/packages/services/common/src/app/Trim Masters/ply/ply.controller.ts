@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { PlyService } from "./ply.service";
 import { PlyDto } from "./ply.dto";
 
@@ -48,6 +48,16 @@ export class PlyController{
                 return await this.service.createPly(req,true)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+
+        @Post('/getAllPlyForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllPlyForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllPlyForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

@@ -1,4 +1,4 @@
-import {CommonResponseModel, PartsDto } from "@project-management-system/shared-models";
+import {CategoryIdRequest, CommonResponseModel, PartsDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class PartsService extends CommonAxiosService{
@@ -27,5 +27,11 @@ export class PartsService extends CommonAxiosService{
   async  getPartsById(req: PartsDto): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + '/getPartsById',req)
 }
+
+async getAllPartsForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+  return this.axiosPostCall(this.URL + '/getAllPartsForCategory',req)
+}
+
+
 
 }

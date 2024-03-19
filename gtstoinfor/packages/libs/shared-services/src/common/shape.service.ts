@@ -1,4 +1,4 @@
-import { CommissionResponseModel, CommonResponseModel, ShapeDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommissionResponseModel, CommonResponseModel, ShapeDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class ShapeService extends CommonAxiosService{
@@ -25,6 +25,10 @@ export class ShapeService extends CommonAxiosService{
   }
   async  getShapeById(req: ShapeDto): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + '/getShapeById',req)
+}
+
+async getAllShapeForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+  return this.axiosPostCall(this.URL + '/getAllShapeForCategory',req)
 }
 
 }

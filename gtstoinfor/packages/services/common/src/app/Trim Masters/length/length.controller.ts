@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { LengthService } from "./length.service";
 import { LengthDto } from "./length-dto";
 
@@ -48,6 +48,15 @@ export class LengthController{
                 return await this.service.createLength(req,true)
             }catch(err){
                 return this.applicationHandler.returnException(CommonResponseModel,err)
+            }
+        }
+        @Post('/getAllTrimLengthForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllTrimLengthForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllTrimLengthForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
             }
         }
 }

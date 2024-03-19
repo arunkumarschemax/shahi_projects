@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommonResponseModel } from "@project-management-system/shared-models";
 import { ShapeService } from "./shape.service";
 import { ShapeDto } from "./shape-dto";
 
@@ -71,5 +71,15 @@ export class ShapeController{
               return this.applicationHandler.returnException(CommonResponseModel,error)
           }
       }
+
+      @Post('/getAllShapeForCategory')
+        @ApiBody({type: CategoryIdRequest})
+        async getAllShapeForCategory(@Body() req: any): Promise<CommonResponseModel>{
+            try{
+                return await this.service.getAllShapeForCategory(req)
+            }catch (error){
+                return this.applicationHandler.returnException(CommonResponseModel,error)
+            }
+        }
 
 }

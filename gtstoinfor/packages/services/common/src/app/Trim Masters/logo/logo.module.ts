@@ -4,10 +4,12 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { LogoEntity } from "./logo-entity";
 import { LogoController } from "./logo.controller";
 import { LogoService } from "./logo.service";
+import { CategoryMappingEntity } from "../../m3-trims/m3-trims-category-mapping.entity";
+import { M3TrimsCategoryMappingRepo } from "../../m3-trims/m3-trims-category-mapping.repo";
 
 @Module({
-    imports:[TypeOrmModule.forFeature([LogoEntity])],
+    imports:[TypeOrmModule.forFeature([LogoEntity,CategoryMappingEntity])],
     controllers:[LogoController],
-    providers:[LogoService,ApplicationExceptionHandler]
+    providers:[LogoService,ApplicationExceptionHandler,M3TrimsCategoryMappingRepo]
 })
 export class LogoModule{}

@@ -1,4 +1,4 @@
-import { CommissionResponseModel, PlyDto } from "@project-management-system/shared-models";
+import { CategoryIdRequest, CommissionResponseModel, CommonResponseModel, PlyDto } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class PlyService extends CommonAxiosService{
@@ -19,4 +19,8 @@ export class PlyService extends CommonAxiosService{
     async getAllActivePly(): Promise<CommissionResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllActivePly")
     }
+    async getAllPlyForCategory(req:CategoryIdRequest):Promise<CommonResponseModel>{
+      return this.axiosPostCall(this.URL + '/getAllPlyForCategory',req)
+    }
+    
 }

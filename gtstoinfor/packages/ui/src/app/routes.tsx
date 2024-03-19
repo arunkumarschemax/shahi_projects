@@ -242,6 +242,8 @@ import TrimBuyerForm from "./trim-master/trim-buyers/trim-buyer-form"
 import TrimBuyerGrid from "./trim-master/trim-buyers/trim-buyer-view"
 import LogoForm from "./trim-master/logo/logo-form"
 import LogoGrid from "./trim-master/logo/logo-view"
+import TrimSizeForm from "./trim-master/trim-size/trim-size-form"
+import TrimSizeGrid from "./trim-master/trim-size/trim-size-view"
 import AirHoleForm from "./trim-master/air-hole/air-hole-form"
 import AirHoleGrid from "./trim-master/air-hole/air-hole-view"
 import LineGrid from "./trim-master/line/line-view"
@@ -250,6 +252,8 @@ import ShapeForm from "./trim-master/shape/shape-form"
 import ShapeGrid from "./trim-master/shape/shape-view"
 import PartsForm from "./trim-master/parts/parts-form"
 import PartsGrid from "./trim-master/parts/parts-view"
+import ArticleForm from "./trim-master/article/article-form"
+import ArticleGrid from "./trim-master/article/article-view"
 
 
 
@@ -884,6 +888,18 @@ export const AppRoutes = () => {
                         updateData={(undefined) => { }} 
                         data={undefined} />} />
                     <Route path='logo/logo-view' element={<LogoGrid />} />
+                    <Route path='size/size-form' element={<TrimSizeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='size/size-view' element={<TrimSizeGrid />} />
+                    <Route path='article/article-form' element={<ArticleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateData={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='article/article-view' element={<ArticleGrid />} />
                     
                 </Route>
 
