@@ -30,6 +30,7 @@ export const bomGenerationColumnsMapping= {
     item : 'Item',
     plant : 'Plant',
     productCode : 'Product Code',
-    colorDesc :'Color Desc'
+    colorDesc :'Color Desc',
+    totalSizeQty :'Total Qty'
 
 }
