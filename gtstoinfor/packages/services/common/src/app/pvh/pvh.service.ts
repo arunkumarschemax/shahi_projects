@@ -67,12 +67,17 @@ export class PVHService {
 
           const entity = new PVHOrdersEntity();
           entity.poNumber = req.poNumber
+          entity.currency = req.currency
+          entity.buyerName = req.buyerName
 
           entity.poLine = item.poLine
+          entity.deliveryDate = item.deliveryDate
      
 
           entity.size = variant.size
+          entity.color = variant.color
           entity.upc = variant.upc
+          entity.quantity = variant.quantity
 
           pdfData.push(entity);
 
@@ -80,8 +85,13 @@ export class PVHService {
             const update = await transactionManager.getRepository(PVHOrdersEntity).update(
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
               {
-                
-                 upc: variant.upc
+                currency :req.currency,
+                buyerName :req.buyerName,
+                deliveryDate:item.deliveryDate,
+                color : variant.color,
+                 upc: variant.upc,
+                quantity : variant.quantity
+
               }
             );
             console.log("update", update)
@@ -90,14 +100,18 @@ export class PVHService {
             const entitys = new PvhOrderschildEntity()
 
             entitys.poNumber = req.poNumber
-            
-
+            entitys.currency = req.currency
+            entitys.buyerName = req.buyerName
+  
             entitys.poLine = item.poLine
-      
-
-            entitys.size = variant.size
-            entitys.upc = variant.upc
+            entitys.deliveryDate = item.deliveryDate
        
+  
+            entitys.size = variant.size
+            entitys.color = variant.color
+            entitys.upc = variant.upc
+            entity.quantity = variant.quantity
+
             entitys.poVersion = po.toString()
             entitys.orderId = orderData.id
 
@@ -108,19 +122,22 @@ export class PVHService {
               throw new Error('Update failed');
             }
           }
-          // } 
           else {
-            // Only save if the record doesn't exist
             saved = await transactionManager.getRepository(PVHOrdersEntity).save(entity);
             const entitys = new PvhOrderschildEntity()
 
-            entitys.poNumber = req.poNumber
-          
+             entitys.poNumber = req.poNumber
+            entitys.currency = req.currency
+            entitys.buyerName = req.buyerName
+  
             entitys.poLine = item.poLine
-        
-
+            entitys.deliveryDate = item.deliveryDate
+       
+  
             entitys.size = variant.size
+            entitys.color = variant.color
             entitys.upc = variant.upc
+            entity.quantity = variant.quantity
 
             entitys.orderId = entity.id
 

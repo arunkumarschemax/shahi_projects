@@ -1,12 +1,8 @@
 export class PvhPoItemVariant {
 
-    product:string;
     size: string;
+    color: string;
     upc: string;
     quantity: string;
-    unitPrice: string;
-    scheduledDate: string;
-    itemNo:string;
-    label:string
    
 }
