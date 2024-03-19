@@ -50,6 +50,7 @@ export default function GenerateProposal(props: Props) {
   const [hmsheet,setHmsheet] = useState<any>([])
 
   const [GumTapeData, setGumTapeData] = useState<any>([]);
+  const [Backingpaperv2Data, setBackingpaperv2Data] = useState<any>([]);
 
   useEffect(() => {
     getAllTrims();
@@ -335,6 +336,18 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+  function handleBackingPaperV2Trim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
+    service.getBackingPaperV2(bomProposalReq).then((v) => {
+      if (v.status) {
+        setBackingpaperv2Data(v.data)
+      }
+    })
+  }
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
     // const headerMapping = {
@@ -593,6 +606,9 @@ export default function GenerateProposal(props: Props) {
     } 
     if(val.item ===  "Gum Tape"){
       handleGumTapeTrim(val.itemId)
+    }
+    if(val.item ===  "Backing Paper v2"){
+      handleBackingPaperV2Trim(val.itemId)
     }
   }
 

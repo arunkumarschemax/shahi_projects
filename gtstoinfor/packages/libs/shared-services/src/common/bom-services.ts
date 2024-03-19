@@ -158,4 +158,8 @@ export class BomService extends CommonAxiosService {
     async getProposalForGumtape(req: BomProposalReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getProposalForGumtape", req)
     }
+
+    async getBackingPaperV2(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBackingPaperV2", req)
+    }
 }

@@ -1626,6 +1626,65 @@ export class BomService {
     }
 
 
+    
+    async getBackingPaperV2(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+
+        const poBomData = await this.poBomRepo.getBackingPaperV2(req)
+        // const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+        // console.log(poBomZfactorData, '---po bom zfactord data')
+        let data = [...poBomData]
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute, attributeValue, productCode, bQty, poQty,nonwovencolor,wastage,consumption ,combination} = currentItem;
+            // console.log(season)
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    use,
+                    imCode,
+                    itemNo,
+                    bomQty: 0,
+                    destination,
+                    itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
+                    color,
+                    itemColor,
+                    productCode,
+                    bQty,
+                    poQty,
+                    attribute,
+                    attributeValue,
+                    nonwovencolor,
+                    wastage,
+                    consumption,
+                    combination,
+                    sizeWiseQty: [],
+                    // colorData: []
+                };
+            }
+            const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+            if (sizeIndex >= 0) {
+                result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+            } else {
+                result[key].sizeWiseQty.push({ size, qty: bomQty });
+            }
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        // console.log(groupedData,'@@@@@@@@@@@@@@@')
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+    }
+
+
 }
 
 
