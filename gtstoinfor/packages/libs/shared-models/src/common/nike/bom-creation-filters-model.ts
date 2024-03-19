@@ -28,6 +28,9 @@ export class UpdatedConsumptions {
     uom: UOMEnum;
     item:string;
     consumptionAgainst : string
+    directExcess ?:number
+    distributeExcess?:number
+
 }
 
 export class BomGenerationReq {
@@ -35,7 +38,7 @@ export class BomGenerationReq {
     updatedSizes: UpdatedSizes[]
     updatedConsumptions: UpdatedConsumptions[]
     itemId: number
-}
+    }
 
 export class BomProposalReq {
     poLine: string[]
