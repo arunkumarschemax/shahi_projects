@@ -13,6 +13,7 @@ import { PvhOrdersChildRepository } from "./repositories/pvh-orders-child.repo";
 import { PvhOrderschildEntity } from "./entities/pvh-orders-child.entity";
 import { PVHOrdersEntity } from "./entities/pvh-orders.entity";
 import { PvhPdfInfoEntity } from "./entities/pvh-pdf.entity";
+import { PvhPdfRepo } from "./repositories/pvh-pdf.repo";
 
 
 @Injectable()
