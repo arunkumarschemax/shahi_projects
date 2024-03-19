@@ -25,32 +25,6 @@ export class PVHService {
 
   ) { }
 
-  // async savePvhOrder(req: any): Promise<CommonResponseModel> {
-  //   const transactionManager = new GenericTransactionManager(this.dataSource);
-
-  //   try {
-  //     let saved;
-  //     const pdfData = [];
-
-  //     await transactionManager.startTransaction();
-
-  //     const orderData = await this.PvhOrdersRepo.findOne({ where: { poNumber: req.poNumber } });
-
-  //     const entity = new PVHOrdersEntity();
-  //     entity.poNumber = req.poNumber
-
-  //     pdfData.push(entity);
-
-  //     const savedChild = await transactionManager.getRepository(PVHOrdersEntity).save(entity)
-
-
-  //     if (!savedChild) {
-  //       throw new Error('Update failed');
-  //     }
-
-  //     if (!saved) {
-  //       throw new Error('Save failed');
-  //     }
   async savePvhOrder(req: any): Promise<CommonResponseModel> {
     const transactionManager = new GenericTransactionManager(this.dataSource);
 
@@ -69,10 +43,10 @@ export class PVHService {
           entity.poNumber = req.poNumber
           entity.currency = req.currency
           entity.buyerName = req.buyerName
+          entity.deliveryDate = req.deliveryDate
 
           entity.poLine = item.poLine
-          entity.deliveryDate = item.deliveryDate
-     
+
 
           entity.size = variant.size
           entity.color = variant.color
@@ -85,12 +59,12 @@ export class PVHService {
             const update = await transactionManager.getRepository(PVHOrdersEntity).update(
               { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
               {
-                currency :req.currency,
-                buyerName :req.buyerName,
-                deliveryDate:item.deliveryDate,
-                color : variant.color,
-                 upc: variant.upc,
-                quantity : variant.quantity
+                currency: req.currency,
+                buyerName: req.buyerName,
+                deliveryDate: req.deliveryDate,
+                color: variant.color,
+                upc: variant.upc,
+                quantity: variant.quantity
 
               }
             );
@@ -102,15 +76,16 @@ export class PVHService {
             entitys.poNumber = req.poNumber
             entitys.currency = req.currency
             entitys.buyerName = req.buyerName
-  
+            entitys.deliveryDate = req.deliveryDate
+
+
             entitys.poLine = item.poLine
-            entitys.deliveryDate = item.deliveryDate
-       
-  
+
+
             entitys.size = variant.size
             entitys.color = variant.color
             entitys.upc = variant.upc
-            entity.quantity = variant.quantity
+            entitys.quantity = variant.quantity
 
             entitys.poVersion = po.toString()
             entitys.orderId = orderData.id
@@ -126,18 +101,19 @@ export class PVHService {
             saved = await transactionManager.getRepository(PVHOrdersEntity).save(entity);
             const entitys = new PvhOrderschildEntity()
 
-             entitys.poNumber = req.poNumber
+            entitys.poNumber = req.poNumber
             entitys.currency = req.currency
             entitys.buyerName = req.buyerName
-  
+            entitys.deliveryDate = req.deliveryDate
+
+
             entitys.poLine = item.poLine
-            entitys.deliveryDate = item.deliveryDate
-       
-  
+
+
             entitys.size = variant.size
             entitys.color = variant.color
             entitys.upc = variant.upc
-            entity.quantity = variant.quantity
+            entitys.quantity = variant.quantity
 
             entitys.orderId = entity.id
 

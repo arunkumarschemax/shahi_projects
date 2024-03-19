@@ -165,18 +165,19 @@ const XMLParser: React.FC = () => {
             const poNumber = parsedXML.DOC.ePM_VerContent.PMNo._text;
             const currency = parsedXML.DOC.ePM_VerContent.CurrencyCode._text;
             const buyerName = parsedXML.DOC.ePM_VerContent.BuyerName._text;
+            const deliveryDate = parsedXML.DOC.ePM_VerContent.Shipments.Shipment.ShipmentDeliveryDate._text;
             const items = Array.isArray(parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item)
                 ? parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item
                 : [parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item];
 
-            const poData = {
+            const poPdfData = {
                 poNumber: poNumber,
                 currency: currency,
-                buyerName:buyerName,
+                buyerName: buyerName,
+                deliveryDate: deliveryDate,
                 PvhpoItemDetails: items.map((item: any) => {
                     return {
                         poLine: item.ItemSeq._text,
-                        deliveryDate: parsedXML.DOC.ePM_VerContent.Shipments.Shipment.ShipmentDeliveryDate._text,
                         PvhpoItemVariantDetails: item.ColorSizes.ColorSize.map((colorSize: any) => {
                             return {
                                 color: colorSize.Color._text,
@@ -189,8 +190,8 @@ const XMLParser: React.FC = () => {
                 })
             };
 
-            console.log(poData, "poData")
-            setPoPdfData(poData);
+            console.log(poPdfData, "poPdfData")
+            setPoPdfData(poPdfData);
         } catch (error) {
             console.error('Error parsing XML:', error);
         }
@@ -217,7 +218,7 @@ const XMLParser: React.FC = () => {
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
                         formData.append('poNumber', poPdfData?.poNumber);
-                        formData.append('jsonData', JSON.stringify(poPdfData))
+                        formData.append('jsonData', poPdfData)
                     })
                     console.log(formData, "form")
                     pvhService.fileUpload(formData).then((res) => {
@@ -226,7 +227,6 @@ const XMLParser: React.FC = () => {
                         }
                     })
                 }
-                alert(res.internalMessage)
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
@@ -257,69 +257,70 @@ const XMLParser: React.FC = () => {
                     </Dragger>
                 </Col>
             </Row>
-                {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
-                <br />
-                {poPdfData && (
-            <Card>
+            {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
+            <br />
+            {poPdfData && (
+                <Card>
                     <Row>
-                <Col span={2}>
-                    <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
-                </Col>
-                <Col span={2}>
-                    <Button onClick={onReset} >Reset</Button>
-                </Col>
-            </Row>
-                <br />
-                <div className="table-container">
-                    <table className='ta-b' style={{ width: '100%' }} >
-                        <tr className='ta-b'>
-                            <th className='ta-b'>PO NUMBER</th>
-                            <th className='ta-b'>CURRENCY</th>
-                            <th className='ta-b'>BUYER NAME</th>
-                        </tr>
-                        <tr className='ta-b'>
-                            <td className='ta-b'>{poPdfData?.poNumber}</td>
-                            <td className='ta-b'>{poPdfData?.currency}</td>
-                            <td className='ta-b'>{poPdfData?.buyerName}</td>
-                        </tr>
-                        {poPdfData?.PvhpoItemDetails?.map((i) => (
-                            <>
-                                <tr className='ta-b'>
-                                    <th></th>
-                                    <th className='ta-b'>PO LINE</th>
-                                    <th className='ta-b'>DELIVERY DATE</th>
-                                </tr>
-                                <tr className='ta-b'>
-                                    <td></td>
-                                    <td className='ta-b'>{i.poLine}</td>
-                                    <td className='ta-b'>{i.deliveryDate}</td>
-                                </tr>
-                                <tr className='ta-b'>
-                                    <th></th>
-                                    <th></th>
-                                    <th className='ta-b'>SIZE</th>
-                                    <th className='ta-b'>COLOR</th>
-                                    <th className='ta-b'>UPC</th>
-                                    <th className='ta-b'>QUANTITY</th>
-                                </tr>
-                                {i.PvhpoItemVariantDetails.map((j) => (
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td className='ta-b'>{j.size}</td>
-                                        <td className='ta-b'>{j.color}</td>
-                                        <td className='ta-b'>{j.upc}</td>
-                                        <td className='ta-b'>{j.quantity}</td>
-                                    </tr>
-                                ))}
-                            </>
-                        ))}
-                    </table>
-                </div>
-            </Card>
-        )}
+                        <Col span={2}>
+                            <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
+                        </Col>
+                        <Col span={2}>
+                            <Button onClick={onReset} >Reset</Button>
+                        </Col>
+                    </Row>
+                    <br />
+                    <div className="table-container">
+                        <table className='ta-b' style={{ width: '100%' }} >
+                            <tr className='ta-b'>
+                                <th className='ta-b'>PO NUMBER</th>
+                                <th className='ta-b'>CURRENCY</th>
+                                <th className='ta-b'>BUYER NAME</th>
+                                <th className='ta-b'>DELIVERY DATE</th>
 
-</Card>
+                            </tr>
+                            <tr className='ta-b'>
+                                <td className='ta-b'>{poPdfData?.poNumber}</td>
+                                <td className='ta-b'>{poPdfData?.currency}</td>
+                                <td className='ta-b'>{poPdfData?.buyerName}</td>
+                                <td className='ta-b'>{poPdfData?.deliveryDate}</td>
+                            </tr>
+                            {poPdfData?.PvhpoItemDetails?.map((i) => (
+                                <>
+                                    <tr className='ta-b'>
+                                        <th></th>
+                                        <th className='ta-b'>PO LINE</th>
+                                    </tr>
+                                    <tr className='ta-b'>
+                                        <td></td>
+                                        <td className='ta-b'>{i.poLine}</td>
+                                    </tr>
+                                    <tr className='ta-b'>
+                                        <th></th>
+                                        <th></th>
+                                        <th className='ta-b'>SIZE</th>
+                                        <th className='ta-b'>COLOR</th>
+                                        <th className='ta-b'>UPC</th>
+                                        <th className='ta-b'>QUANTITY</th>
+                                    </tr>
+                                    {i.PvhpoItemVariantDetails.map((j) => (
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td className='ta-b'>{j.size}</td>
+                                            <td className='ta-b'>{j.color}</td>
+                                            <td className='ta-b'>{j.upc}</td>
+                                            <td className='ta-b'>{j.quantity}</td>
+                                        </tr>
+                                    ))}
+                                </>
+                            ))}
+                        </table>
+                    </div>
+                </Card>
+            )}
+
+        </Card>
     )
 };
 
