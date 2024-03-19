@@ -25,9 +25,10 @@ export default function ConsumptionUpdate(props: Props) {
         getAllTrims();
     }, [])
 
+const styleReq = props.distinctValues.distinctStyles
 
     const getAllTrims = () => {
-        service.getAllConsumptionRequiredTrims().then(res => {
+        service.getAllConsumptionRequiredTrims(styleReq).then(res => {
             if (res.status) {
                 setTrims(res.data);
             }
@@ -61,23 +62,23 @@ export default function ConsumptionUpdate(props: Props) {
                     bordered
                     columns={columns}
                     dataSource={trims} /> */}
-            <Tabs
-                
-                
-                tabPosition={'left'}
-                onChange={setActiveKey}
-                style={{ height: 420, left: 0 }}
-                items={trims.map((v, i) => {
-                    const id = v.itemId;
-                    return {
-                        label: v.item,
-                        key: id,
-                        children: <>
-                       { v.consumptionRequired ?<Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link> : <></>}
-                        <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} /></>,
-                    };
-                })}
-            />
+                <Tabs
+                    
+                    
+                    tabPosition={'left'}
+                    onChange={setActiveKey}
+                    style={{ height: 420, left: 0 }}
+                    items={trims.map((v, i) => {
+                        const id = v.itemId;
+                        return {
+                            label: v.item,
+                            key: id,
+                            children: <>
+                        { v.consumptionRequired ?<Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link> : <></>}
+                            <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} /></>,
+                        };
+                    })}
+                />
             <Modal style={{ top: 20, right: 20 }} width={'50%'} open={viewModal} closable onCancel={closeConversionModal} footer={false} >
                 <UOMConversion />
             </Modal>

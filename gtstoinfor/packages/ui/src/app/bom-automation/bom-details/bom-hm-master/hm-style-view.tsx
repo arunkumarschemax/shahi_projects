@@ -132,13 +132,13 @@ const getHMStyleData = () => {
 
   return (
     <div>
-         <Card
-            extra={<span><Button type='primary' onClick={() => navigate('/bom/hm-style-creation')}>Create</Button></span>} headStyle={{  height: '40px' }}
-            bodyStyle={{ paddingTop: '2px', paddingBottom: '12px' }}
-            title={<h4 style={{ textAlign: 'left', padding: '20px' }}>HM STYLES</h4>}>
-<Table columns={Columns} dataSource={hmStyle}/>
-<Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '65%' : '85%'}
-        onClose={closeDrawer} visible={drawerVisible} closable={true}>
+         <Card   title={<span style={{fontWeight: "bold"}}>HM Styles</span>}
+            extra={<span><Button type='primary' onClick={() => navigate('/bom/hm-style-creation')}>Create</Button></span>} >
+ 
+          <Table columns={Columns} dataSource={hmStyle} size='small'/>
+          
+          <Drawer bodyStyle={{ paddingBottom: 80 }}  style={{fontWeight: "bold"}} title='Update' width={window.innerWidth > 768 ? '65%' : '85%'}
+                onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
           <HMStyleCreation
             setDrawerVisible={setDrawerVisible}

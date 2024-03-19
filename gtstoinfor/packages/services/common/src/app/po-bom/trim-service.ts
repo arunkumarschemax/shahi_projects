@@ -10,6 +10,8 @@ import { BomInfo, BomInfoModel, BomPrintFilterReq, BomPrintInfoModel, CommonResp
 import { StyleDto } from "./dto/style-dto";
 import { StyleRepo } from "./dto/style-repo";
 import { StyleNumberDto } from "./dto/style-number-dto";
+import { ItemsRepo } from "./repo/items-repo";
+import { ItemDto } from "./dto/item-request";
 
 @Injectable()
 export class TrimService {
@@ -20,7 +22,9 @@ export class TrimService {
         private dataSource: DataSource,
         private dpomRepo: DpomRepository,
         @InjectRepository(ItemEntity)
-        private itemRepo: Repository<ItemEntity>
+        private itemRepo: Repository<ItemEntity>,
+        private itemRepository: ItemsRepo,
+
 
     ) { }
 
@@ -205,19 +209,6 @@ export class TrimService {
         }
     }
 
-    async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
-        try {
-            const data = await this.itemRepo.find({ where: { isActive: true },order:{consumptionRequired : "DESC"} })
-            if (data) {
-                return new CommonResponseModel(true, 1, 'Data retrieved', data)
-            } else {
-                return new CommonResponseModel(false, 0, 'No data found')
-            }
-
-        } catch (err) {
-            throw err
-        }
-    }
     async getProductCodeDropdownByCreatedAt(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
             // const data = await this.dpomRepo.find({select:['item'],where:{createdAt:Between(`${req.fromDate}`,`${req.toDate}`)}})
@@ -274,4 +265,26 @@ export class TrimService {
             throw err
         }
     }
+ 
+    async getAllConsumptionRequiredTrims(req): Promise<CommonResponseModel> {
+        try {
+            const data = await this.itemRepository.getTrimListForBomGenration(req);
+            if (data) {
+
+                const itemDtos = data.map(item => new ItemDto(
+                    item.item_id,item.item,item.consumption_required == 1 ?true:false,item.consumption,
+                    item.wastage, item.moq,item.print_component,item.consumption_against,item.uom,
+                    item.createdAt,item.createdUser,item.updatedAt,
+                    item.updatedUser,item.versionFlag,item.isActive
+                ));
+                return new CommonResponseModel(true, 1, 'Data retrieved', itemDtos);
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found');
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+    
+    
 }

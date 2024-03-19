@@ -81,6 +81,7 @@ import { Button3Print } from "./trims/trim-prints/button"
 import HmSheet from "./trims/trim-prints/hm-sheet"
 import HMStyleView from "./bom-automation/bom-details/bom-hm-master/hm-style-view"
 import HMStyleCreation from "./bom-automation/bom-details/bom-hm-master/hm-style-create"
+import ZFactors from "./masters/z-factors/z-factors-form"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -242,6 +243,9 @@ export const AppRoutes = () => {
 
                              <Route path='thread-view' element={<ThreadView />} />
                              <Route path="thread-form" element={<ThreadForm Data={[]} />}></Route>
+                             <Route path='z-factors' element={<ZFactors />} />
+                             <Route path='bom-order-acceptance' key='bom-order-acceptance' element={<BomOrderAcceptance/>} />
+
 
                 </Route>
 

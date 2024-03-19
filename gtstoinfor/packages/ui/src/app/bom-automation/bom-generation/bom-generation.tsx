@@ -302,6 +302,11 @@ export default function BomGeneration(props: Props) {
             title: "Year",
             dataIndex: 'planningSeasonYear'
         },
+        {
+            title:"Total Size Qty",
+            dataIndex:'totalSizeQty',
+            align:'right'
+        }
 
 
     ]
@@ -423,7 +428,7 @@ export default function BomGeneration(props: Props) {
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
-        excel.addRow();
+        // excel.addRow();
         excel.addColumns(exportingColumns);
         excel.addDataSource(filterData);
         excel.saveAs(`Generate-proposal-${currentDate}.xlsx`);

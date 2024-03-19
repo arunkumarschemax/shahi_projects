@@ -349,8 +349,9 @@ export class BomService {
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
             const regionDataMap = new Map<string, { poData: PoDataForBomGenerationModel[], totalQty: number }>()
             // moq logic for wash care label
-            function calculateBomQty(poQty: number, consumption: number, shippingType: ShippingTypeEnum) {
-                const excessQty = shippingType == ShippingTypeEnum.DIRECT ? 1.02 : 1.03
+            function calculateBomQty(poQty: number, consumption: number, directExcess: number, distributeExcess:number, shippingType: ShippingTypeEnum) {
+                // const excessQty = shippingType == ShippingTypeEnum.DIRECT ? 1.02 : 1.03
+                const excessQty = shippingType == ShippingTypeEnum.DIRECT ? directExcess : distributeExcess
                 const bomQty = poQty * consumption;
                 const bomQtyWithExcess = bomQty * excessQty; // Adding 3% excess
                 return bomQtyWithExcess;
@@ -391,18 +392,15 @@ export class BomService {
 
                 const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                 for (const styleBom of styleData) {
-                    // console.log(styleBom)
-
-                    // console.log(consumptions,styleBom.itemId)
-
-                    const { consumption } = req.updatedConsumptions.length ? req.updatedConsumptions.find((v) => {
+                    const { consumption ,directExcess,distributeExcess} = req.updatedConsumptions.length ? req.updatedConsumptions.find((v) => {
                         if (v.consumptionAgainst == 'item') {
                             return v.item == po.item
                         } else {
                             return v.style == po.styleNumber
                         }
-                    }) : { consumption: 1 }
-                    const bomQty = calculateBomQty(updatedQty, consumption, po.shippingType)
+                    }) : { consumption: 1,directExcess:1,distributeExcess:1 }
+                    
+                    const bomQty = calculateBomQty(updatedQty, consumption,directExcess,distributeExcess, po.shippingType)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
 
@@ -1526,10 +1524,8 @@ export class BomService {
             const { styleNumber, imCode, bomQty, poQty, primaryColor, use, itemNo, itemId, destination, size, ogacDate, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-            let key = `${styleNumber}-${imCode}-${itemNo}`;
-            if (req.trimName === 'Poid Label') {
-                key += `${styleNumber}-${ogacDate}`;
-            }
+            let key = `${styleNumber}-${itemNo}`;
+            
             if (!result[key]) {
                 result[key] = {
                     geoCode, styleNumber,
@@ -1546,6 +1542,7 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+    
     async generateProposalForHmSheet(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
 

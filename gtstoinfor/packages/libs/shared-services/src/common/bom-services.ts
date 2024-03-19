@@ -108,9 +108,7 @@ export class BomService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getMainWovenLableData", req)
     }
 
-    async getAllConsumptionRequiredTrims(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllConsumptionRequiredTrims")
-    }
+ 
     async getSizeStrip(req: BomProposalReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getSizeStrip", req)
     }
@@ -157,6 +155,9 @@ export class BomService extends CommonAxiosService {
 
     async getProposalForGumtape(req: BomProposalReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getProposalForGumtape", req)
+    }
+    async getAllConsumptionRequiredTrims(styleReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllConsumptionRequiredTrims",styleReq)
     }
 
     async getBackingPaperV2(req: BomProposalReq): Promise<CommonResponseModel> {
