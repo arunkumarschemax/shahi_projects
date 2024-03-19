@@ -185,7 +185,7 @@ export class PVHService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new PvhOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status,rec.delivery_date,rec.buyer_name, [])
+            new PvhOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.trans_mode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status,rec.delivery_date,rec.buyer_name, [])
           );
 
         }
