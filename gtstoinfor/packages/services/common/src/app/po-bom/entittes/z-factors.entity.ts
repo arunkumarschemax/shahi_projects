@@ -96,7 +96,7 @@ export class ZFactorsEntity {
 
     
     @OneToMany(type => ZFactorsBomEntity,zfactorBom =>zfactorBom.zFactors)
-    zFactorBom:ZFactorsBomEntity
+    zFactorBom:ZFactorsBomEntity[]
 
     
 }
