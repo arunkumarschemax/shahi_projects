@@ -14,4 +14,8 @@ export class PvhService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/fileUpload", req)
     }
 
+    async getorderDataForInfo(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getorderDataForInfo", req)
+    }
+
 }

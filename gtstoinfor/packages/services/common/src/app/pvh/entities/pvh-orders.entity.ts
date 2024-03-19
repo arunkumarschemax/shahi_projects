@@ -19,7 +19,7 @@ export class PVHOrdersEntity {
     currency: string
 
     @Column("varchar", {
-        name: "buyerName",
+        name: "buyer_name",
     })
     buyerName: string
 
@@ -31,7 +31,7 @@ export class PVHOrdersEntity {
     poLine: string
 
     @Column("varchar", {
-        name: "deliveryDate",
+        name: "delivery_date",
     })
     deliveryDate: string
 

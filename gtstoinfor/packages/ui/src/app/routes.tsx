@@ -96,6 +96,7 @@ import GapAddressView from "./masters/gap-address/gap-address-view"
 import CkAddressUpload from "./masters/ck-address/ck-address-excel-upload"
 import CkAddressView from "./masters/ck-address/ck-address-view"
 import PvhPdfUpload from "./pvh/pdf-upload"
+import PvhOrdersGrid from "./pvh/pvh-order-data-grid"
 
 
 export const AppRoutes = () => {
@@ -336,6 +337,7 @@ export const AppRoutes = () => {
                     <Route path='masters/ck-address/ck-address-excel-upload' key='/address/address-excel-upload' element={<CkAddressUpload />} />
                     <Route path='masters/ck-address/ck-address-view' key='/address/address-view' element={<CkAddressView />} />
                     <Route path='pvh-pdf-upload' element={<PvhPdfUpload />} />
+                    <Route path='order-data-info-grid' element={<PvhOrdersGrid />} />
 
 
 

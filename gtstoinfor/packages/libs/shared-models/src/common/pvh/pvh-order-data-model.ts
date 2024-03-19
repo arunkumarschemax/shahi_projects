@@ -13,8 +13,11 @@ export class PvhOrderDataModel {
     totalUnitPrice: string;
     originalDate: string;
     status:string;
+    deliverDate:string;
+    buyerName:string;
     sizeWiseData: PvhSizeWiseModel[];
-    exFactoryDate?:string;
+   
+   
 
 
     constructor(
@@ -28,8 +31,10 @@ export class PvhOrderDataModel {
         totalUnitPrice: string,
         originalDate: string,
         status:string,
+        deliverDate:string,
+        buyerName:string,
         sizeWiseData: PvhSizeWiseModel[],
-        exFactoryDate?:string,
+       
 
 
 
@@ -44,9 +49,10 @@ export class PvhOrderDataModel {
         this.totalUnitPrice = totalUnitPrice
         this.originalDate = originalDate
         this.status=status
-        this.exFactoryDate=exFactoryDate
+        this.deliverDate=deliverDate
+        this.buyerName=buyerName
         this.sizeWiseData = sizeWiseData
-        this.exFactoryDate=exFactoryDate
+       
 
 
 
