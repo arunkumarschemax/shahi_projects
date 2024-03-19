@@ -1,8 +1,8 @@
 import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('orders')
-export class PVHOrdersEntity {
+@Entity('orders_child')
+export class PvhOrderschildEntity {
     @PrimaryGeneratedColumn('increment', {
         name: "id",
     })
@@ -14,7 +14,6 @@ export class PVHOrdersEntity {
     poNumber: string
 
 
-    
     @Column("varchar", {
         name: "po_line",
     })
@@ -39,7 +38,6 @@ export class PVHOrdersEntity {
         name: 'status',
     })
     status: StatusEnum;
-
 
 
     @CreateDateColumn({
@@ -77,7 +75,17 @@ export class PVHOrdersEntity {
     })
     isActive: boolean;
 
-    
-    
+    @Column("varchar", {
+        default: 1,
+        name: "po_version",
+    })
+    poVersion: string;
+
+    @Column("int", {
+        name: "order_id",
+    })
+    orderId: number;
+
 
 }
+

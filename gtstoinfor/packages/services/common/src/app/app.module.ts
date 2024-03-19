@@ -29,7 +29,7 @@ import { CkAddressModule } from './Entites@Shahi/ck-address/ck-address-module';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20

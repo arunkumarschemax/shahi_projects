@@ -12,6 +12,9 @@ import { GapAddressEntity } from "../Entites@Shahi/gap-address/gap-address-entit
 import { CkAddressService } from "../Entites@Shahi/ck-address/ck-address-service";
 import { CkAddressRepository } from "../Entites@Shahi/ck-address/ck-address.repo";
 import { CkAddressEntity } from "../Entites@Shahi/ck-address/ck-address-entity";
+import { PvhOrdersChildRepository } from "./repositories/pvh-orders-child.repo";
+import { PvhOrderschildEntity } from "./entities/pvh-orders-child.entity";
+import { PvhPdfInfoEntity } from "./entities/pvh-pdf.entity";
 
 
 @Module({
@@ -20,9 +23,11 @@ import { CkAddressEntity } from "../Entites@Shahi/ck-address/ck-address-entity";
     TypeOrmModule.forFeature([
         PVHOrdersEntity,
         GapAddressEntity,
-        CkAddressEntity
+        CkAddressEntity,
+        PvhOrderschildEntity,
+        PvhPdfInfoEntity
     ])],
   controllers: [PVHController],
-  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository,CkAddressService,CkAddressRepository]
+  providers: [PVHService,ApplicationExceptionHandler,PVHOrdersRepository,GapAddressService,GapAddressRepository,CkAddressService,CkAddressRepository,PvhOrdersChildRepository]
 })
 export class PVHModule { }

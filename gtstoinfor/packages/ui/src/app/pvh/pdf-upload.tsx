@@ -1,274 +1,209 @@
-import { Card, Upload, message, Form, Row, Col, Button, Result, Input } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-const { Dragger } = Upload;
-import { Document, pdfjs } from 'react-pdf';
+import { Table, Upload, Button, Col, Row, UploadFile, Form, message, Card } from 'antd';
+import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import xmljs from 'xml-js';
+import Dragger from 'antd/es/upload/Dragger';
+import { DiaPDFModel, PvhPoDetails, PvhPoItemDetails, PvhPoItemVariant } from '@project-management-system/shared-models';
+import { LevisService, PvhService } from '@project-management-system/shared-services';
+import { CURRENCY } from '../eddiebauer/popdf-regex-expressions';
+import Item from 'antd/es/list/Item';
 
-import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService, LevisService } from '@project-management-system/shared-services';
-import PoPdfTable from './po-pdf-table';
-import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
-// import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
-
-interface IPdfUploadProps { }
-
-class ResultPropsModel {
-    status: any;
-    title: any;
-    subtitle: any;
-    extra: any
+interface ColorSize {
+    key: string;
+    packSeqNo: string;
+    SKU: string;
+    UPCOrEAN: string;
+    color: string;
+    size: string;
+    packingRatio: string;
+    quantity: string;
 }
 
-const pdfFilesValidationObject = [
-    // {
-    //     pdfName: 'PO PDF',
-    //     pdfKeyText: 'RALPH'
-    // },
-    {
-        pdfName: 'PO PDF',
-        pdfKeyText: /\<\/\w+\>/
-    }
-]
-
-const pdfIndexes = {
-    poNumber: 6
-}
-
-
-const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
-    const [fileList, setFileList] = useState([]);
-    const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
-    const [resultProps, setResultProps] = useState<ResultPropsModel>()
+const XMLParser: React.FC = () => {
+    const [colorSizes, setColorSizes] = useState<ColorSize[]>([]);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [poPdfData, setPoPdfData] = useState<any>()
-    const [xmlText, setXmlText] = useState(null);
 
+    const [poNumber, setPoNumber] = useState<string>('');
+    const [poLine, setPoLine] = useState<string>('');
 
 
     const [diaPDfForm] = Form.useForm()
-    const levisService = new LevisService();
-    const adobeAcrobatApi = new AdobeAcrobatApiService()
-
-
+    const pvhService = new PvhService();
 
 
     const uploadProps = {
         name: 'file',
         accept: '.xml',
-        onRemove: (file) => {
-            const index = fileList.indexOf(file);
-            const newFileList = fileList.slice();
-            newFileList.splice(index, 1);
-            setFileList(newFileList);
-        },
         beforeUpload: (file) => {
-            if (file.type === 'text/xml') {
-                setFileList([file]);
-                extractTextFromPdf(file);
-            } else {
-                message.error('Please upload only XML files.');
-            }
+            handleUpload(file);
             return false;
         },
-        fileList,
-        showUploadList: false
+        showUploadList: true
     };
-    async function extractPoPdfData(pdf: any, pdfText: any) {
-        const poData = await extractDataFromPoPdf(pdf)
-        setPoPdfData(poData)
-    }
 
-    /* xml format ///////////////********************* */
-    // const xmlFormat = (xml) => {
-    //     if (xml.nodeType === Node.TEXT_NODE) {
-    //         return xml.textContent.trim();
-    //     }
-    //     let result = '';
-    //     if (xml.nodeType === Node.ELEMENT_NODE) {
-    //         result += '<' + xml.tagName;
-
-    //         for (let i = 0; i < xml.attributes.length; i++) {
-    //             result += ' ' + xml.attributes[i].name + '="' + xml.attributes[i].value + '"';
-    //         }
-    //         result += '>';
-    //         for (let i = 0; i < xml.childNodes.length; i++) {
-    //             result += xmlFormat(xml.childNodes[i]);
-    //         }
-    //         if (xml.childNodes.length > 0) {
-    //             result += '</' + xml.tagName + '>';
-    //         } else {
-    //             result += '/>';
-    //         }
-    //     }
-    //     result += '\n';
-    //     return result;
-    // };
-
-  
-    /* extraction of xml */////////////////////////**************** */
-    // const extractTextFromPdf = async (file) => {
-    //     const reader = new FileReader();
-    //     console.log(reader, "reader")
-    //     reader.onload = async (e) => {
-    //         let xmlText = e.target.result;
-
-    //         if (typeof xmlText !== 'string') {
-    //             const arrayBufferView = new Uint8Array(xmlText);
-    //             const blob = new Blob([arrayBufferView], { type: 'text/xml' });
-
-    //             const reader = new FileReader();
-
-    //             reader.onload = (event) => {
-    //                 xmlText = event.target.result.toString();
-    //                 const parser = new DOMParser();
-    //                 console.log(parser, "parser")
-
-    //                 const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    //                 console.log(xmlDoc, "xmlDoc")
-
-    //                 const textContent :any= (xmlDoc.documentElement);
-    //                 console.log(textContent, "textContent");
-
-    //                 // const formattedXmlText = textContent;
-    //                 // console.log(JSON.stringify(formattedXmlText),null, "formattedXmlText");
-    //                 extractDataFromPoPdf(textContent);
-
-    //                 const title = pdfFilesValidationObject.find((val) => textContent.match(val.pdfKeyText))?.pdfName;
-    //                 if (title) {
-    //                     extractPoPdfData(xmlText, textContent);
-    //                 }
-    //                 updateResultProps(title);
-    //             };
-    //             reader.readAsText(blob);
-    //         } else {
-    //             const parser = new DOMParser();
-    //             const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    //             const textContent:any = (xmlDoc.documentElement);
-    //             console.log(textContent, "textContent");
-
-    //             // const formattedXmlText = xmlFormat(textContent);
-    //             // console.log(formattedXmlText, "formattedXmlText");
-    //             extractDataFromPoPdf(textContent);
-
-    //             const title = pdfFilesValidationObject.find((val) => textContent.match(val.pdfKeyText))?.pdfName;
-    //             if (title) {
-    //                 extractPoPdfData(xmlText, textContent);
-    //             }
-    //             updateResultProps(title);
-    //         }
-    //     };
-    //     reader.readAsArrayBuffer(file);
-    // };
-
-    const extractTextFromPdf = async (file) => {
-        const reader = new FileReader();
-        console.log(reader, "reader")
-
-        reader.onload = async (e) => {
-            let xmlText = e.target.result;
-
-            if (typeof xmlText !== 'string') {
-                const arrayBufferView = new Uint8Array(xmlText);
-                const blob = new Blob([arrayBufferView], { type: 'text/xml' });
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    xmlText = event.target.result.toString();
-                    xmlProcess(xmlText);
+    interface ParsedXML {
+        DOC: {
+            ePM_VerContent: {
+                PMNo: any;
+                ePMVerNo: any;
+                VerDate: any;
+                VerTime: any;
+                VendorId: any;
+                VendorName: any;
+                BuyerName: any;
+                Division: any;
+                Department: any;
+                Agent: any;
+                CurrencyCode: any;
+                Currency: any;
+                ConditionsOfSalesCode: any;
+                ConditionsOfSalesDesc: any;
+                DestinationCode: any;
+                Destination: any;
+                PMShippingMark: any;
+                PMBottomRemark: any;
+                ShipmentUpdateNo: any;
+                ShipmentUpdateDate: any;
+                ShipmentUpdateTime: any;
+                BuyerDept: any;
+                POXMLVerNo: any;
+                Attributes: {
+                    Attribute: {
+                        AttributeSeqNo: any;
+                        AttributeLabel: any;
+                        AttributeDataType: any;
+                        AttributeCode: any;
+                        AttributeValue: any;
+                    };
                 };
-                reader.readAsText(blob);
-            } else {
-                xmlProcess(xmlText);
-            }
+                Shipments: {
+                    Shipment: {
+                        ShipmentNo: any;
+                        ShipmentRef: any;
+                        ShipmentShipModeCode: any;
+                        ShipmentShipMode: any;
+                        ShipmentBuyerOrderNo: any;
+                        ShipmentDeliveryDate: any;
+                        ShipmentPortOfDischargeCode: any;
+                        ShipmentPortOfDischarge: any;
+                        ShipmentFinalDestinationCode: any;
+                        ShipmentFinalDestination: any;
+                        ShipmentPortOfLoadingCode: any;
+                        ShipmentPortOfLoading: any;
+                        DistributionCentreCode: any;
+                        DistributionCentre: any;
+                        DistributionCentreAddress1: any;
+                        DistributionCentreAddress2: any;
+                        DistributionCentreAddress3: any;
+                        DistributionCentreAddress4: any;
+                        ShipToAddress: any;
+                        PrePacks: {
+                            PrePack: {
+                                PackSeqNo: any;
+                                PackLineNo: any;
+                                PackSKU: any;
+                                PackEANOrUPC: any;
+                                PackDesc: any;
+                                NoOfInnerPackUnits: any;
+                                NoOfUnitsPerInnerPack: any;
+                                NoOfCartons: any;
+                                GWPerInnerPack: any;
+                                NWPerInnerPack: any;
+                                InnerPackWeightUOM: any;
+                                PackStyleNo: any;
+                            };
+                        };
+                        Items: {
+                            Item: {
+                                ItemSeq: any;
+                                ItemNo: any;
+                                ItemDesc: any;
+                                ItemQty: any;
+                                ItemQtyUOM: any;
+                                ItemBuyerOrderNo: any;
+                                ItemLiFungFactoryCode: any;
+                                ItemFactoryNameInEnglish: any;
+                                ItemLongDesc: any;
+                                ItemCountryOfOriginCode: any;
+                                ItemCountryOfOrigin: any;
+                                ItemProductionCountryCode: any;
+                                ItemProductionCountry: any;
+                                ItemEANNo: any;
+                                ItemHSCode: any;
+                                ItemHS: any;
+                                ItemLabel: any;
+                                ItemUnitPrice: any;
+                                ItemSupplierNo: any;
+                                RetailPrice: any;
+                                ItemUnitPriceTotal: any;
+                                Attributes: any;
+                                ColorSizes: {
+                                    ColorSize: {
+                                        PackSeqNo: any;
+                                        LineNo: any;
+                                        SKU: any;
+                                        UPCOrEAN: any;
+                                        Color: any;
+                                        Size: any;
+                                        PackingRatio: any;
+                                        Quantity: any;
+                                    }[];
+                                };
+                            };
+                        };
+                    };
+                };
+                ItemBreakdowns: any;
+            };
         };
-        reader.readAsArrayBuffer(file);
-
-        const xmlProcess = (xmlText) => {
-            const parser = new DOMParser();
-            console.log(parser, "parser")
-
-            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-            console.log(xmlDoc, "xmlDoc")
-
-            const textContent = xmlDoc.documentElement;
-            console.log(textContent, "textContent")
-            extractDataFromPoPdf(textContent);
-
-            const title = pdfFilesValidationObject.find((val) => xmlText.match(val.pdfKeyText))?.pdfName;
-            console.log(title,"title")
-            if (title) {
-                extractPoPdfData(xmlText, textContent);
-            }
-            updateResultProps(title);
-        };
-    };
-
-    // const extractTextFromPdf = async (file) => {
-    //     const reader = new FileReader();
-    //     reader.onload = (e) => {
-    //         let xmlText = e.target.result;
-    //         console.log(xmlText, "xmlText")
-
-    //         if (typeof xmlText !== 'string') {
-    //             const arrayBufferView = new Uint8Array(xmlText);
-    //             const blob = new Blob([arrayBufferView], { type: 'text/xml' });
-    //             console.log(blob, "blob")
-
-
-    //             const reader = new FileReader();
-    //             console.log(reader, "reader")
-
-    //             reader.onload = (event) => {
-    //                 xmlText = event.target.result.toString();
-
-    //                 const parser = new DOMParser();
-    //                 console.log(parser, "parser")
-
-    //                 const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    //                 console.log(xmlDoc, "xmlDoc")
-
-    //                 const extractedXmlData = xmlFormat(xmlDoc.documentElement);
-    //                 extractPoPdfData(xmlText, extractedXmlData);
-    //                 console.log(extractedXmlData, "extractedXmlData");
-    //                 // console.log(JSON.stringify(extractedXmlData,null));
-    //             };
-    //             reader.readAsText(blob);
-    //         } else {
-    //             const parser = new DOMParser();
-    //             const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-
-    //             const extractedXmlData = xmlFormat(xmlDoc.documentElement);
-    //             extractPoPdfData(xmlText, extractedXmlData);
-    //             console.log(extractedXmlData, "extractedXmlData");
-    //             // console.log(JSON.stringify(extractedXmlData,null));
-    //         }
-    //     };
-    //     reader.readAsArrayBuffer(file);
-    //     if (file) {
-    //         // Remove this line as it's redundant
-    //         // extractPoPdfData(xmlText, extractedXmlData);
-    //     }
-    //     updateResultProps(file);
-    // };
-
-    const updateResultProps = (title) => {
-        const resultProps: ResultPropsModel = new ResultPropsModel()
-        if (title == undefined) {
-            resultProps.status = 'error'
-            resultProps.title = 'Wrong document uploaded'
-            resultProps.subtitle = 'Document doesnt match the criteria,please upload correct documet'
-        } else {
-            resultProps.status = 'success'
-            resultProps.title = 'Document found  : ' + title
-            resultProps.subtitle = 'Please check the values below'
-        }
-        setResultProps(resultProps)
     }
 
+    const parseXML = (xmlString: string) => {
+        try {
+            const parsedXML = xmljs.xml2js(xmlString, { compact: true }) as ParsedXML;
+
+            const poNumber = parsedXML.DOC.ePM_VerContent.PMNo._text;
+            const items = Array.isArray(parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item)
+                ? parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item
+                : [parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item];
+
+            const poData = {
+                poNumber: poNumber,
+                PvhpoItemDetails: items.map((item: any) => {
+                    return {
+                        poLine: item.ItemSeq._text,
+                        PvhpoItemVariantDetails: item.ColorSizes.ColorSize.map((colorSize: any) => {
+                            return {
+                                size: colorSize.Size._text,
+                                upc: colorSize.UPCOrEAN._text
+                            };
+                        })
+                    };
+                })
+            };
+
+            console.log(poData, "poData")
+            setPoPdfData(poData);
+        } catch (error) {
+            console.error('Error parsing XML:', error);
+        }
+    };
+
+
+
+    const handleUpload = (file: File) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const xmlString = event.target?.result as string;
+            console.log(xmlString, "xmlString")
+            parseXML(xmlString);
+        };
+        reader.readAsText(file);
+    };
 
     const savePdfFields = () => {
-        levisService.saveLevisOrder(poPdfData).then((res) => {
+        pvhService.savePvhOrder(poPdfData).then((res) => {
             if (res.status) {
                 onReset()
                 if (fileList) {
@@ -279,13 +214,13 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         formData.append('jsonData', JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
-                    levisService.fileUpload(formData).then((res) => {
+                    pvhService.fileUpload(formData).then((res) => {
                         if (res.status) {
                             message.success(res.internalMessage)
                         }
                     })
                 }
-                // alert(res.internalMessage)
+                alert(res.internalMessage)
                 message.success(res.internalMessage)
             } else {
                 message.error(res.internalMessage)
@@ -293,78 +228,82 @@ const PvhPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         })
     }
 
-    console.log(poPdfData?.poNumber, "addddddddd")
+    console.log(poPdfData?.poNumber, "poNumber")
 
     function onReset() {
-        setFileList([]);
-        setPoPdfData(undefined)
-        setResultProps(undefined)
+     window.location.reload()
     }
 
-    function renderPDFOutPut() {
-        if (resultProps && resultProps.status == 'success') {
-            if (poPdfData) {
-                return <PoPdfTable data={poPdfData} />
-            }
-        }
-        return <></>
-    }
-
-    const levisBot = (req) => {
-        levisService.levisBot().then(res => {
-            if (res.status) {
-                // setBuyer(res.data);
-                // setPoPdfData(res.data)
-                message.success("Button CLicked")
-            }
-        });
-    };
 
 
     return (
-        <Card title="Order Upload">
-            {resultProps === undefined &&
-                <Row gutter={24}>
-                    <Col span={24}>
-                        <Dragger {...uploadProps}>
-                            <p className="ant-upload-drag-icon">
-                                <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                            <p className="ant-upload-hint">Please upload only valid documents.</p>
-                        </Dragger>
-                    </Col>
-                </Row>
-            }
-            < Row gutter={24} justify={'center'} >
-                {resultProps !== undefined && <>
-                    <Col span={24}>
-                        <Result {...resultProps} />
-                    </Col>
-                    {
-                        resultProps.status == 'success' ? <>
-                            <Col span={24}>
-                                {renderPDFOutPut()}
-                            </Col>
-                            < Col span={2} >
-                                <Button onClick={savePdfFields} type={'primary'} > Submit </Button>
-                            </Col>
-                            < Col span={2} >
-                                <Button onClick={onReset} > Reset </Button>
-                            </Col>
-                        </> : <>
-                            < Col span={2} >
-                                <Button onClick={onReset}> Reset </Button>
-                            </Col>
-                        </>
-                    }
-                </>
-
-                }
+        <Card title='Order Upload'>
+            <Row gutter={24}>
+                <Col span={24}>
+                    <Dragger {...uploadProps}>
+                        <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                        </p>
+                        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                        <p className="ant-upload-hint">Please upload only valid documents.</p>
+                    </Dragger>
+                </Col>
             </Row>
+                {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
+                <br />
+                {poPdfData && (
+            <Card>
+                    <Row>
+                <Col span={2}>
+                    <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
+                </Col>
+                <Col span={2}>
+                    <Button onClick={onReset} >Reset</Button>
+                </Col>
+            </Row>
+                <br />
+                <div className="table-container">
+                    <table className='ta-b' style={{ width: '100%' }} >
+                        <tr className='ta-b'>
+                            <th className='ta-b'>PO NUMBER</th>
+                        </tr>
+                        <tr className='ta-b'>
+                            <td className='ta-b'>{poPdfData?.poNumber}</td>
+                        </tr>
+                        {poPdfData?.PvhpoItemDetails?.map((i) => (
+                            <>
+                                <tr className='ta-b'>
+                                    <th></th>
+                                    <th className='ta-b'>PO LINE</th>
+                                </tr>
+                                <tr className='ta-b'>
+                                    <td></td>
+                                    <td className='ta-b'>{i.poLine}</td>
+                                </tr>
+                                <tr className='ta-b'>
+                                    <th></th>
+                                    <th></th>
+                                    <th className='ta-b'>SIZE</th>
+                                    <th className='ta-b'>UPC</th>
+                                </tr>
+                                {i.PvhpoItemVariantDetails.map((j) => (
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td className='ta-b'>{j.size}</td>
+                                        <td className='ta-b'>{j.upc}</td>
+                                    </tr>
+                                ))}
+                            </>
+                        ))}
+                    </table>
+                </div>
+            </Card>
+        )}
 
-        </Card>
-    );
+</Card>
+    )
 };
 
-export default PvhPdfUpload;
+
+export default XMLParser;

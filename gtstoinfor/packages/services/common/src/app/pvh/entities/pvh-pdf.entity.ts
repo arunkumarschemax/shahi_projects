@@ -1,44 +1,48 @@
-import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('orders')
-export class PVHOrdersEntity {
+@Entity('pdf_file_upload')
+export class PvhPdfInfoEntity {
     @PrimaryGeneratedColumn('increment', {
         name: "id",
     })
     id: number;
 
     @Column("varchar", {
+        nullable: false,
+        length: 50,
         name: "po_number",
     })
-    poNumber: string
-
+    poNumber: string 
 
     
     @Column("varchar", {
-        name: "po_line",
+        nullable: false,
+        length: 50,
+        name: "pdf_file_name",
     })
-    poLine: string
+    pdfFileName: string 
 
-
-
+    
     @Column("varchar", {
-        name: "size",
+        nullable: false,
+        length: 25,
+        name: "file_path",
     })
-    size: string
+    filePath: string 
 
+    
     @Column("varchar", {
-        name: "upc",
+        nullable: false,
+        length: 50,
+        name: "file_type",
     })
-    upc: string
+    fileType: string 
 
-
-    @Column({
-        type: 'enum',
-        enum: StatusEnum,
-        name: 'status',
+    @Column("text", {
+        nullable: false,
+        name: "file_data",
     })
-    status: StatusEnum;
+    fileData: string 
 
 
 
@@ -49,6 +53,7 @@ export class PVHOrdersEntity {
 
     @Column("varchar", {
         nullable: true,
+        length: 40,
         name: "created_user",
     })
     createdUser: string | null;
@@ -60,15 +65,10 @@ export class PVHOrdersEntity {
 
     @Column("varchar", {
         nullable: true,
+        length: 40,
         name: "updated_user",
     })
     updatedUser: string | null;
-
-    @VersionColumn({
-        default: 1,
-        name: "version_flag",
-    })
-    versionFlag: number;
 
     @Column({
         nullable: false,
@@ -77,7 +77,11 @@ export class PVHOrdersEntity {
     })
     isActive: boolean;
 
-    
-    
+    @Column("varchar", {
+
+        length: 40,
+        name: "upload_status",
+    })
+    uploadStatus: string ;
 
 }
