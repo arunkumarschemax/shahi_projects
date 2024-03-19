@@ -8,6 +8,7 @@ export class PvhSizeWiseModel {
     quantity: string;
     unitPrice: string;
     itemNo?:string;
+    color?:string;
     
 
 
@@ -21,6 +22,7 @@ export class PvhSizeWiseModel {
         quantity: string,
         unitPrice: string,
         itemNo?:string,
+        color?:string,
 
 
 
@@ -35,6 +37,7 @@ export class PvhSizeWiseModel {
         this.quantity = quantity
         this.unitPrice = unitPrice
         this.itemNo=itemNo
+        this.color=color
 
     };
 }
