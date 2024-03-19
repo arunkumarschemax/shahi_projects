@@ -378,7 +378,6 @@ export default function BomGeneration(props: Props) {
                 notification.info({ message: `Please update ItemNo for all the selected PO: ${isItemNoNull.poLine}`, placement: 'topRight' })
                 return
             }
-            console.log('item is nujll')
             const allKeys = filterData.map(row => row.poLine);
             setSelectedRowKeys(allKeys);
             setSelectedData(allKeys)
