@@ -21,13 +21,16 @@ export default function ConsumptionForms(props: Props) {
     const { itemId, printComponent, consumptionAgainst, uom, consumptionRequired } = itemDetails
     const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
+
+
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
     const bomService = new BomService()
 
-    const handleFieldChange = (value: any, styleOrItem: string, field: string) => {
+    const handleFieldChange = (value: any, styleOrItem: string, field: string ,type: string) => {
         const existingIndex = consumptions.findIndex(item => item[consumptionAgainst] === styleOrItem);
         const newConsumption = { [consumptionAgainst]: styleOrItem, consumptionAgainst, itemId, [field]: value, uom };
+        console.log(newConsumption)
         if (existingIndex !== -1) {
             const updatedConsumptions = [...consumptions];
             updatedConsumptions[existingIndex][field] = value;
@@ -38,6 +41,7 @@ export default function ConsumptionForms(props: Props) {
         setTrimWiseConsumptions(consumptions)
     };
 
+    console.log(consumptions)
 
     function UOMDropdown(record) {
         return <Select defaultValue={uom} key={record.id} disabled style={{ width: '100px' }} placeholder='Select UOM' >
@@ -53,12 +57,37 @@ export default function ConsumptionForms(props: Props) {
         {
             title: consumptionAgainst,
             dataIndex: 'value'
-        }, {
+        },
+         {
             title: 'Consumption',
+            width:'300px',
             render: (v, r) => <InputNumber addonBefore={UOMDropdown(r)}
-                onChange={(value: any) => handleFieldChange(Number(value), r.value, "consumption")}
+                onChange={(value: any) => handleFieldChange(Number(value), r.value, "consumption","Consumption")}
                 key={r.id}
             />
+        },
+        {
+            title:'Excess',
+            width:'70px',
+            children:[
+                {
+                    title: 'Direct',
+                    key: 'Direct',
+                    render: (v, r) => <InputNumber 
+                    onChange={(value: any) => handleFieldChange(Number(value), r.value, "directExcess","directExcess")}
+                    key={r.id}
+                />
+                  },
+                  {
+                    title: 'Distribution',
+                    dataIndex: 'Distribution',
+                    key: 'Distribution',
+                    render: (v, r) => <InputNumber 
+                    onChange={(value: any) => handleFieldChange(Number(value), r.value, "distributeExcess","distributeExcess")}
+                    key={r.id}
+                />
+                  },
+              ]      
         }
     ]
 
