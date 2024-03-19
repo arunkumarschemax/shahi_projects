@@ -162,6 +162,10 @@ const XMLParser: React.FC = () => {
     const parseXML = (xmlString: string) => {
         try {
             const parsedXML = xmljs.xml2js(xmlString, { compact: true }) as ParsedXML;
+            const regex = /<ItemFactoryNameInEnglish>.+\s+UNIT\s+-\s+12<\/ItemFactoryNameInEnglish>/;
+            const unit12IndexFind = regex.test(xmlString);
+            console.log("unit12IndexFind", unit12IndexFind);
+            // if (unit12IndexFind) {
             const poNumber = parsedXML.DOC.ePM_VerContent.PMNo._text;
             const currency = parsedXML.DOC.ePM_VerContent.CurrencyCode._text;
             const buyerName = parsedXML.DOC.ePM_VerContent.BuyerName._text;
@@ -194,6 +198,10 @@ const XMLParser: React.FC = () => {
 
             console.log(poPdfData, "poPdfData")
             setPoPdfData(poPdfData);
+        // }
+        // else {
+        //     message.error("Wrong Document Uploaded");
+        // }
         } catch (error) {
             console.error('Error parsing XML:', error);
         }
