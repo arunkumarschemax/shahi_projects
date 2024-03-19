@@ -39,7 +39,7 @@ const XMLParser: React.FC = () => {
             handleUpload(file);
             return false;
         },
-        showUploadList: true
+        showUploadList: false
     };
 
     interface ParsedXML {
@@ -162,21 +162,27 @@ const XMLParser: React.FC = () => {
     const parseXML = (xmlString: string) => {
         try {
             const parsedXML = xmljs.xml2js(xmlString, { compact: true }) as ParsedXML;
-
             const poNumber = parsedXML.DOC.ePM_VerContent.PMNo._text;
+            const currency = parsedXML.DOC.ePM_VerContent.CurrencyCode._text;
+            const buyerName = parsedXML.DOC.ePM_VerContent.BuyerName._text;
             const items = Array.isArray(parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item)
                 ? parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item
                 : [parsedXML.DOC.ePM_VerContent.Shipments.Shipment.Items.Item];
 
             const poData = {
                 poNumber: poNumber,
+                currency: currency,
+                buyerName:buyerName,
                 PvhpoItemDetails: items.map((item: any) => {
                     return {
                         poLine: item.ItemSeq._text,
+                        deliveryDate: parsedXML.DOC.ePM_VerContent.Shipments.Shipment.ShipmentDeliveryDate._text,
                         PvhpoItemVariantDetails: item.ColorSizes.ColorSize.map((colorSize: any) => {
                             return {
+                                color: colorSize.Color._text,
                                 size: colorSize.Size._text,
-                                upc: colorSize.UPCOrEAN._text
+                                upc: colorSize.UPCOrEAN._text,
+                                quantity: colorSize.Quantity._text
                             };
                         })
                     };
@@ -231,13 +237,15 @@ const XMLParser: React.FC = () => {
     console.log(poPdfData?.poNumber, "poNumber")
 
     function onReset() {
-     window.location.reload()
+        setFileList([]);
+        setPoPdfData(undefined)
+
     }
 
 
 
     return (
-        <Card title='Order Upload'>
+        <Card title='PVH Order Upload'>
             <Row gutter={24}>
                 <Col span={24}>
                     <Dragger {...uploadProps}>
@@ -266,32 +274,42 @@ const XMLParser: React.FC = () => {
                     <table className='ta-b' style={{ width: '100%' }} >
                         <tr className='ta-b'>
                             <th className='ta-b'>PO NUMBER</th>
+                            <th className='ta-b'>CURRENCY</th>
+                            <th className='ta-b'>BUYER NAME</th>
                         </tr>
                         <tr className='ta-b'>
                             <td className='ta-b'>{poPdfData?.poNumber}</td>
+                            <td className='ta-b'>{poPdfData?.currency}</td>
+                            <td className='ta-b'>{poPdfData?.buyerName}</td>
                         </tr>
                         {poPdfData?.PvhpoItemDetails?.map((i) => (
                             <>
                                 <tr className='ta-b'>
                                     <th></th>
                                     <th className='ta-b'>PO LINE</th>
+                                    <th className='ta-b'>DELIVERY DATE</th>
                                 </tr>
                                 <tr className='ta-b'>
                                     <td></td>
                                     <td className='ta-b'>{i.poLine}</td>
+                                    <td className='ta-b'>{i.deliveryDate}</td>
                                 </tr>
                                 <tr className='ta-b'>
                                     <th></th>
                                     <th></th>
                                     <th className='ta-b'>SIZE</th>
+                                    <th className='ta-b'>COLOR</th>
                                     <th className='ta-b'>UPC</th>
+                                    <th className='ta-b'>QUANTITY</th>
                                 </tr>
                                 {i.PvhpoItemVariantDetails.map((j) => (
                                     <tr>
                                         <td></td>
                                         <td></td>
                                         <td className='ta-b'>{j.size}</td>
+                                        <td className='ta-b'>{j.color}</td>
                                         <td className='ta-b'>{j.upc}</td>
+                                        <td className='ta-b'>{j.quantity}</td>
                                     </tr>
                                 ))}
                             </>

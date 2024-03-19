@@ -13,11 +13,27 @@ export class PvhOrderschildEntity {
     })
     poNumber: string
 
+    @Column("varchar", {
+        name: "currency",
+    })
+    currency: string
 
+    @Column("varchar", {
+        name: "buyerName",
+    })
+    buyerName: string
+
+
+    
     @Column("varchar", {
         name: "po_line",
     })
     poLine: string
+
+    @Column("varchar", {
+        name: "deliveryDate",
+    })
+    deliveryDate: string
 
 
 
@@ -27,10 +43,19 @@ export class PvhOrderschildEntity {
     size: string
 
     @Column("varchar", {
+        name: "color",
+    })
+    color: string
+
+    @Column("varchar", {
         name: "upc",
     })
     upc: string
 
+    @Column("varchar", {
+        name: "quantity",
+    })
+    quantity: string
 
     @Column({
         type: 'enum',
