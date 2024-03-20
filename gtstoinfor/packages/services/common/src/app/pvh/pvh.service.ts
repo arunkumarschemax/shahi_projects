@@ -13,6 +13,7 @@ import { PvhOrdersChildRepository } from "./repositories/pvh-orders-child.repo";
 import { PvhOrderschildEntity } from "./entities/pvh-orders-child.entity";
 import { PVHOrdersEntity } from "./entities/pvh-orders.entity";
 import { PvhPdfInfoEntity } from "./entities/pvh-pdf.entity";
+import { PvhPdfRepo } from "./repositories/pvh-pdf.repo";
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export class PVHService {
     private dataSource: DataSource,
     private PvhOrdersRepo: PVHOrdersRepository,
     private PvhOrdersChildRepo: PvhOrdersChildRepository,
+    private pvhPdfRepo: PvhPdfRepo,
 
 
   ) { }
@@ -156,7 +158,7 @@ export class PVHService {
         entity.uploadStatus = "SUCCESS";
         entities.push(entity);
       }
-      const uploadDoc = await this.PvhOrdersRepo.save(entities);
+      const uploadDoc = await this.pvhPdfRepo.save(entities);
       if (!uploadDoc) {
         flag = false;
       }
