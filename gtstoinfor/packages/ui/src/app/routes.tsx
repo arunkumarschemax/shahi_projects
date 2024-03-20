@@ -98,6 +98,7 @@ import CkAddressView from "./masters/ck-address/ck-address-view"
 import PvhPdfUpload from "./pvh/pdf-upload"
 import PvhOrdersGrid from "./pvh/pvh-order-data-grid"
 import PvhOrdersDetailView from "./pvh/pvh-order-detail-view"
+import PvhOrderAcceptanceGrid from "./pvh/pvh-order-acceptance-view"
 
 
 export const AppRoutes = () => {
@@ -340,6 +341,7 @@ export const AppRoutes = () => {
                     <Route path='pvh-pdf-upload' element={<PvhPdfUpload />} />
                     <Route path='pvh-order-data-info-grid' element={<PvhOrdersGrid />} />
                     <Route path='pvh-order-data-detail-view' element={<PvhOrdersDetailView />} />
+                    <Route path="pvh-order-acceptance" element={<PvhOrderAcceptanceGrid />} />
 
 
 

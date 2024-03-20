@@ -114,6 +114,28 @@ export class PVHController {
     }
 
 
+    @Post('/getPoNumber')
+    async getPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    
+    @Post('/getorderacceptanceData')
+    @ApiBody({ type: PvhOrderFilter })
+    async getorderacceptanceData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderacceptanceData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
 
 
 

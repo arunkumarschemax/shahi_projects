@@ -24,10 +24,35 @@ export class PVHOrdersRepository extends Repository<PVHOrdersEntity> {
         // if (req.color !== undefined) {
         //     query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
         // }
-        // if (req.deliveryDateStartDate !== undefined) {
-        //     query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
-        // }
+        if (req.deliveryDateStartDate !== undefined) {
+            query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+        }
        query.andWhere(`o.status != 'ACCEPTED'`);
+
+        return await query.getRawMany()
+    }
+
+    async getPoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+
+        return await query.getRawMany()
+    }
+
+    async getorderacceptanceData(req?: PvhOrderFilter): Promise<any[]> {
+        console.log(req)
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+        if (req.poNumber !== undefined) {
+            query.andWhere(`o.po_number ='${req.poNumber}'`)
+        }
+        // if (req.color !== undefined) {
+        //     query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
+        // }
+        if (req.deliveryDateStartDate !== undefined) {
+            query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+        }
+        query.andWhere(`o.status != 'ACCEPTED'`);
 
         return await query.getRawMany()
     }

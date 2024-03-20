@@ -49,7 +49,7 @@ import {
   
     useEffect(() => {
       getorderData();
-      //  getPoNumber()
+       getPoNumber()
     }, []);
 
   
@@ -89,14 +89,14 @@ import {
     });
     };
 
-    // const getPoNumber = () => {
-    //     service.getPoNumber().then((res) => {
-    //       if (res.status) {
-    //         setPoNumber(res.data);
+    const getPoNumber = () => {
+        service.getPoNumber().then((res) => {
+          if (res.status) {
+            setPoNumber(res.data);
           
-    //       }
-    //     });
-    //   };
+          }
+        });
+      };
 
       // const getColorInfo = () => {
     //   services.getColorInfo().then((res) => {
@@ -1155,7 +1155,7 @@ import {
                   <Input placeholder="Enter Color "  allowClear />
                 </Form.Item>
               </Col> */}
-              {/* <Col
+              <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -1165,7 +1165,7 @@ import {
                <Form.Item label="Delivery Date" name="deliveryDate"  >
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
-              </Col> */}
+              </Col>
               {/* <Row> */}
               <Col
                 xs={{ span: 24 }}

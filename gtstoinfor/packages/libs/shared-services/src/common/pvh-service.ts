@@ -25,4 +25,12 @@ export class PvhService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/pvhBot")
     }
 
+    async getPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPoNumber")
+    }
+
+    async getorderacceptanceData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getorderacceptanceData", req)
+    }
+
 }

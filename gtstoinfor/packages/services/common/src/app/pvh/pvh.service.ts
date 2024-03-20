@@ -276,6 +276,55 @@ export class PVHService {
     
   }
 
+  async getPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.PvhOrdersRepo.getPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+  async getorderacceptanceData(req?: PvhOrderFilter): Promise<CommonResponseModel> {
+    console.log(req, "servvv")
+    try {
+      const details = await this.PvhOrdersRepo.getorderacceptanceData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, PvhOrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
+          sizeDateMap.set(
+            `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
+            new PvhOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.trans_mode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status,rec.delivery_date,rec.buyer_name, [])
+          );
+
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new PvhSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no,rec.color));
+        }
+      }
+      const dataModelArray: PvhOrderDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
+
 
 
 }
