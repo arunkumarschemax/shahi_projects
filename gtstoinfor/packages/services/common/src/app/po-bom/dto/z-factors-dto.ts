@@ -1,81 +1,66 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { zFactorsBomDto } from "./z-factors-bom-dto";
+import { ActionEnum } from "packages/libs/shared-models/src/Enum/z-factors-Enum";
 
-export class ZFactorsBomDto {
+export class ZFactorsDto {
     @ApiProperty()
     id:number
 
     @ApiProperty()
-    itemName:string
+    itemId:number
     
     @ApiProperty()
-    imCode:string
-
-
-    @ApiProperty()
-    geoCode:string
+    actualIM:string
 
     @ApiProperty()
-    destination:string
+    action:ActionEnum
 
     @ApiProperty()
-    size:string
+    geoCode:boolean
 
     @ApiProperty()
-    gender:string
+    destination:boolean
 
     @ApiProperty()
-    plant:string
+    size:boolean
 
     @ApiProperty()
-    style:string
+    gender:boolean
 
     @ApiProperty()
-    sequence:number
+    plant:boolean
 
     @ApiProperty()
-    isActive: boolean;
-  
-    @ApiProperty()
-    createdAt : string;
-  
-    @ApiProperty()
-    createdUser : string;
-    
-      @ApiProperty()
-    updatedAt : string;
-    @ApiProperty()
-    updatedUser : string;
-  
-    @ApiProperty()
-    versionFlag : number;
-    
-    Zfactordto: any;
+    style:boolean
 
-    // constructor(
-    //     id:number,
-    //     itemName:string,
-    //     imCode:string,
-    //     geoCode:string,
-    //     destination:string,
-    //     size:string,
-    //     gender:string,
-    //     plant:string,
-    //     style:string,
-    //     sequence:number,
-    //     createdUser?: string | null
-    // ){
-    //     this.id=id
-    //     this.itemName=itemName
-    //     this.imCode=imCode
-    //     this.geoCode=geoCode
-    //     this.destination=destination
-    //     this.size=size
-    //     this.gender=gender
-    //     this.style=style
-    //     this.plant=plant
-    //     this.sequence=sequence
-    //     this.createdUser=createdUser
-    // }
+    @ApiProperty({type:[zFactorsBomDto]})
+    zFactorBomDetails:zFactorsBomDto[];
 
+    constructor(
+    id:number,
+    itemId:number,
+    actualIM:string,
+    action:ActionEnum,
+    geoCode:boolean,
+    destination:boolean,
+    size:boolean,
+    gender:boolean,
+    plant:boolean,
+    style:boolean,
+    zFactorBomDetails:zFactorsBomDto[]
 
+        )
+        {
+       this.id=id
+       this.itemId=itemId    
+       this.actualIM=actualIM
+       this.action=action
+       this.geoCode=geoCode
+       this.destination=destination
+       this.size=size
+       this.gender=gender
+       this.plant=plant
+       this.style=style
+       this.zFactorBomDetails=zFactorBomDetails
+    }
 }

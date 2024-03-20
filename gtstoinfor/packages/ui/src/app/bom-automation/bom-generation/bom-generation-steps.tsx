@@ -45,6 +45,23 @@ export default function BomGenerationSteps() {
             }
         })
     }
+  
+    function getUniqueSizes(data) {
+        const sizes = new Set();
+        data.forEach(item => {
+            Object.keys(item).forEach(key => {
+                if (['L', 'XL', 'M', 'XXL', 'S', 'XS','XXL','XS-T'].includes(key)) {
+                    sizes.add(key);
+                }
+            });
+        });
+            return Array.from(sizes);
+    }
+    
+    const uniqueSizes = getUniqueSizes(selectedData);
+    console.log(uniqueSizes)
+
+
     const steps = [
         {
             title: 'Update Quantites',
@@ -56,7 +73,7 @@ export default function BomGenerationSteps() {
         },
         {
             title: 'Update Consumption',
-            content: <ConsumptionUpdate updatedSizes={updatedData} poLines={selectedPoLines} generateBom={generateBom} setItemId={setItemId} setTrimWiseConsumptions={setTrimsConsumptions} distinctValues={distinctValues} />,
+            content: <ConsumptionUpdate updatedSizes={updatedData} poLines={selectedPoLines} generateBom={generateBom} setItemId={setItemId} setTrimWiseConsumptions={setTrimsConsumptions} distinctValues={distinctValues}  getSelectedData={uniqueSizes}/>,
         },
         // {
         //     title: 'Generate proposal',

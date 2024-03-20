@@ -12,6 +12,9 @@ type Props = {
     generateBom: () => void;
     poLines: string[]
     updatedSizes: any[]
+    // getSelectedData:any
+    getSelectedData: any[]
+
 }
 
 export default function ConsumptionUpdate(props: Props) {
@@ -24,7 +27,7 @@ export default function ConsumptionUpdate(props: Props) {
     useEffect(() => {
         getAllTrims();
     }, [])
-
+console.log('hiiiiiii')
 const styleReq = props.distinctValues.distinctStyles
 
     const getAllTrims = () => {
@@ -34,7 +37,7 @@ const styleReq = props.distinctValues.distinctStyles
             }
         })
     }
-
+    console.log(props.getSelectedData)
     console.log(props.updatedSizes)
 
     function openConversionModal() {
@@ -80,7 +83,7 @@ const styleReq = props.distinctValues.distinctStyles
                             key: id,
                             children: <>
                         { v.consumptionRequired ?<Typography.Link onClick={openConversionModal}>{"Converter"}</Typography.Link> : <></>}
-                            <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} /></>,
+                            <ConsumptionForms updatedSizes={props.updatedSizes} poLines={props.poLines} generateBom={props.generateBom} setTrimWiseConsumptions={props.setTrimWiseConsumptions} itemDetails={v} distinctValues={props.distinctValues} key={id} selectedSize={props.getSelectedData}/></>,
                         };
                     })}
                 />
