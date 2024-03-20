@@ -1,4 +1,4 @@
-export enum action {
+export enum ActionEnum {
     ADD = 'ADD',
     ALTER = 'ALTER',
   }

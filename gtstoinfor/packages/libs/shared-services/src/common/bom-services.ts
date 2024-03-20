@@ -1,4 +1,4 @@
-import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, BomProposalReq, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumReq, StyleNumberReq, updateItemId } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, BomProposalReq, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumReq, StyleNumberReq, styleAndItemreq, updateItemId } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -158,5 +158,12 @@ export class BomService extends CommonAxiosService {
     }
     async getAllConsumptionRequiredTrims(styleReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllConsumptionRequiredTrims",styleReq)
+    }
+    async getUniqueSizeAgainstStyleAndItem(req:styleAndItemreq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getUniqueSizeAgainstStyleAndItem",req)
+    }
+
+    async getBackingPaperV2(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBackingPaperV2", req)
     }
 }
