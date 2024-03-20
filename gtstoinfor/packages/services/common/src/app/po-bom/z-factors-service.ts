@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
+
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { ZFactorsRepo } from './repo/z-factors-repo';
 import { ZFactorsEntity } from './entittes/z-factors.entity';
 import { ZFactorsBomEntity } from './entittes/z-factors-bom.entity';
 import { log } from 'winston';
-import { zFactorsDto } from './dto/z-factors-dto';
+import { ZFactorsBomDto } from './dto/z-factors-dto';
 
 @Injectable()
 export class ZFactorServices {
@@ -39,7 +40,7 @@ export class ZFactorServices {
         }
     }
 
-    async createZFactors(req: zFactorsDto): Promise<CommonResponseModel> {
+    async createZFactors(req: ZFactorsBomDto): Promise<CommonResponseModel> {
         console.log(req,"reqq")
         try {
             const entity = new ZFactorsEntity()

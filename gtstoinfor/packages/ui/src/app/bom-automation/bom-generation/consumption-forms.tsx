@@ -19,6 +19,7 @@ type Props = {
 export default function ConsumptionForms(props: Props) {
 
     const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
+    console.log(props)
     const { itemId, printComponent, consumptionAgainst, uom, consumptionRequired } = itemDetails
     const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
@@ -27,6 +28,8 @@ export default function ConsumptionForms(props: Props) {
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
     const bomService = new BomService()
+
+    console.log(updatedSizes)
 
     const handleFieldChange = (value: any, styleOrItem: string, field: string ,type: string) => {
         const existingIndex = consumptions.findIndex(item => item[consumptionAgainst] === styleOrItem);
@@ -101,7 +104,7 @@ export default function ConsumptionForms(props: Props) {
               ]      
         }
     ]
-
+    
     const generateBom = () => {
         const req = new BomGenerationReq()
         req.poLine = poLines

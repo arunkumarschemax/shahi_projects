@@ -34,6 +34,11 @@ export class ItemEntity {
     })
     consumption: number
 
+    @Column('varchar', {
+        name: 'wastage_against',
+    })
+    wastageAgainst: string
+
     @Column('int', {
         name: 'wastage',
     })
