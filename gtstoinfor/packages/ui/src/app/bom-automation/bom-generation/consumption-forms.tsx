@@ -5,6 +5,7 @@ import UOMConversion from './uom-convserion-form'
 import { DownloadOutlined } from '@ant-design/icons'
 import moment from 'moment'
 import { BomService } from '@project-management-system/shared-services'
+import { render } from 'react-dom'
 
 type Props = {
     distinctValues: any,
@@ -13,14 +14,14 @@ type Props = {
     setTrimWiseConsumptions: (consumptions: any) => void
     generateBom: () => void
     updatedSizes: any[]
+    selectedSize:any[]
 
 }
 
 export default function ConsumptionForms(props: Props) {
 
-    const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes } = props
-    console.log(props)
-    const { itemId, printComponent, consumptionAgainst, uom, consumptionRequired } = itemDetails
+    const { distinctValues, setTrimWiseConsumptions, poLines, itemDetails, updatedSizes,selectedSize } = props
+    const { itemId, printComponent, consumptionAgainst, uom, consumptionRequired,wastageAgainst } = itemDetails
     const { distinctStyles, distinctItems } = distinctValues
     const [consumptions, setConsumptions] = useState<any[]>([])
 
@@ -29,7 +30,6 @@ export default function ConsumptionForms(props: Props) {
     const [DynamicComponent, setDynamiComponent] = useState<any>(null)
     const bomService = new BomService()
 
-    console.log(updatedSizes)
 
     const handleFieldChange = (value: any, styleOrItem: string, field: string ,type: string) => {
         const existingIndex = consumptions.findIndex(item => item[consumptionAgainst] === styleOrItem);
@@ -44,8 +44,7 @@ export default function ConsumptionForms(props: Props) {
         }
         setTrimWiseConsumptions(consumptions)
     };
-
-    console.log(consumptions)
+    // console.log(consumptions)
 
     // function UOMDropdown(record) {
     //     console.log(record,"record")
@@ -121,7 +120,6 @@ export default function ConsumptionForms(props: Props) {
             }
         })
     }
-    // console.log(consumptions)
     function onGenerateBom() {
         // Convert consumptions array to a Map for easier lookup
         generateBom()
@@ -146,7 +144,17 @@ export default function ConsumptionForms(props: Props) {
 
     function onCancel() {
         setModalOpen(false)
-    }
+    }   
+
+      const sizeColumns = props?.selectedSize?.map((header, index) => ({
+        title: header,
+        key: header,
+        render: (v, r) => <InputNumber 
+        onChange={(value: any) => handleFieldChange(Number(value), r.value, header,header)}
+        key={r.id}
+        />
+      }));
+    
     return (
         <Row gutter={[24, 24]} justify={'center'}>
             <Col span={24} >
@@ -154,7 +162,11 @@ export default function ConsumptionForms(props: Props) {
                     <Table rowKey={(row) => row.style} bordered pagination={false} columns={columns} dataSource={handleDynamicDataSource()} /> 
                     : 
                     <Tag>Consumption not required,Download the O/P</Tag>
-                }            </Col>
+                }   
+                { wastageAgainst?
+                      <Table rowKey={(row) =>row.style} bordered pagination={false} columns={sizeColumns} dataSource={handleDynamicDataSource()}></Table>
+                      :<></>
+                }         </Col>
             {/* <Col span={4}>
                 <Button icon={<DownloadOutlined />} onClick={props.generateBom} type='primary'>Download BOM </Button>
             </Col> */}
