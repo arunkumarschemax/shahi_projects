@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { zFactorsDto } from './dto/z-factors-dto';
+
 import { CommonResponseModel } from '@project-management-system/shared-models';
 import { ZFactorsRepo } from './repo/z-factors-repo';
 import { ZFactorsEntity } from './entittes/z-factors.entity';
