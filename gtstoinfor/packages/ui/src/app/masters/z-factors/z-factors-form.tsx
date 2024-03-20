@@ -1,6 +1,8 @@
+import { ZFactorReq } from '@project-management-system/shared-models';
 import { BomService, ItemsService, ZFactoryService } from '@project-management-system/shared-services';
-import { Card, Col, Form, Input, Radio, Row, Select } from 'antd'
+import { Button, Card, Col, Form, Input, Radio, Row, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const ZFactors = () => {
   const [items,setItems] =useState<any[]>([]);
@@ -9,15 +11,16 @@ const ZFactors = () => {
   const [geoCode,setGeoCode]=useState<any[]>([]);
   const [plantCode,setPlantCode]=useState<any[]>([]);
   const service1=new BomService();
-  const service= new ItemsService();
   const service2= new ZFactoryService();
   const {Option} = Select
+  const navigate=useNavigate();
 
   useEffect(() => {
     getAllItems();
     getImCode();
     getStyles();
     getGeoCode();
+    getPlantCode();
 },[])
 
 const getPlantCode= () => {
@@ -45,8 +48,9 @@ const getGeoCode= () => {
 };
 
 const getImCode= () => {
-  service1
-    .getImcodes().then((res) => {
+  const req = new ZFactorReq()
+  service2
+    .getImCode(req).then((res) => {
       if (res.status) {
         setImCode(res.data);
       } else {
@@ -56,20 +60,10 @@ const getImCode= () => {
   
 };
 
-const getStyles= () => {
-  service1
-    .getStyle().then((res) => {
-      if (res.status) {
-        setStyle(res.data);
-      } else {
-        setStyle([]);
-      }
-    })
-  
-};
+
 
   const getAllItems= () => {
-    service
+    service2
       .getAllItems().then((res) => {
         if (res.status) {
           setItems(res.data);
@@ -79,10 +73,23 @@ const getStyles= () => {
       })
     
   };
+
+  const getStyles= () => {
+    service1
+      .getStyle().then((res) => {
+        if (res.status) {
+          setStyle(res.data);
+        } else {
+          setStyle([]);
+        }
+      })
+    
+  };
     
   return (
     <div>
-      <Card title={<span style={{fontWeight: "bold"}}>Z FACTORS</span>}>
+    <Card title={<span style={{fontWeight: "bold"}}>Z Factors</span>}
+            extra={<span><Button type='primary' onClick={() => navigate('/bom/z-factors-view')}>View</Button></span>}>
        <Form layout='vertical'>
        <Row gutter={60}>
        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
@@ -98,7 +105,7 @@ const getStyles= () => {
                     <Form.Item name="imCode" label="Im Code" >
                          <Select  placeholder='Select Style Number' style={{textAlign:"center"}}  showSearch >
                          {imCode.map((item) => (
-                           <Option key={item.id} value={item.imCode}>{item.imCode}</Option>
+                           <Option key={item.id} value={item.im_code}>{item.im_code}</Option>
                          ))}
                        </Select>
                     </Form.Item>
@@ -218,17 +225,17 @@ const getStyles= () => {
        <Row gutter={40}>
        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="item" label="Items" >
-                         <Input placeholder='Select Item'/>
+                         <Input placeholder='Enter Item'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="imCode" label="Im Code" >
-                    <Input placeholder='Select ImCode'/>
+                    <Input placeholder='Enter ImCode'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="description" label="Description" >
-                    <Input placeholder='Select Description'/>
+                    <Input placeholder='Enter Description'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
@@ -242,27 +249,27 @@ const getStyles= () => {
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="destination" label="Destination" >
-                    <Input placeholder='Select Destination'/>
+                    <Input placeholder='Enter Destination'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="size" label="Size" >
-                    <Input placeholder='Select Size'/>
+                    <Input placeholder='Enter Size'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="sequence" label="Sequence" >
-                    <Input placeholder='Select Sequence'/>
+                    <Input placeholder='Enter Sequence'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="gender" label="Gender" >
-                   <Input placeholder='Select Gender'/>
+                   <Input placeholder='Enter Gender'/>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="plantCode" label="Plant code" >
-                    <Select  placeholder='Select Geo Code' style={{textAlign:"center"}}  showSearch >
+                    <Select  placeholder='Select Plant Code' style={{textAlign:"center"}}  showSearch >
                          {plantCode.map((map) => (
                            <Option key={map.id} value={map.plant}>{map.plant}</Option>
                          ))}
