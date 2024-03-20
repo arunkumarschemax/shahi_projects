@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { zFactorsBomDto } from "./z-factors-bom-dto";
 import { ActionEnum } from "packages/libs/shared-models/src/Enum/z-factors-Enum";
 
-export class ZFactorsBomDto {
+export class ZFactorsDto {
     @ApiProperty()
     id:number
 
