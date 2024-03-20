@@ -2589,79 +2589,62 @@ export class DpomService {
 
     @Cron('0 23 * * *')
     async legalPOPdfBot() {
-        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+        const browser = await puppeteer.launch({ headless: false }); // Run in headless mode
         try {
             const page = await browser.newPage();
-            // Set screen size
             await page.setViewport({ width: 1580, height: 1024 });
-            // Navigate the page to a URL
-            await page.goto('http://localhost:4200/#/login', {
-                timeout: 100000,
-                waitUntil: 'networkidle0', // Wait until there are no more network connections
-            });
+            await page.goto('http://localhost:4200/#/login', { waitUntil: 'networkidle0' });
+
             await page.waitForSelector('#login-form_username');
             await page.type('#login-form_username', 'nike@gmail.com');
             await page.waitForSelector('#login-form_password');
-            await page.type('#login-form_password', 'nike@shahi')
+            await page.type('#login-form_password', 'nike@shahi');
             await page.click('button.ant-btn-primary');
-            await new Promise(resolve => setTimeout(resolve, 10000))
-            // Wait for a while to see the result (you can adjust the wait time)
-            // setTimeout(async () => {
-            await page.goto('http://localhost:4200/#/nike/pdf-upload/', {
-                timeout: 15000,
-                waitUntil: 'networkidle0', // Wait until there are no more network connections
-            }).then(async () => {
-                // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                const directoryPath = 'D:/Nike PDF/NIKE-PDF PO';
-                // Specify the source and destination directories
-                const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
-                const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
-                const files = fs.readdirSync(directoryPath)
-                console.log(files)
-                if (files.length > 0) {
-                    for (const file of files) {
-                        await page.waitForSelector('input[type="file"]');
-                        const fileInput = await page.$('input[type="file"]');
-                        // Get the full path of the file
-                        const filePath = path.join(directoryPath, file);
-                        // Set the file path to be uploaded
-                        await fileInput.uploadFile(filePath);
-                        // await input.uploadFile(filePath);
-                        await page.waitForTimeout(5000)
-                        // Submit the form if needed
-                        await page.waitForSelector('button.ant-btn-primary')
-                        await page.click('button.ant-btn-primary');
-                        page.on('response', async response => {
-                            // console.log(`Response1: ${JSON.stringify(response)}`);
-                            const responseObject = JSON.parse(await response.text())
-                            if (responseObject.status) {
-                                const sourceFilePath = path.join(sourceDirectory, file);
-                                const destinationFilePath = path.join(destinationDirectory, file);
-                                fs.rename(sourceFilePath, destinationFilePath, (err) => {
-                                    if (err) {
-                                        return new CommonResponseModel(false, 0, '')
-                                    }
-                                });
-                            } else {
-                                await page.waitForSelector('button.ant-btn-dangerous')
-                                await page.click('button.ant-btn-dangerous');
-                                page.off('response')
-                            }
-                        });
-                    }
+            await page.waitForNavigation({ waitUntil: 'networkidle0' });
+
+            await page.goto('http://localhost:4200/#/nike/pdf-upload/', { waitUntil: 'networkidle0' });
+
+            const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
+            const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
+            const files = fs.readdirSync(sourceDirectory);
+
+            if (files.length === 0) {
+                return new CommonResponseModel(false, 0, 'No PDF Files to upload');
+            }
+
+            for (const file of files) {
+                const filePath = path.join(sourceDirectory, file);
+                await page.waitForSelector('input[type="file"]');
+                const fileInput = await page.$('input[type="file"]');
+                await fileInput.uploadFile(filePath);
+                await page.waitForTimeout(5000);
+                await page.waitForSelector('button.ant-btn-primary');
+                await page.click('button.ant-btn-primary');
+
+                const response = await page.waitForResponse(response => {
+                    const contentType = response.headers()['content-type'];
+                    return contentType && contentType.includes('application/json');
+                });
+
+                const responseObject = await response.json();
+                if (responseObject.status) {
+                    const sourceFilePath = path.join(sourceDirectory, file);
+                    const destinationFilePath = path.join(destinationDirectory, file);
+                    fs.renameSync(sourceFilePath, destinationFilePath);
                 } else {
-                    browser.close()
-                    return new CommonResponseModel(false, 0, 'No PDF Files to upload')
+                    await page.waitForSelector('button.ant-btn-dangerous');
+                    await page.click('button.ant-btn-dangerous');
                 }
-            });
-            // }, 10000);
-            return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
+            }
+
+            return new CommonResponseModel(true, 1, 'All PDFs submitted successfully');
         } catch (error) {
-            return new CommonResponseModel(false, 0, error)
+            return new CommonResponseModel(false, 0, error.message || 'Unknown error occurred');
         } finally {
-            browser.close()
+            await browser.close();
         }
     }
+
 
     @Cron('0 21 * * *')
     async diaPdfBot() {
