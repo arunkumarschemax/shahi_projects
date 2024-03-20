@@ -4,11 +4,11 @@ export class ZFactoryService extends CommonAxiosService{
   private URL = "/z-factors-controller";
 
 
-  async getGeoCode(): Promise<AllHMStyleResponseModel> {
+  async getGeoCode(): Promise< CommonResponseModel> {
     return this.axiosPostCall(this.URL + '/getGeoCode')
   }
 
-  async getPlantCode(): Promise<AllHMStyleResponseModel> {
+  async getPlantCode(): Promise< CommonResponseModel> {
     return this.axiosPostCall(this.URL + '/getPlantCode')
   }
 

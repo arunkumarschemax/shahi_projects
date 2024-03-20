@@ -2,8 +2,9 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
 
-import { AllHMStyleResponseModel, CommonResponseModel, HMStylesModelDto } from '@project-management-system/shared-models';
+import {  CommonResponseModel} from '@project-management-system/shared-models';
 import { ZFactorServices } from './z-factors-service';
+import { ZFactorsDto } from './dto/z-factors-dto';
 
 
 
@@ -38,7 +39,7 @@ export class ZfactorsController {
         }
      }
      
-    @ApiBody({type:zFactorsDto})
+    @ApiBody({type:ZFactorsDto})
     @Post('/createZFactors')
     async createZFactors(@Body() req: any): Promise<CommonResponseModel> {
         try {
