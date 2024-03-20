@@ -36,6 +36,7 @@ import { HMStyleAdapter } from "./adapter/hm-style-adapter";
 import { ZfactorsController } from "./z-factor-controller";
 import { ZFactorServices } from "./z-factors-service";
 
+
 @Module({
     imports:[
         TypeOrmModule.forFeature([

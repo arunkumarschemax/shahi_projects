@@ -162,4 +162,8 @@ export class BomService extends CommonAxiosService {
     async getUniqueSizeAgainstStyleAndItem(req:styleAndItemreq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getUniqueSizeAgainstStyleAndItem",req)
     }
+
+    async getBackingPaperV2(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBackingPaperV2", req)
+    }
 }
