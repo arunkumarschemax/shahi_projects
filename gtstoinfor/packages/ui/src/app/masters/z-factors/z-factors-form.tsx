@@ -1,6 +1,10 @@
 import { BomService, ItemsService, ZFactoryService } from '@project-management-system/shared-services';
 import { Card, Col, Form, Input, Radio, Row, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
+import AlertMessages from '../../common/common-functions/alert-messages';
+import { useNavigate } from 'react-router-dom';
+import { ActionEnum } from 'packages/libs/shared-models/src/Enum/z-factors-Enum';
+
 
 const ZFactors = () => {
   const [items,setItems] =useState<any[]>([]);
@@ -12,6 +16,8 @@ const ZFactors = () => {
   const service= new ItemsService();
   const service2= new ZFactoryService();
   const {Option} = Select
+
+
 
   useEffect(() => {
     getAllItems();
@@ -86,16 +92,16 @@ const getStyles= () => {
        <Form layout='vertical'>
        <Row gutter={60}>
        <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
-                    <Form.Item name="item" label="Items" >
+                    <Form.Item name="itemId" label="Items" >
                          <Select  placeholder='Select Item' style={{textAlign:"center"}}  showSearch >
                          {items.map((map) => (
-                           <Option key={map.itemId} value={map.item}>{map.item}</Option>
+                           <Option key={map.itemId} value={map.itemId}>{map.item}</Option>
                          ))}
                        </Select>
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
-                    <Form.Item name="imCode" label="Im Code" >
+                    <Form.Item name="actualIM" label="Im Code" >
                          <Select  placeholder='Select Style Number' style={{textAlign:"center"}}  showSearch >
                          {imCode.map((item) => (
                            <Option key={item.id} value={item.imCode}>{item.imCode}</Option>
@@ -104,10 +110,18 @@ const getStyles= () => {
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
-                    <Form.Item name="action" label="Action" >
-                        
-                    </Form.Item>
-                </Col>
+                <Form.Item label="Action" name="action"
+                initialValue={ActionEnum.ADD}
+                >
+                <Select placeholder='Select Action' 
+                defaultValue={ActionEnum.ADD}
+                >
+                  {Object.keys(ActionEnum).map(action => {
+                    return <Select.Option value={ActionEnum[action]}>{ActionEnum[action]}</Select.Option>
+                  })}
+                </Select>
+              </Form.Item>
+              </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
                     <Form.Item name="geoCode" label="Geo Code" >
                     <Radio.Group
@@ -177,7 +191,7 @@ const getStyles= () => {
                     </Form.Item>
                 </Col>
                 <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 5 }} xl={{ span: 5}} >
-                    <Form.Item name="plantCode" label="Plant code" >
+                    <Form.Item name="plant" label="Plant code" >
                     <Radio.Group
               // onChange={(e) => {
               //   setSelectedKeys([e.target.value.toString()]);

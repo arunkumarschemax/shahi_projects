@@ -2,9 +2,10 @@ import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from 'libs/backend-utils';
 
-import { AllHMStyleResponseModel, CommonResponseModel, HMStylesModelDto } from '@project-management-system/shared-models';
+import {  CommonResponseModel} from '@project-management-system/shared-models';
 import { ZFactorServices } from './z-factors-service';
-import { zFactorsDto } from './dto/z-factors-dto';
+import { ZFactorsDto } from './dto/z-factors-dto';
+
 
 
 
@@ -12,10 +13,10 @@ import { zFactorsDto } from './dto/z-factors-dto';
 @Controller('z-factors-controller')
 
 export class ZfactorsController {
-  constructor(private zFactorService: ZFactorServices,
-    private readonly applicationExceptionHandler: ApplicationExceptionHandler) { }
-   
-   
+    constructor(private zFactorService: ZFactorServices,
+        private readonly applicationExceptionHandler: ApplicationExceptionHandler) { }
+
+
 
 
     @Post('/getGeoCode')
@@ -28,14 +29,25 @@ export class ZfactorsController {
         }
       }
 
-      @Post('/getPlantCode')
-    async getPlantCode():Promise<CommonResponseModel>{
+    @Post('/getPlantCode')
+    async getPlantCode():Promise<CommonResponseModel> {
         try{
             return this.zFactorService.getPlantCode()
         }
         catch(err){
-            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
-      }
- 
+     }
+     
+    @ApiBody({type:ZFactorsDto})
+    @Post('/createZFactors')
+    async createZFactors(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.zFactorService.createZFactors(req)
+        }
+        catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
 }

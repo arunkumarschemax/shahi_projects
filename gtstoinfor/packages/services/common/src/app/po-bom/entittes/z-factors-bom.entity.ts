@@ -19,6 +19,12 @@ export class ZFactorsBomEntity {
     })
     itemName: string
 
+    @Column('int', {
+        nullable: true,
+        name: 'zfactor_id',
+    })
+    zFactorId: number
+
     @Column('varchar', {
         nullable: true,
         name: 'im_code',

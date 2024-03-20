@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { StyleEntity } from "./style-entity";
 import { ItemEntity } from "./item-entity";
 import { ZFactorsBomEntity } from "./z-factors-bom.entity";
+import { ActionEnum } from "packages/libs/shared-models/src/Enum/z-factors-Enum";
 
 @Entity('z_factors')
 export class ZFactorsEntity {
@@ -14,7 +15,7 @@ export class ZFactorsEntity {
         nullable: true,
         name: 'item_id',
     })
-    itemId: string
+    itemId: number
 
     @Column('varchar', {
         nullable: true,
@@ -23,12 +24,13 @@ export class ZFactorsEntity {
     })
     actualIM: string
 
-    @Column('varchar', {
-        nullable: true,
-        name: 'action',
-        length: 50,
+    @Column( {
+        type:"enum",
+        name:'action',
+        enum:ActionEnum,
+        nullable:false
     })
-    action: string
+    action: ActionEnum
 
     @Column('boolean', {
         nullable: true,
@@ -47,6 +49,20 @@ export class ZFactorsEntity {
         name: 'size',
     })
     size: boolean
+
+    
+    @Column('boolean', {
+        nullable: true,
+        name: 'gender',
+    })
+    gender: boolean
+
+    
+    @Column('boolean', {
+        nullable: true,
+        name: 'plant_code',
+    })
+    plant: boolean
 
     @Column('boolean', {
         nullable: true,
@@ -93,7 +109,12 @@ export class ZFactorsEntity {
     })
     isActive: boolean;
 
-
+    @Column('boolean', {
+        nullable: false,
+        name: 'is_size_split',
+        default: true
+    })
+    isSizeSplit: boolean;
     
     @OneToMany(type => ZFactorsBomEntity,zfactorBom =>zfactorBom.zFactors)
     zFactorBom:ZFactorsBomEntity[]
