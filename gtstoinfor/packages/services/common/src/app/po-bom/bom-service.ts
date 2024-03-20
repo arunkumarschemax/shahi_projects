@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, ShippingTypeEnum, StyleNumReq, updateItemId } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PoDataForBomGenerationModel, PpmDateFilterRequest, ShippingTypeEnum, StyleNumReq, styleAndItemreq, updateItemId } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -1622,6 +1622,14 @@ export class BomService {
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
+    async getUniqueSizeAgainstStyleAndItem(req:styleAndItemreq):Promise<CommonResponseModel>{
+        try{
+            const data = await this.bomRepo.getUniqueSizeAgainstStyleAndItem(req)
+            return new CommonResponseModel(true,1,'data retrived',data)
+        }catch(err){
+            throw err
+        }
+    }
 
 }
 

@@ -178,3 +178,19 @@ export class updateItemId {
     imCode: string
     itemId: number
 }
+
+export class styleAndItemreq{
+    consumptionAgainst:string
+    styleNumber:string[]
+    itemNumber:string[]
+    constructor(
+    consumptionAgainst:string,
+        styleNumber?:string[],
+        itemNumber?:string[]
+    ){
+        this.consumptionAgainst=consumptionAgainst
+        this.styleNumber=styleNumber
+        this.itemNumber=itemNumber
+    }
+}
+

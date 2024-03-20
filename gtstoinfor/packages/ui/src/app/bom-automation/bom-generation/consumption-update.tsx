@@ -35,6 +35,7 @@ const styleReq = props.distinctValues.distinctStyles
         })
     }
 
+    console.log(props.updatedSizes)
 
     function openConversionModal() {
         setViewModal(true)
@@ -45,7 +46,11 @@ const styleReq = props.distinctValues.distinctStyles
     }
 
     function setActiveKey(activeKey) {
+        console.log(activeKey)
         props.setItemId(activeKey)
+    }
+    const onchange = (vale) =>{
+
     }
     return (
         <>

@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BomEntity } from "../entittes/bom-entity";
 import { StyleComboEntity } from "../entittes/style-combo-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, styleAndItemreq } from "@project-management-system/shared-models";
 import { StyleEntity } from "../entittes/style-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 
@@ -71,6 +71,24 @@ export class BomRepo extends Repository<BomEntity> {
         const query = this.createQueryBuilder('i')
         .select(`item_id as id,item AS itemName`)
         .groupBy(`item`)
+        const data = await query.getRawMany()
+        return data
+    }
+
+    async getUniqueSizeAgainstStyleAndItem(req:styleAndItemreq):Promise<any[]>{
+        const query=this.createQueryBuilder('b')
+        .select(`d.size_description as size,d.style_number as styleNumber,style_id,item_id,
+        SUBSTRING(d.bom_item, 1, 4) AS itemNo`)
+        .leftJoin(StyleEntity,'s','s.id=b.style_id')
+        .leftJoin(DpomEntity,'d','d.style_number=s.style')
+        if(req.consumptionAgainst === 'item'){
+            query.where(`SUBSTRING(d.bom_item, 1, 4) IN (:...itemId)`, { itemId: req.itemNumber })
+            query.groupBy(`SUBSTRING(d.bom_item, 1, 4),size_description`)
+        }
+        if(req.consumptionAgainst === 'style'){
+            query.where(`d.style_number IN(:...styleNumber)`,{styleNumber:req.styleNumber})
+            query.groupBy(`d.style_number,size_description`)
+        }
         const data = await query.getRawMany()
         return data
     }

@@ -445,4 +445,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+
+    @Post('/getUniqueSizeAgainstStyleAndItem')
+    async getUniqueSizeAgainstStyleAndItem(@Body() req:any): Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getUniqueSizeAgainstStyleAndItem(req)
+        }
+        catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }

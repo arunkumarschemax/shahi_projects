@@ -273,7 +273,7 @@ export class TrimService {
 
                 const itemDtos = data.map(item => new ItemDto(
                     item.item_id,item.item,item.consumption_required == 1 ?true:false,item.consumption,
-                    item.wastage, item.moq,item.print_component,item.consumptionAgainst,item.uom,
+                    item.wastage, item.moq,item.print_component,item.consumptionAgainst,item.wastage_against,item.uom,
                     item.createdAt,item.createdUser,item.updatedAt,
                     item.updatedUser,item.versionFlag,item.isActive
                 ));
