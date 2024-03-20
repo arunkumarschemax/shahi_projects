@@ -135,6 +135,24 @@ export class PVHController {
         }
     }
 
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getHistoryPoNumber')
+    async getHistoryPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getHistoryPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 
 
 

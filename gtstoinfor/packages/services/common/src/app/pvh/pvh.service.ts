@@ -326,6 +326,33 @@ export class PVHService {
     }
   }
 
+  async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
+    console.log(req, 'reqqqqqqqq')
+    try {
+      const data = await this.pvhPdfRepo.getPdfFileInfo(req)
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getHistoryPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pvhPdfRepo.getHistoryPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
 
 
 
