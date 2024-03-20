@@ -244,6 +244,8 @@ export const AppRoutes = () => {
                              <Route path='thread-view' element={<ThreadView />} />
                              <Route path="thread-form" element={<ThreadForm Data={[]} />}></Route>
                              <Route path='z-factors' element={<ZFactors />} />
+                             <Route path='bom-order-acceptance' key='bom-order-acceptance' element={<BomOrderAcceptance/>} />
+
 
                 </Route>
 

@@ -50,25 +50,28 @@ export class ItemDto {
     @ApiProperty()
     isActive: boolean;
 
-
+    @ApiProperty()
+    wastageAgainst:string
 
     constructor(
         itemId: number,
         item: string,
-        consumptionRequired: boolean,    consumption: number,
+        consumptionRequired: boolean, 
+        consumption: number,
         wastage: number,
-        moq: number,    printComponent: string ,    consumptionAgainst: string,
-        uom: UOMEnum,     createdAt: Date,     createdUser: string | null,
-        updatedAt: Date,    updatedUser: string | null,
+        moq: number,  
+       printComponent: string ,  
+       consumptionAgainst: string,
+       wastageAgainst:string,
+        uom: UOMEnum,   
+      createdAt: Date,   
+        createdUser: string | null,
+        updatedAt: Date,  
+       updatedUser: string | null,
         versionFlag: number,isActive: boolean
-
-
-
-
-
     ){
         this.itemId=itemId
-
+        this.wastageAgainst=wastageAgainst
         this.item = item
         this.consumptionRequired = consumptionRequired
         this.consumption = consumption
