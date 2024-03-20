@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class zFactorsDto {
+export class ZFactorsBomDto {
     @ApiProperty()
     id:number
 
@@ -10,8 +10,6 @@ export class zFactorsDto {
     @ApiProperty()
     imCode:string
 
-    @ApiProperty()
-    action:string
 
     @ApiProperty()
     geoCode:string
@@ -35,37 +33,49 @@ export class zFactorsDto {
     sequence:number
 
     @ApiProperty()
-    createdUser: string | null;
+    isActive: boolean;
+  
+    @ApiProperty()
+    createdAt : string;
+  
+    @ApiProperty()
+    createdUser : string;
+    
+      @ApiProperty()
+    updatedAt : string;
+    @ApiProperty()
+    updatedUser : string;
+  
+    @ApiProperty()
+    versionFlag : number;
     
     Zfactordto: any;
 
-    constructor(
-        id:number,
-        itemName:string,
-        action:string,
-        imCode:string,
-        geoCode:string,
-        destination:string,
-        size:string,
-        gender:string,
-        plant:string,
-        style:string,
-        sequence:number,
-        createdUser?: string | null
-    ){
-        this.id=id
-        this.itemName=itemName
-        this.imCode=imCode
-        this.action=action
-        this.geoCode=geoCode
-        this.destination=destination
-        this.size=size
-        this.gender=gender
-        this.style=style
-        this.plant=plant
-        this.sequence=sequence
-        this.createdUser=createdUser
-    }
+    // constructor(
+    //     id:number,
+    //     itemName:string,
+    //     imCode:string,
+    //     geoCode:string,
+    //     destination:string,
+    //     size:string,
+    //     gender:string,
+    //     plant:string,
+    //     style:string,
+    //     sequence:number,
+    //     createdUser?: string | null
+    // ){
+    //     this.id=id
+    //     this.itemName=itemName
+    //     this.imCode=imCode
+    //     this.geoCode=geoCode
+    //     this.destination=destination
+    //     this.size=size
+    //     this.gender=gender
+    //     this.style=style
+    //     this.plant=plant
+    //     this.sequence=sequence
+    //     this.createdUser=createdUser
+    // }
 
 
 }
