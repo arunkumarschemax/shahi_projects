@@ -329,6 +329,7 @@ export const SourcingRequisitionDynamicForm = () => {
         console.log(request)
          req= new m3FabricFiltersReq() 
          req.buyerId=buyer
+         req.fabricType = "woven"
          if(request != undefined){
          req.fabricTypeId=request.fabricTypeId
          req.content=request.content
