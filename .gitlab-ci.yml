@@ -18,6 +18,6 @@ deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   script:
-    - ssh schemax@192.168.0.8 'bash -s' <deploy_script.sh
+    - ssh schemax@192.168.0.8 'bash -s' </path/to/deploy_script.sh
     - echo "Deploying application..."
     - echo "Application successfully deployed."
