@@ -7,4 +7,6 @@ build_stage:
         -npm install    
 deploy_stage:
     stage: deploy
+    script:
+        -ssh schemax@192.168.0.8 'bash -s' <deploy_script.sh
 
