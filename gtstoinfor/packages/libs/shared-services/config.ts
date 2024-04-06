@@ -5,7 +5,7 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
 
     
-     APP_PROJECT_MANAGEMENT_URL: "https://levis-backend.shahiapps.in/api",
+     APP_PROJECT_MANAGEMENT_URL: "http://139.59.23.204:5000/api",
     //  APP_PROJECT_MANAGEMENT_URL: "http://localhost:9009/api",
 
 
