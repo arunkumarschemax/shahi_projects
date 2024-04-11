@@ -1,9 +1,0 @@
-stages:
-    - deploy
-
-deploy:
-    stage: deploy
-    script:
-        -npm install
-        -npm run services-common:build
-        -cp -R dist/*/var/www/html/automation
