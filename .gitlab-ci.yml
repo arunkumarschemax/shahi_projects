@@ -3,8 +3,8 @@ stages:
   - deploy
 
 variables:
-  TAG_LATEST: "https://gitlab.com/dileepraghumajji88/shahi-projects/test_levis:latest"
-  TAG_COMMIT: "https://gitlab.com/dileepraghumajji88/shahi-projects/$CI_COMMIT_REF_NAME:417acc68"
+  TAG_LATEST: "latest"
+  TAG_COMMIT: "$CI_COMMIT_REF_NAME-417acc68"
 
 build:
   image: docker:latest
@@ -12,7 +12,7 @@ build:
   services:
     - docker:dind
   script:
-    - docker build -t "$TAG_COMMIT" -t "$TAG_LATEST" .
+    - docker build -t "$TAG_COMMIT" -t "$CI_REGISTRY_IMAGE:$TAG_LATEST" .
 
 deploy:
   image: alpine:latest
@@ -22,10 +22,10 @@ deploy:
   script:
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker login -u dileepraghumajji88/shahi-projects -p $GR1348941CnRZYiN4E4reBm1GavSy https://gitlab.com/dileepraghumajji88/shahi-projects"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker pull $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker login -u dileepraghumajji88/shahi-projects -p $GR1348941CnRZYiN4E4reBm1GavSy $CI_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker pull $CI_REGISTRY_IMAGE:$TAG_COMMIT"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker container rm -f my-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker run -d -p 80:80 --name my-app $TAG_COMMIT"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker run -d -p 80:80 --name my-app $CI_REGISTRY_IMAGE:$TAG_COMMIT"
 
 deploy_environment:
   stage: deploy
