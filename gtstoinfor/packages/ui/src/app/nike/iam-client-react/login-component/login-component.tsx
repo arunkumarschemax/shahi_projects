@@ -22,8 +22,11 @@ export const LoginComponent = () => {
             const from = location.state?.from;
             if (from) {
                 navigate(from, { replace: true });
-            } else {
-                navigate("/nike-dashboard", { replace: true });
+            } 
+            else {
+                // navigate("/nike-dashboard", { replace: true });
+                // navigate("/sanmar/sanmar-pdf-upload", { replace: true });
+                navigate("/levis/levis-pdf-upload", { replace: true });
             }
             return true;
         } catch (error: any) {
@@ -45,7 +48,7 @@ export const LoginComponent = () => {
             className="card-header"
             style={{ height: '55%', width: '300px' }}
         >
-            <div><b>NIKE</b></div>
+            {/* <div><b>NIKE</b></div> */}
             <br />
             <Form
                 name="login-form"

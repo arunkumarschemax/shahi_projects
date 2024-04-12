@@ -14,6 +14,9 @@ import { DpomDifferenceRepository } from './repositories/dpom-difference.reposit
 import { NikeFileUploadEntity } from './entites/upload-file.entity';
 import { NikeFileUploadRepository } from './repositories/upload.repository';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
+import { COLineEntity } from './entites/co-line.entity';
+import { COLineRepository } from './repositories/co-line.repository';
 
 
 @Module({
@@ -23,9 +26,11 @@ import { ScheduleModule } from '@nestjs/schedule';
       DpomEntity,
       DpomChildEntity,
       DpomDifferenceEntity,
-      NikeFileUploadEntity
+      NikeFileUploadEntity,
+      PDFFileInfoEntity,
+      COLineEntity
     ])],
   controllers: [DpomController],
-  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository]
+  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository]
 })
 export class DpomModule { }

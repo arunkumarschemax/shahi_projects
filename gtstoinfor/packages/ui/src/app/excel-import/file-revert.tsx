@@ -52,7 +52,7 @@ export function FileRevert() {
             dataIndex: 'uploadedDate',
             render: (value, record) => {
                 return (
-                    moment(value).utc().format('YYYY-MM-DD HH:mm:ss')
+                    moment(value).format('YYYY-MM-DD HH:mm:ss')
                 )
             }
         },

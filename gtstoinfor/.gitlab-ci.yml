@@ -1,0 +1,14 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - nx run services-common:build
+
+deploy:
+  stage: deploy
+  script:
+    - scp -r /var/www/html/automation/gtstoinfor/dist/packages/services/common root@68.183.86.255:/var/www/html/automation/gtstoinfor/dist/packages/services/
+  environment: production

@@ -414,6 +414,20 @@ export class DpomEntity {
     })
     sizeDescription: string;
 
+    @Column("varchar", {
+        name: "geo_code",
+        length: 10,
+        nullable: true
+    })
+    geoCode: string;
+
+    // @Column("varchar", {
+    //     name: "exFactoryExpDate",
+    //     length: 10,
+    //     nullable: true
+    // })
+    // exFactoryExpDate: string;
+
     //PDF Data
     @Column('varchar', {
         name: "ship_to_address_legal_po",
@@ -423,18 +437,25 @@ export class DpomEntity {
     shipToAddressLegalPO: string;
 
     @Column('int', {
-        name: "quantity",
+        name: "legal_po_qty",
         nullable: true
     })
-    quantity: number;
+    legalPoQty: number;
 
     @Column('decimal', {
-        name: "price",
+        name: "legal_po_price",
         nullable: true,
-        precision:5,
-        scale:2
+        precision: 5,
+        scale: 2
     })
-    price: number;
+    legalPoPrice: number;
+
+    @Column('varchar', {
+        name: "legal_po_currency",
+        length: 5,
+        nullable: true
+    })
+    legalPoCurrency: string;
 
     @Column('varchar', {
         name: "item_vas_pdf",
@@ -500,21 +521,31 @@ export class DpomEntity {
     })
     truckOutDate: string;
 
-    @Column('varchar', {
+    @Column('int', {
         name: "actual_shipped_qty",
-        length: 20,
         nullable: true
     })
-    actualShippedQty: string;
+    actualShippedQty: number;
+
+    @Column('int', {
+        name: "crm_co_qty",
+        nullable: true
+    })
+    crmCoQty: number;
 
     @Column('decimal', {
         name: "co_price",
         nullable: true,
-        precision:5,
-        scale:2,
-        
+        precision: 5,
+        scale: 2,
     })
     coPrice: number;
+
+    @Column('varchar', {
+        name: "co_price_currency",
+        nullable: true,
+    })
+    coPriceCurrency: string;
 
     @Column('varchar', {
         name: "ship_to_address",
@@ -652,6 +683,20 @@ export class DpomEntity {
         name: 'diverted_to_pos',
     })
     divertedToPos: string;
+
+    @Column('varchar', {
+        name: "actual_unit",
+        length: 20,
+        nullable: true
+    })
+    actualUnit: string;
+
+    @Column('varchar', {
+        name: "allocated_quantity",
+        length: 20,
+        nullable: true
+    })
+    allocatedQuantity: string;
 
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;

@@ -42,6 +42,7 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
             throw Error(res.internalMessage);
         }
     } catch (error: any) {
+        error.message = error?.response?.data?.message ?? error.message;
         const errorMessage: any = { errorMessage: error.message };
         dispatch({ type: ActionTypes.LOGIN_ERROR, payload: errorMessage });
         throw Error(error.message);

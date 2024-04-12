@@ -1,17 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FactoriesModule } from './factories/factories.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { DpomModule } from './dpom/nike-dpom.module';
-import { SupplierModule } from './supplier/supplier.module';
+import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
-import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource';
+import { AppDataSource } from './app-datasource';
+import { LevisModule } from './levis/levis.module';
+import { AddressModule } from './Entites@Shahi/address/address-module';
+import { ColorModule } from './Entites@Shahi/color/color-module';
+import { SizeModule } from './Entites@Shahi/size/size-module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
@@ -32,10 +36,18 @@ import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource'
         connectionLimit: 20
       }
     }),
-    FactoriesModule,
-    SupplierModule,
+
+    ServeStaticModule.forRoot({
+      // rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      rootPath: join(__dirname, '../../../../', 'upload_files'),
+      serveRoot: '/static',
+      serveStaticOptions: {
+        redirect: false,
+        index: false
+      }
+    }),
     UsersModule,
-    AuthModule, JwtModule, DpomModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule,ColorModule,SizeModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
@@ -47,20 +59,7 @@ import { AppDataSource, AppDataSource1, AppDataSource2 } from './app-datasource'
         .catch((err) => {
           console.error('Error during Data Source initialization', err);
         });
-      await AppDataSource1.initialize()
-        .then(() => {
-          console.log('Data Source has been initialized!');
-        })
-        .catch((err) => {
-          console.error('Error during Data Source initialization', err);
-        });
-      await AppDataSource2.initialize()
-        .then(() => {
-          console.log('Data Source has been initialized!');
-        })
-        .catch((err) => {
-          console.error('Error during Data Source initialization', err);
-        });
+    
     }
   }],
 })

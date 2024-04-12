@@ -414,6 +414,13 @@ export class DpomChildEntity {
     })
     sizeDescription: string;
 
+    @Column("varchar", {
+        name: "geo_code",
+        length: 10,
+        nullable: true
+    })
+    geoCode: string;
+
     //PDF Data
     @Column('varchar', {
         name: "ship_to_address_legal_po",
@@ -423,16 +430,25 @@ export class DpomChildEntity {
     shipToAddressLegalPO: string;
 
     @Column('int', {
-        name: "quantity",
+        name: "legal_po_qty",
         nullable: true
     })
-    quantity: number;
+    legalPoQty: number;
 
-    @Column('int', {
-        name: "price",
+    @Column('decimal', {
+        name: "legal_po_price",
+        nullable: true,
+        precision: 5,
+        scale: 2
+    })
+    legalPoPrice: number;
+
+    @Column('varchar', {
+        name: "legal_po_currency",
+        length: 5,
         nullable: true
     })
-    price: number;
+    legalPoCurrency: string;
 
     @Column('varchar', {
         name: "item_vas_pdf",
@@ -498,12 +514,17 @@ export class DpomChildEntity {
     })
     truckOutDate: string;
 
-    @Column('varchar', {
+    @Column('int', {
         name: "actual_shipped_qty",
-        length: 20,
         nullable: true
     })
-    actualShippedQty: string;
+    actualShippedQty: number;
+
+    @Column('int', {
+        name: "crm_co_qty",
+        nullable: true
+    })
+    crmCoQty: number;
 
     @Column('varchar', {
         name: "co_price",
@@ -511,6 +532,12 @@ export class DpomChildEntity {
         nullable: true
     })
     coPrice: number;
+
+    @Column('varchar', {
+        name: "co_price_currency",
+        nullable: true,
+    })
+    coPriceCurrency: string;
 
     @Column('varchar', {
         name: "ship_to_address",

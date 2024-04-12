@@ -1,4 +1,5 @@
 import { FileExcelFilled } from '@ant-design/icons';
+import { PpmDateFilterRequest } from '@project-management-system/shared-models';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Table } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -15,7 +16,8 @@ const FabricTrackerReport1 = () => {
       }, [])
     
       const getData = () => {
-        service.getFabricTrackerReport().then(res => {
+        const req = new PpmDateFilterRequest
+        service.getFabricTrackerReport(req).then(res => {
           if (res.status) {
             setGridData(res.data)
             setFilteredData(res.data)
@@ -74,6 +76,13 @@ const Columns:any =[
     {
         title: 'Item',
         dataIndex: 'item',
+        render: (text, record) => {
+          if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return text;
+          }
+        },
        
       },
       {
@@ -106,6 +115,7 @@ extra={filteredData.length > 0 ?
             columns={Columns}
             dataSource={gridData}
             bordered
+            className="custom-table-wrapper"
         ></Table>
     </Card>
 </>

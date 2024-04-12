@@ -54,7 +54,13 @@ export class NikeFileUploadEntity {
 
     @Column("varchar", {
         nullable: true,
-        name: "status"
+        name: "dpom_status"
     })
-    status: string;
+    dpomStatus: string;
+
+    @Column("varchar", {
+        nullable: true,
+        name: "crm_status"
+    })
+    crmStatus: string;
 }

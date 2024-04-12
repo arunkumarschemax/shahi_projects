@@ -50,27 +50,28 @@ export function NikeFileRevert() {
         {
             title: 'Uploaded Date ',
             dataIndex: 'uploadedDate',
-            render: (value, record) => {
-                return (
-                    moment(record.uploadedDate).format('YYYY-MM-DD HH:mm:ss')
-                )
-            }
+            // render: (value, record) => {
+            //     return (
+            //         moment(record.uploadedDate).format('YYYY-MM-DD HH:mm:ss')
+            //     )
+            // }
         },
         {
-            title: 'File Name',
-            dataIndex: 'fileName'
+            title: 'DPOM API (sync status)',
+            dataIndex: 'status', align: 'center'
         },
         {
-            title: 'Upload Status',
-            dataIndex: 'status'
+            title: 'CRM API (sync status)',
+            dataIndex: 'crmStatus', align: 'center'
         },
         {
-            title: 'Uploaded User',
-            dataIndex: 'createdUser'
+            title: 'Type Of Sync',
+            dataIndex: 'createdUser', align: 'center'
         },
         {
             title: 'Action',
             dataIndex: 'Action',
+            width: 150,
             render: (text, record, index) => {
                 const isFirstRecord = index === 0 && page === 1;
                 return (
@@ -82,7 +83,7 @@ export function NikeFileRevert() {
                                 cancelText="No"
                                 onConfirm={() => revertFileData(record?.fileId)}
                             >
-                                <Button icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
+                                <Button size='small' icon={<UndoOutlined style={{ color: 'red' }} />}>Revert File</Button>
                             </Popconfirm>
                         )}
                         {!isFirstRecord && <></>}
@@ -99,8 +100,11 @@ export function NikeFileRevert() {
                 <Table
                     columns={columns}
                     dataSource={data}
-                    scroll={{ x: 1000 }}
+
+                    className="custom-table-wrapper"
+                    scroll={{ x: 'max-content', y: 450 }}
                     pagination={{
+                        pageSize: 50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);

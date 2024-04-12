@@ -12,7 +12,7 @@ async function bootstrap() {
   }));
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = Number(9001);
+  const port = Number(5000);
 
   const options = new DocumentBuilder()
     .setTitle('Migration System')
@@ -20,7 +20,7 @@ async function bootstrap() {
     .setVersion('0.0')
     // .setBasePath(`${ptsConfigs.swagger.basePath}`)
     .addBearerAuth()
-    .addTag('ms')
+    .addTag('levis')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

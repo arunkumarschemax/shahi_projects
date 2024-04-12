@@ -15,6 +15,10 @@ export class NewDivertModel {
     nGAC: string;
     nInventorySegmentCode: string;
     nItemVasText: string;
+    nFOBPrice?:string;
+    ntradingCoNetIncDis?:string;
+    // nNetIncDis?:string;
+
   
     constructor(
         nItem: string,
@@ -30,7 +34,7 @@ export class NewDivertModel {
         nOGAC: string,
         nGAC: string,
         nInventorySegmentCode: string,
-        nItemVasText: string, ) {
+        nItemVasText: string,nFOBPrice?:string,ntradingCoNetIncDis?:string,nNetIncDis?:string, ) {
 
         this.nItem = nItem
         this.nPlant = nPlant
@@ -46,6 +50,9 @@ export class NewDivertModel {
         this.nGAC = nGAC
         this.nInventorySegmentCode = nInventorySegmentCode
         this.nItemVasText = nItemVasText
-        
+        this.nFOBPrice = nFOBPrice;
+        this.ntradingCoNetIncDis = ntradingCoNetIncDis;
+        // this.nNetIncDis = nNetIncDis;
+
     };
 }

@@ -101,7 +101,7 @@ export function CategoryWiseItemQtyGraph() {
       // tickAmount: 16,
       // tickPixelInterval: 100,
       title: {
-        text: ' Accept & Unaccepted Qty'
+        text: ' Accepted & UnAccepted Qty'
       },
       enabled: true,
       style: {
