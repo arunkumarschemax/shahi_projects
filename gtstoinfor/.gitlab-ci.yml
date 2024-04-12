@@ -2,13 +2,18 @@ stages:
   - build
   - deploy
 
-build:
+build-job:
   stage: build
   script:
-    - nx run services-common:build
+    - npm install --force
+    - nx build services-common
+  artifacts:
+    paths:
+      - /var/www/html/automation/gtstoinfor/dist/packages/services/common
 
-deploy:
+deploy-job:
   stage: deploy
   script:
     - scp -r /var/www/html/automation/gtstoinfor/dist/packages/services/common root@68.183.86.255:/var/www/html/automation/gtstoinfor/dist/packages/services/
   environment: production
+
