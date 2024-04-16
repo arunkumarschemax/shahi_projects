@@ -1,37 +1,10 @@
-stages:
-  - build
-  - deploy
-
-variables:
-  TAG_LATEST: https://gitlab.com/dileepraghumajji88/shahi-projects/test_levis:latest
-  TAG_COMMIT: https://gitlab.com/dileepraghumajji88/shahi-projects/$CI_COMMIT_REF_NAME:417acc68
-
-build:
-  image: docker:latest
-  stage: build
-  services:
-    - docker:dind
+stage: build
   script:
-    - docker build -t $TAG_COMMIT -t $TAG_LATEST .
-  artifacts:
+   -cd /var/www/html/automation/gtstoinfor/
+   -npm install
+   -nx run services-common:build
+   -pm2 rest
+   
+   artificats:
     paths:
-      - /path/to/your/artifacts # Adjust the path to your built artifacts directory
-
-deploy:
-  image: alpine:latest
-  stage: deploy
-  tags:
-    - deployment
-  script:
-    - chmod og= $ID_RSA
-    - apk update && apk add openssh-client
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker login -u dileepraghumajji88/shahi-projects -p $GR1348941CnRZYiN4E4reBm1GavSy $https://gitlab.com/dileepraghumajji88/shahi-projects"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker pull $TAG_COMMIT"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker container rm -f my-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $root@$68.183.86.255 "docker run -d -p 80:80 --name my-app $TAG_COMMIT"
-
-environment:
-  name: production
-  url: http://68.183.86.255
-  only:
-    - test_levis
+	- /home/gitlab-runner/
