@@ -1,0 +1,11 @@
+pipeline {
+      agent {label 'agentlinux'}
+	  
+	  stages {
+	        stage {"deployment"} {
+			steps {
+			     sh "node -v"
+				 sh "npm -v"
+		        } 
+		    }
+		}
