@@ -1,5 +1,5 @@
 pipeline {
-      agent {label 'agentlinux'}
+      agent {label '143'}
 	  
 	  stages {
 	        stage ("check version") {
