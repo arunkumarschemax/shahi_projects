@@ -1,13 +1,6 @@
 pipeline {
     agent { label 'agentlinux' }
     stages {
-        stage("Build Backend") {
-            steps {
-                dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor') {
-                    sh "nx run services-common:build"
-                }
-            }
-        }
          stage("Build Backend") {
             steps {
                 // Adding the directory change to the location where nx command is available
