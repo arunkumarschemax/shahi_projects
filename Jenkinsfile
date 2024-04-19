@@ -24,7 +24,7 @@ pipeline {
             steps {
                 dir('gtstoinfor') {
                     sh 'npm cache clean --force'
-                    sh 'npm install'
+                    sh 'npm install --force'
                 }
             }
         }
