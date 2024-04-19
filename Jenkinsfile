@@ -1,20 +1,25 @@
 pipeline {
-    agent { label 'agentlinux' }
+    agent any
 
     stages {
-        stage("Check Version") {
+        stage('Checkout') {
             steps {
-                sh "node -v"
-                sh "npm -v"
+                checkout scm
             }
         }
-        
-        stage("Install Dependencies") {
+
+        stage('Check Version') {
             steps {
-                // Change directory to the desired location
-                dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor') {
-                    // Run npm install to install dependencies
-                    sh "npm install"
+                sh 'node -v'
+                sh 'npm -v'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('gtstoinfor') {
+                    sh 'npm cache clean --force'
+                    sh 'npm install'
                 }
             }
         }
