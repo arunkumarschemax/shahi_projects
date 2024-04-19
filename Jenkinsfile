@@ -1,16 +1,9 @@
 pipeline {
     agent { label 'agentlinux' }
     stages {
-        stage("Install Dependencies") {
-            steps {
-                dir('/var/lib/jenkins/workspace/pipeline') {
-                    sh "npm install"
-                }
-            }
-        }
         stage("Build Backend") {
             steps {
-                dir('/var/lib/jenkins/workspace/pipeline') {
+                dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor') {
                     sh "nx run services-common:build"
                 }
             }
