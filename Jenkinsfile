@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout test_levis
             }
         }
         stage('Install Dependencies') {
