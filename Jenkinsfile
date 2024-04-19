@@ -1,18 +1,22 @@
 pipeline {
-    agent { label 'agentlinux' }
+    agent any
     stages {
-        stage("Install Dependencies") {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
             steps {
                 dir('/var/lib/jenkins/workspace/pipeline') {
-                    sh "npm install"
+                    sh 'npm install'
                 }
             }
         }
-        stage("Build Backend") {
+        stage('Build Backend') {
             steps {
-                // Assuming NX is installed locally within the project
                 dir('/var/lib/jenkins/workspace/pipeline') {
-                    sh "./node_modules/.bin/nx run services-common:build"
+                    sh './node_modules/.bin/nx run services-common:build'
                 }
             }
         }
