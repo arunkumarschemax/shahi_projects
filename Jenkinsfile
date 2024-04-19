@@ -6,6 +6,7 @@ pipeline {
 			steps {
 			     sh "node -v"
 				 sh "npm -v"
-		        } 
+		    } 
 		}
 	}
+}
