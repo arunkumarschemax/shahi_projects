@@ -10,8 +10,7 @@ pipeline {
 		}
 		stage("Install Dependencies") {
             steps {
-				sh "/var/www/html/automation/gtstoinfor"
-                sh "npm install"
+                sh "npm install --force"
             }
 		}
 	}
