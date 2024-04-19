@@ -1,31 +1,11 @@
 pipeline {
-    agent any
+    agent { label 'agentlinux' }
 
     stages {
-        stage('Clear Workspace') {
+        stage("Check Version") {
             steps {
-                deleteDir()
-            }
-        }
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Check Version') {
-            steps {
-                sh 'node -v'
-                sh 'npm -v'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                dir('gtstoinfor') {
-                    sh 'npm cache clean --force'
-                    sh 'npm install --force'
-                }
+                sh "node -v"
+                sh "npm -v"
             }
         }
     }
