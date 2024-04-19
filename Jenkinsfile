@@ -3,7 +3,7 @@ pipeline {
 	  stages{
           stage("Install Dependencies") {
             steps {
-                dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor') {
+                dir('/var/lib/jenkins/workspace/pipeline') {
                     sh "npm install"
                 }
             }
