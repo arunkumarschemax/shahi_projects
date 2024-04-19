@@ -13,5 +13,10 @@ pipeline {
                 sh "npm install --force"
             }
 		}
+		stage("Build Frontend") {
+            steps {
+                sh "npx nx run ui:build"
+            }
+        }
 	}
 }
