@@ -1,6 +1,6 @@
 pipeline {
       agent {label 'agentlinux'}
-	  stage{
+	  stages{
           stage("Install Dependencies") {
             steps {
                 dir('/var/www/html/automation/gtstoinfor') {
