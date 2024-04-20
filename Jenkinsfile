@@ -19,7 +19,7 @@ pipeline {
             steps {
                 git branch: 'test_levis', credentialsId: '3', url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git'
                 sh 'npm install'
-                sh '/var/lib/jenkins/workspace/pipeline/gtstoinfor/node_modules/nx/bin/nx.js run services-common:build'
+                sh '/var/lib/jenkins/workspace/pipeline/gtstoinfor/node_modules/nx/bin/nx run services-common:build'
             }
         }
     }
