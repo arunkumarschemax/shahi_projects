@@ -1,6 +1,5 @@
 pipeline {
     agent { label 'agentlinux' }
-    tools {nodejs "node"}
     stages {
         stage("Check Version") {
             steps {
