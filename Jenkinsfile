@@ -11,7 +11,8 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh 'npm install'
-                sh 'npm install -g @nrwl/cli --force'
+                sh 'npm install -g @nrwl/cli --force --prefix=/var/lib/jenkins/workspace/pipeline/'
+
             }
         }
 
