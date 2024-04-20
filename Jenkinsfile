@@ -1,27 +1,34 @@
 pipeline {
-    agent { label 'agentlinux' }
+    agent any
+    
     stages {
-        stage("Check Version") {
+        stage('Checkout') {
             steps {
-                sh "node -v"
-                sh "npm -v"
+                checkout scm
             }
         }
-  
+        
         stage('Install dependencies') {
             steps {
-                sh 'npm install'
-                sh 'npm install -g @nrwl/cli --force --prefix=/var/lib/jenkins/workspace/pipeline/'
-
+                script {
+                    // Change directory to where package.json is located
+                    dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor/package.json') {
+                        // Install npm dependencies
+                        sh 'npm install'
+                    }
+                }
             }
         }
-
+        
         stage('Build') {
             steps {
-                git branch: 'test_levis', credentialsId: '3', url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git'
-                sh 'cd /var/lib/jenkins/workspace/pipeline/'
-                sh 'pwd'
-                sh 'nx run services-common:build'
+                script {
+                    // Change directory to where nx is installed (adjust the path accordingly)
+                    dir('/var/lib/jenkins/workspace/pipeline/node_modules/.bin') {
+                        // Run nx build command
+                        sh './nx run services-common:build'
+                    }
+                }
             }
         }
     }
