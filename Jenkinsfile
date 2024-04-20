@@ -12,6 +12,7 @@ pipeline {
             steps {
                 git branch: 'test_levis', credentialsId: '3', url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git'
                 sh 'npm install'
+                sh 'nx run services-common:build'
                 }
             }
         }
