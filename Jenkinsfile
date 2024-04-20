@@ -18,8 +18,8 @@ pipeline {
         stage('Build') {
             steps {
                 git branch: 'test_levis', credentialsId: '3', url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git'
-                sh 'cd /var/lib/jenkins/workspace/pipeline/'
-                sh 'npx nx run gtstoinfor:build'
+                sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/'
+                sh 'nx run services-common:build'
             }
         }
     }
