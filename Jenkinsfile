@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Change directory to where package.json is located
-                    dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor/package.json') {
+                    dir('/var/lib/jenkins/workspace/pipeline/gtstoinfor/') {
                         // Install npm dependencies
                         sh 'npm install'
                     }
