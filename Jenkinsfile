@@ -11,15 +11,15 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh 'npm install'
-                sh 'npm install @nrwl/cli' // Install Nx using npm
+                sh 'npm install @nrwl/cli'
             }
         }
 
         stage('Build') {
             steps {
                 git branch: 'test_levis', credentialsId: '3', url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git'
-                sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/node_modules/nx/bin/'
-                sh 'npx nx run build'
+                sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/'
+                sh 'npx nx run gtstoinfor:build'
             }
         }
     }
