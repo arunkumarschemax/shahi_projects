@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                         sh 'npm install --force'
-                        sh 'npm install -g @nrwl/cli --force'
+                        sh 'npm install -g nx@latest --force'
                     }
                 }
             }
