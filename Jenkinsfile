@@ -20,7 +20,7 @@ pipeline {
             steps {
                 
                 sh 'cd /var/www/html/automation/gtstoinfor'
-                sh 'nx run services-common:build'
+                sh '/root/.nvm/versions/node/v18.16.0/lib/nx run services-common:build'
                 
             }
         }
