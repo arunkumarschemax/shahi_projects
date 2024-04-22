@@ -19,9 +19,8 @@ pipeline {
         stage('Build') {
             steps {
                 
-                sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/'
-                sh 'pwd'
-                // Additional build steps can be added here
+                sh 'cd /var/lib/jenkins/workspace/pipeline'
+                sh 'nx run services-common:build'
             }
         }
     }
