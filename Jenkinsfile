@@ -19,8 +19,9 @@ pipeline {
         stage('Build') {
             steps {
                 
-                sh 'cd /var/lib/jenkins/workspace/pipeline'
-                sh 'node ./gtstoinfor/node_modules/.bin/nx run gtstoinfor:build'
+                sh 'cd /var/www/html/automation/gtstoinfor'
+                sh 'nx run services-common:build'
+                
             }
         }
     }
