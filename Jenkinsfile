@@ -2,17 +2,6 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: 'test_levis']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
-                          userRemoteConfigs: [[url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git']]])
-            }
-        }
-        
         stage('Check Version') {
             steps {
                 sh 'node -v'
@@ -29,12 +18,6 @@ pipeline {
         
         stage('Build') {
             steps {
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: 'test_levis']], 
-                          doGenerateSubmoduleConfigurations: false, 
-                          extensions: [], 
-                          submoduleCfg: [], 
-                          userRemoteConfigs: [[url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git']]])
                 
                 sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/'
                 sh 'pwd'
