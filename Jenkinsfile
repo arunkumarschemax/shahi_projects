@@ -20,7 +20,7 @@ pipeline {
             steps {
                 
                 sh 'cd /var/lib/jenkins/workspace/pipeline'
-                sh 'node ./gtstoinfor/node_modules/.bin/nx run services-common:build'
+                sh 'node ./gtstoinfor/node_modules/.bin/nx run gtstoinfor:build'
             }
         }
     }
