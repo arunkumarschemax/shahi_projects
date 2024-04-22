@@ -2,28 +2,43 @@ pipeline {
     agent any
     
     stages {
-        stage('Checkout') {
+        stage('Checkout SCM') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: 'test_levis']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git']]])
+            }
+        }
+        
+        stage('Check Version') {
+            steps {
+                sh 'node -v'
+                sh 'npm -v'
             }
         }
         
         stage('Install dependencies') {
             steps {
-                script {
-                        sh 'npm install --force'
-                        // sh 'npm install -g nx@latest --force'
-                    }
-                }
+                sh 'npm install'
+                sh 'npm install @nrwl/cli'
             }
+        }
         
         stage('Build') {
             steps {
-                script {
-                    
-                        sh './nx run services-common:build'
-                    
-                }
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: 'test_levis']], 
+                          doGenerateSubmoduleConfigurations: false, 
+                          extensions: [], 
+                          submoduleCfg: [], 
+                          userRemoteConfigs: [[url: 'https://gitlab.com/dileepraghumajji88/shahi-projects.git']]])
+                
+                sh 'cd /var/lib/jenkins/workspace/pipeline/gtstoinfor/'
+                sh 'pwd'
+                // Additional build steps can be added here
             }
         }
     }
