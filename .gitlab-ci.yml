@@ -1,0 +1,7 @@
+deploy:
+  stage: deploy
+  environment:
+    name: production
+    url: https://example.com
+  script:
+    - ssh root@68.183.86.255 "cd /var/www/html/automation/gtstoinfor/ && git pull origin test_levis && npm install && pm2 restart auto"
