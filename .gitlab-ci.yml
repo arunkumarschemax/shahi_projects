@@ -1,7 +1,22 @@
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm install
+    - nx run services-common:build
+  artifacts:
+    paths:
+      - dist/services-common/
+
 deploy:
   stage: deploy
-  environment:
-    name: production
-    url: https://example.com
   script:
-    - ssh root@68.183.86.255 "cd /var/www/html/automation/gtstoinfor/ && git pull origin test_levis && npm install && pm2 restart auto"
+    - ssh root@68.183.86.255 "mkdir -p /var/www/html/automation/gtstoinfor"
+    - scp dist/services-common/* root@68.183.86.255:/var/www/html/automation/gtstoinfor/
+    - ssh root@68.183.86.255 "cd /var/www/html/automation/gtstoinfor && npm install && nx reset && pm2 restart auto"
+  environment:
+    name: dev
