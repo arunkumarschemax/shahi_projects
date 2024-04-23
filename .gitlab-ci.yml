@@ -18,5 +18,4 @@ deploy:
     - ssh root@68.183.86.255 "mkdir -p /var/www/html/automation/gtstoinfor"
     - scp dist/services-common/* root@68.183.86.255:/var/www/html/automation/gtstoinfor/
     - ssh root@68.183.86.255 "cd /var/www/html/automation/gtstoinfor && npm install && nx reset && pm2 restart auto"
-  environment:
-    name: dev
+  
