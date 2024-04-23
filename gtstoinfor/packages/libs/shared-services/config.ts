@@ -5,7 +5,7 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
 
     
-     APP_PROJECT_MANAGEMENT_URL: "http://68.183.86.255:100/api",
+     APP_PROJECT_MANAGEMENT_URL: "http://68.183.86.255:8000/api",
     //  APP_PROJECT_MANAGEMENT_URL: "http://localhost:9009/api",
 
 
