@@ -1,5 +1,25 @@
-deploy_job:
+# Specify the GitLab CI/CD pipeline configuration
+stages:
+  - build
+  - deploy
+
+# Define job for building the Node.js application
+build:
+  stage: build
+  script:
+    - npm install  # Install dependencies
+    - nx run services-common:build # Build the application artifacts
+  artifacts:
+    paths:
+      - build/  # Specify the directory containing build artifacts
+
+# Define job for running tests
+
+# Define job for deploying the application
+deploy:
   stage: deploy
   script:
-    - echo "Deploying the project..."
-    - ssh -i $SSH_PRIVATE_KEY root@68.183.86.255 'bash -s' < test.sh
+    - npm install --production  # Install production dependencies
+    - pm2 restart auto  # Restart the Node.js application using pm2
+  only:
+    - test_levis  # Deploy only when changes are pushed to the master branch
