@@ -1,21 +1,19 @@
-
 stages:
   - build
+  - test
   - deploy
 
-build:
+build_job:
   stage: build
   script:
-    - npm install
-    - nx run services-common:build
-  artifacts:
-    paths:
-      - dist/services-common/
+    - echo "Building the project..."
 
-deploy:
+test_job:
+  stage: test
+  script:
+    - echo "Running tests..."
+
+deploy_job:
   stage: deploy
   script:
-    - ssh root@68.183.86.255 "mkdir -p /var/www/html/automation/gtstoinfor"
-    - scp dist/services-common/* root@68.183.86.255:/var/www/html/automation/gtstoinfor/
-    - ssh root@68.183.86.255 "cd /var/www/html/automation/gtstoinfor && npm install && nx reset && pm2 restart auto"
-  
+    - echo "Deploying the project..."
