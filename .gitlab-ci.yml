@@ -1,19 +1,5 @@
-stages:
-  - build
-  - test
-  - deploy
-
-build_job:
-  stage: build
-  script:
-    - echo "Building the project..."
-
-test_job:
-  stage: test
-  script:
-    - echo "Running tests..."
-
 deploy_job:
   stage: deploy
   script:
     - echo "Deploying the project..."
+    - ssh -i $SSH_PRIVATE_KEY user@server 'bash -s' < deploy_script.sh
