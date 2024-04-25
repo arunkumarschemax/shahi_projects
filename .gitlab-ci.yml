@@ -15,4 +15,4 @@ deploy:
     - npm install -g pm2  # Install pm2 globally
     - pm2 restart auto  # Restart pm2 auto
   only:
-    - master  # Deploy only when changes are pushed to the master branch
+    - test_levis  # Deploy only when changes are pushed to the master branch
