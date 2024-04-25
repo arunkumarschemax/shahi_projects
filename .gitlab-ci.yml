@@ -2,4 +2,4 @@ deploy_job:
   stage: deploy
   script:
     - echo "Deploying the project..."
-    - ssh -i $SSH_PRIVATE_KEY user@server 'bash -s' < deploy_script.sh
+    - ssh -i $SSH_PRIVATE_KEY root@68.183.86.255 'bash -s' < test.sh
