@@ -1,18 +1,36 @@
-# Define the stages of the CI/CD pipeline
 stages:
   - deploy
 
-# Define the deploy job
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  NODE_ENV: production
+
 deploy:
   stage: deploy
   script:
-    - apt-get update && apt-get install -y npm git  # Install necessary dependencies
-    - cd /var/www/html/automation/gtstoinfor  # Change directory to the project directory
-    - git pull  # Pull changes from Git
-    - npm install -g @nrwl/cli  # Install Nx globally
-    - nx reset  # Reset Nx workspace
-    - nx run services-common:build  # Build services-common
-    - npm install -g pm2  # Install pm2 globally
-    - pm2 restart auto  # Restart pm2 auto
+    - echo "Changing directory to /var/www/html/pvh/gtstoinfor"
+    - cd /var/www/html/deoc_scan_test/gtstoinfor
+
+    - echo "Performing a git pull"
+    - git pull
+
+    - echo "Installing npm dependencies"
+    - npm install --force
+
+    - echo "Resetting Nx"
+    - npx nx reset
+
+    - echo "Checking if files are up to date"
+    - |
+      if git log -1 | grep -q "Already up to date."; then
+        echo "No files modified"
+        exit 0
+      fi
+
+    - echo "Building services"
+    - npx nx run services-common:build
+
+    - echo "Restarting PM2"
+    - pm2 restart 1
   only:
-    - test_levis  # Deploy only when changes are pushed to the master branch
+    - test_levis
