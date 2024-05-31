@@ -5,32 +5,31 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   NODE_ENV: production
 
+before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan -H 68.183.86.255 >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
 deploy:
   stage: deploy
   script:
-    - echo "Changing directory to /var/www/html/pvh/gtstoinfor"
-    - cd /var/www/html/deoc_scan_test/gtstoinfor
+    - ssh root@68.183.86.255 << 'EOF'
+      cd /var/www/html/pvh/gtstoinfor
+      git pull
+      npm install --force
+      npx nx reset
 
-    - echo "Performing a git pull"
-    - git pull
-
-    - echo "Installing npm dependencies"
-    - npm install --force
-
-    - echo "Resetting Nx"
-    - npx nx reset
-
-    - echo "Checking if files are up to date"
-    - |
       if git log -1 | grep -q "Already up to date."; then
         echo "No files modified"
         exit 0
       fi
 
-    - echo "Building services"
-    - npx nx run services-common:build
-
-    - echo "Restarting PM2"
-    - pm2 restart 1
+      npx nx run services-common:build
+      pm2 restart 1
+      EOF
   only:
-    - test_levis
+    - main
