@@ -32,4 +32,4 @@ deploy:
       pm2 restart 1
       EOF
   only:
-    - main
+    - test_levis
